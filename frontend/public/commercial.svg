@@ -1,0 +1,15 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="64" height="64" fill="transparent"/>
+  <!-- Чемодан -->
+  <rect x="14" y="18" width="36" height="28" rx="2" stroke="#00d9ff" stroke-width="2.5" fill="rgba(0, 217, 255, 0.05)"/>
+  <!-- Ручка -->
+  <path d="M22 18C22 12 42 12 42 18" stroke="#00d9ff" stroke-width="2.5" fill="none"/>
+  <!-- Замок в центре -->
+  <circle cx="32" cy="32" r="3" stroke="#00d9ff" stroke-width="1.5" fill="none"/>
+  <line x1="32" y1="29" x2="32" y2="32" stroke="#00d9ff" stroke-width="1" stroke-linecap="round"/>
+  <!-- Полоски рисунка (товары) -->
+  <rect x="18" y="26" width="4" height="8" stroke="#00d9ff" stroke-width="1" fill="rgba(0, 217, 255, 0.3)"/>
+  <rect x="26" y="24" width="4" height="10" stroke="#00d9ff" stroke-width="1" fill="rgba(0, 217, 255, 0.3)"/>
+  <rect x="34" y="26" width="4" height="8" stroke="#00d9ff" stroke-width="1" fill="rgba(0, 217, 255, 0.3)"/>
+  <rect x="42" y="24" width="4" height="10" stroke="#00d9ff" stroke-width="1" fill="rgba(0, 217, 255, 0.3)"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="64" height="64" fill="transparent"/>
+  <!-- Большой замок -->
+  <rect x="20" y="26" width="24" height="22" rx="3" stroke="#00d9ff" stroke-width="2.5" fill="rgba(0, 217, 255, 0.05)"/>
+  <!-- Дужка замка -->
+  <path d="M24 26C24 18 40 18 40 26" stroke="#00d9ff" stroke-width="2.5" fill="none"/>
+  <!-- Скважина -->
+  <circle cx="32" cy="40" r="2.5" stroke="#00d9ff" stroke-width="2" fill="none"/>
+  <!-- Бинарный код вокруг -->
+  <text x="14" y="18" font-size="8" fill="#00d9ff" opacity="0.6">01</text>
+  <text x="46" y="22" font-size="8" fill="#00d9ff" opacity="0.6">10</text>
+  <text x="12" y="50" font-size="8" fill="#00d9ff" opacity="0.6">1010</text>
+</svg>

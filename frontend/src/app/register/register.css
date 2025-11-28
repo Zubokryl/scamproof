@@ -1,0 +1,956 @@
+.register-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0a0e27, #1b1f3a);
+  padding: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.register-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap; /* для маленьких экранов */
+  max-width: 1400px; /* Increased max-width to make form wider */
+  width: 100%;
+  align-items: flex-start;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Make form wrapper wider to give more space to the form */
+.form-wrapper {
+  flex: 1.2; /* Increase flex ratio to make form section wider than info section */
+  min-width: 350px;
+  max-width: 600px; /* Increased max-width for wider form */
+}
+
+/* Adjust info section to not be too wide compared to form */
+.register-info {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px; /* Limit width to balance with wider form */
+  color: #cfd8ff;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background-color: rgba(15, 18, 51, 0.7);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.2);
+}
+
+.register-card {
+  background-color: #0f1233;
+  margin-left: 5rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+}
+
+.register-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #00d9ff;
+  font-weight: 700;
+}
+
+.register-error {
+  color: #ff4d4f;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.register-success {
+  color: #28a745;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.register-input {
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #00d9ff;
+  background-color: rgba(0, 217, 255, 0.05);
+  color: #fff;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.register-input:focus {
+  border-color: #00f0ff;
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+  background-color: rgba(0, 217, 255, 0.1);
+}
+
+.register-button {
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #00d9ff;
+  color: #0a0e27;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.register-button:hover {
+  background-color: #00f0ff;
+  transform: translateY(-2px);
+  box-shadow: 0 0 10px #00d9ff;
+}
+
+/* Информационный блок справа */
+.register-info {
+  flex: 1;
+  color: #cfd8ff;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-left: 8rem;
+}
+
+.register-info-title {
+  font-size: 1.5rem;
+  color: #00d9ff;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.register-info h3 {
+  color: #00d9ff;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.register-info ul {
+  margin-left: 1rem;
+  margin-bottom: 0.75rem;
+  list-style-type: disc;
+}
+
+.register-info ul li {
+  margin-bottom: 0.3rem;
+}
+
+.register-login-note {
+  margin-top: 1rem;
+}
+
+.register-link {
+  color: #00d9ff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+.register-link:hover {
+  color: #00f0ff;
+  text-decoration: underline;
+}
+
+/* Make the registration form wider */
+.register-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap; /* for smaller screens */
+  max-width: 1200px;
+  width: 100%;
+  align-items: flex-start;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.form-wrapper {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.register-card {
+  background-color: #0f1233;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+}
+
+.register-info {
+  flex: 1;
+  min-width: 300px;
+  color: #cfd8ff;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  background-color: rgba(15, 18, 51, 0.7);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.2);
+}
+
+/* Center form for login page */
+.login-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.login-form-wrapper {
+  max-width: 400px;
+  width: 100%;
+}
+
+/* Navigation for auth pages */
+.auth-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-main-content {
+  flex: 1;
+}
+
+/* Wider layout for register page */
+.register-container-wide {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap; /* for smaller screens */
+  max-width: 1200px;
+  width: 100%;
+  align-items: flex-start;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.form-wrapper-full {
+  flex: 1;
+  min-width: 300px;
+  max-width: 500px;
+}
+
+.register-card-full {
+  background-color: #0f1233;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.3);
+}
+
+/* Adjustments for login page to match register page styling */
+.login-form-wrapper {
+  width: 100%;
+  max-width: 500px; /* Match the register form width */
+  margin: 0 auto;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Media queries for responsive design starting from 260px */
+@media (max-width: 1200px) {
+  .register-container-wide {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .register-container-wide {
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+  }
+
+  .register-info {
+    max-width: 500px;
+    text-align: center;
+  }
+
+  .form-wrapper-full {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .register-container-wide {
+    padding: 0 1rem;
+    gap: 1.5rem;
+  }
+
+  .register-card-full {
+    padding: 1.5rem;
+  }
+
+  .register-info {
+    padding: 1.25rem;
+  }
+
+  .register-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .register-container-wide {
+    padding: 0 0.5rem;
+  }
+
+  .register-card-full {
+    padding: 1.25rem;
+  }
+
+  .register-info {
+    padding: 1rem;
+  }
+
+  .register-title {
+    font-size: 1.6rem;
+  }
+
+  .register-input {
+    padding: 0.65rem 0.9rem;
+  }
+
+  .register-button {
+    padding: 0.65rem 0.9rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .register-title {
+    font-size: 1.5rem;
+  }
+
+  .register-input {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .register-button {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .register-info {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 375px) {
+  .register-title {
+    font-size: 1.4rem;
+  }
+
+  .register-input {
+    padding: 0.55rem 0.75rem;
+  }
+
+  .register-button {
+    padding: 0.55rem 0.75rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .register-title {
+    font-size: 1.3rem;
+  }
+
+  .register-input {
+    padding: 0.5rem 0.7rem;
+  }
+
+  .register-button {
+    padding: 0.5rem 0.7rem;
+  }
+}
+
+/* Fallback for very small screens (260px and below) */
+@media (max-width: 260px) {
+  .register-section {
+    padding: 5px;
+  }
+
+  .register-container-wide {
+    padding: 0 5px;
+  }
+
+  .register-title {
+    font-size: 1.2rem;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  .register-card-full {
+    padding: 1rem;
+  }
+
+  .register-info {
+    padding: 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .register-login-note {
+    font-size: 0.9rem;
+  }
+}
+
+/* Additional responsive adjustments for login page */
+@media (max-width: 600px) {
+  .login-container {
+    padding: 0 1rem;
+  }
+
+  .login-form-wrapper {
+    max-width: 400px;
+  }
+
+  .register-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .login-form-wrapper {
+    max-width: 350px;
+  }
+
+  .register-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .login-form-wrapper {
+    max-width: 300px;
+  }
+
+  .register-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 300px) {
+  .login-form-wrapper {
+    max-width: 270px;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .register-card {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 260px) {
+  .login-form-wrapper {
+    max-width: 240px;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.9rem;
+  }
+
+  .register-card {
+    padding: 0.7rem;
+  }
+}
+
+/* Responsive design for all screen sizes starting from 260px */
+@media (max-width: 1200px) {
+  .register-container {
+    padding: 0 1.5rem;
+  }
+}
+
+/* Responsive adjustments for login page to match register page styling */
+.login-form-wrapper {
+  width: 100%;
+  max-width: 500px; /* Match the register form width */
+  margin: 0 auto;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+@media (max-width: 600px) {
+  .login-container {
+    padding: 0 1rem;
+  }
+
+  .login-form-wrapper {
+    max-width: 400px;
+  }
+
+  .register-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .login-form-wrapper {
+    max-width: 350px;
+  }
+
+  .register-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .login-form-wrapper {
+    max-width: 300px;
+  }
+
+  .register-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 300px) {
+  .login-form-wrapper {
+    max-width: 270px;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .register-card {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 260px) {
+  .login-form-wrapper {
+    max-width: 240px;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.9rem;
+  }
+
+  .register-card {
+    padding: 0.7rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .register-container {
+    flex-direction: column;
+    align-items: center;
+    max-width: 600px;
+  }
+
+  .register-info {
+    max-width: 500px;
+    text-align: center;
+  }
+
+  .form-wrapper {
+    max-width: 500px;
+  }
+}
+
+@media (max-width: 768px) {
+  .register-container {
+    padding: 0 1rem;
+    gap: 1.5rem;
+  }
+
+  .register-card {
+    padding: 1.5rem;
+  }
+
+  .register-info {
+    padding: 1.25rem;
+  }
+
+  .register-title {
+    font-size: 1.8rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .register-container {
+    padding: 0 0.5rem;
+  }
+
+  .register-card {
+    padding: 1.25rem;
+  }
+
+  .register-info {
+    padding: 1rem;
+  }
+
+  .register-title {
+    font-size: 1.6rem;
+  }
+
+  .register-input {
+    padding: 0.65rem 0.9rem;
+  }
+
+  .register-button {
+    padding: 0.65rem 0.9rem;
+  }
+}
+
+@media (max-width: 425px) {
+  .register-title {
+    font-size: 1.5rem;
+  }
+
+  .register-input {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .register-button {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .register-info {
+    min-width: 100%;
+  }
+}
+
+@media (max-width: 375px) {
+  .register-title {
+    font-size: 1.4rem;
+  }
+
+  .register-input {
+    padding: 0.55rem 0.75rem;
+  }
+
+  .register-button {
+    padding: 0.55rem 0.75rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .register-title {
+    font-size: 1.3rem;
+  }
+
+  .register-input {
+    padding: 0.5rem 0.7rem;
+  }
+
+  .register-button {
+    padding: 0.5rem 0.7rem;
+  }
+}
+
+/* Fallback for very small screens (260px and below) */
+@media (max-width: 260px) {
+  .register-section {
+    padding: 5px;
+  }
+
+  .register-container {
+    padding: 0 5px;
+  }
+
+  .register-title {
+    font-size: 1.2rem;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.45rem 0.65rem;
+    font-size: 0.9rem;
+  }
+
+  .register-card {
+    padding: 1rem;
+  }
+
+  .register-info {
+    padding: 0.8rem;
+    font-size: 0.85rem;
+  }
+
+  .register-login-note {
+    font-size: 0.9rem;
+  }
+}
+
+/* Adjustments for login page as well */
+@media (max-width: 600px) {
+  .form-wrapper {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .register-card {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .form-wrapper {
+    max-width: 350px;
+  }
+
+  .register-card {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .form-wrapper {
+    max-width: 300px;
+  }
+
+  .register-card {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 300px) {
+  .form-wrapper {
+    max-width: 270px;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .register-card {
+    padding: 0.8rem;
+  }
+}
+
+@media (max-width: 260px) {
+  .form-wrapper {
+    max-width: 240px;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.5rem 0.7rem;
+    font-size: 0.9rem;
+  }
+
+  .register-card {
+    padding: 0.7rem;
+  }
+}
+
+/* Responsive design for all screen sizes starting from 260px */
+@media (min-width: 260px) and (max-width: 425px) {
+  .register-container {
+    padding: 0 0.5rem;
+    gap: 1rem;
+  }
+
+  .form-wrapper {
+    max-width: 100%;
+  }
+
+  .register-card {
+    padding: 1.2rem;
+  }
+
+  .register-input {
+    padding: 0.55rem 0.7rem;
+  }
+
+  .register-button {
+    padding: 0.55rem 0.7rem;
+  }
+
+  .register-title {
+    font-size: 1.4rem;
+  }
+
+  .register-info {
+    min-width: 100%;
+    padding: 1rem;
+  }
+
+  .register-info-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (min-width: 426px) and (max-width: 768px) {
+  .register-container {
+    padding: 0 1rem;
+    gap: 1.5rem;
+  }
+
+  .form-wrapper {
+    max-width: 100%;
+  }
+
+  .register-card {
+    padding: 1.5rem;
+  }
+
+  .register-title {
+    font-size: 1.6rem;
+  }
+
+  .register-info {
+    min-width: 100%;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .register-container {
+    padding: 0 1.5rem;
+    gap: 2rem;
+  }
+
+  .form-wrapper {
+    max-width: 500px;
+  }
+
+  .register-card {
+    padding: 1.8rem;
+  }
+
+  .register-title {
+    font-size: 1.8rem;
+  }
+
+  .register-info {
+    max-width: 450px;
+  }
+}
+
+/* Extra small screens */
+@media (max-width: 259px) {
+  .register-section {
+    padding: 5px;
+  }
+
+  .register-container {
+    padding: 0 5px;
+    gap: 0.5rem;
+  }
+
+  .register-card {
+    padding: 0.6rem;
+  }
+
+  .register-title {
+    font-size: 1.2rem;
+  }
+
+  .register-input,
+  .register-button {
+    padding: 0.45rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .register-info {
+    padding: 0.6rem;
+    font-size: 0.8rem;
+  }
+
+  .register-login-note {
+    font-size: 0.85rem;
+  }
+}
+
+/* Tablet portrait */
+@media (min-width: 480px) and (max-width: 768px) {
+  .register-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .form-wrapper {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .register-info {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+/* Mobile landscape */
+@media (min-width: 320px) and (max-width: 480px) and (orientation: landscape) {
+  .register-container {
+    flex-direction: row;
+    gap: 1.5rem;
+  }
+
+  .form-wrapper {
+    flex: 1;
+    max-width: 50%;
+  }
+
+  .register-info {
+    flex: 1;
+    max-width: 50%;
+  }
+}
+
+/* Large screens */
+@media (min-width: 1200px) {
+  .register-container {
+    max-width: 1300px;
+  }
+
+  .register-card {
+    padding: 2.5rem;
+  }
+
+  .register-input {
+    padding: 0.8rem 1rem;
+  }
+
+  .register-button {
+    padding: 0.8rem 1rem;
+  }
+
+  .register-title {
+    font-size: 2.2rem;
+  }
+}

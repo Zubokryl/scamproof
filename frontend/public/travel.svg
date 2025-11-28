@@ -1,0 +1,15 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="64" height="64" fill="transparent"/>
+  <!-- Чемодан -->
+  <rect x="10" y="24" width="28" height="24" rx="2" stroke="#00d9ff" stroke-width="2.5" fill="rgba(0, 217, 255, 0.05)"/>
+  <!-- Ручка чемодана -->
+  <path d="M16 24C16 18 32 18 32 24" stroke="#00d9ff" stroke-width="2"/>
+  <!-- Колесики -->
+  <circle cx="14" cy="50" r="2" stroke="#00d9ff" stroke-width="1.5"/>
+  <circle cx="28" cy="50" r="2" stroke="#00d9ff" stroke-width="1.5"/>
+  <!-- Паспорт сверху -->
+  <rect x="42" y="18" width="14" height="18" rx="1" stroke="#00d9ff" stroke-width="2" fill="rgba(0, 217, 255, 0.05)"/>
+  <line x1="44" y1="24" x2="54" y2="24" stroke="#00d9ff" stroke-width="1"/>
+  <line x1="44" y1="28" x2="54" y2="28" stroke="#00d9ff" stroke-width="1"/>
+  <circle cx="49" cy="34" r="2" stroke="#00d9ff" stroke-width="1" fill="none"/>
+</svg>

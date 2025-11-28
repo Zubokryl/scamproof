@@ -1,0 +1,16 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="64" height="64" fill="transparent"/>
+  <!-- Телефон -->
+  <rect x="12" y="10" width="24" height="44" rx="4" stroke="#00d9ff" stroke-width="2.5" fill="rgba(0, 217, 255, 0.05)"/>
+  <!-- Камера -->
+  <circle cx="24" cy="14" r="2.5" stroke="#00d9ff" stroke-width="1.5"/>
+  <!-- Экран -->
+  <rect x="14" y="18" width="20" height="30" rx="2" fill="rgba(0, 217, 255, 0.02)"/>
+  <!-- Картинка на экране (линии) -->
+  <line x1="16" y1="22" x2="32" y2="22" stroke="#00d9ff" stroke-width="1" opacity="0.5"/>
+  <line x1="16" y1="26" x2="32" y2="26" stroke="#00d9ff" stroke-width="1" opacity="0.5"/>
+  <!-- Сердце (лайк) -->
+  <path d="M42 20C42 18 44 16 46 16C48 16 50 18 50 20C50 22 46 28 46 28C46 28 42 22 42 20Z" stroke="#00d9ff" stroke-width="2" fill="none"/>
+  <!-- Облачки комментариев -->
+  <path d="M44 36C44 34 45 33 47 33H54C56 33 57 34 57 36V42C57 44 56 45 54 45H49L47 47V45H47C45 45 44 44 44 42V36Z" stroke="#00d9ff" stroke-width="1.5" fill="none"/>
+</svg>
