@@ -60,7 +60,7 @@ export default function Hero() {
 
       <div className="hero-container">
         <div className="hero-text">
-          <h1>
+          <h1 className="responsive-hero-title">
             <span className="text-gradient">Защита от</span>
             <br />
             <span className="text-gradient">мошенничества</span>

@@ -13,15 +13,15 @@
 
 /* Внутренняя структура */
 .nav-inner {
-  max-width: 1400px;
+  max-width: 1440px;
   margin: 0 auto;
   padding: 0 2rem;
   height: 80px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 3rem;
-  margin-left: 2rem;
+  gap: 2.5rem;
+  margin-left: 0;
 }
 
 /* === ЛОГО === */
@@ -100,20 +100,21 @@
 
 /* === МЕНЮ === */
 .menu-wrapper {
-  flex: 1;
+  flex: 2;
   display: flex;
   justify-content: center;
-
+  min-width: 0;
 }
 
 .header-menu {
   
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: 1.6rem;
   list-style: none;
   margin: 0;
-  padding: 8px 38px;
+  padding: 6px 28px;
+  white-space: nowrap;
   border-radius: 16px;
   position: relative;
   z-index: 40;
@@ -163,6 +164,12 @@
   transform: skewX(-8deg) scale(1.03);
 }
 
+/* Не позволяем элементам переноситься и выравниваем li по центру */
+.header-menu > li {
+  display: flex;
+  align-items: center;
+}
+
 /* === ССЫЛКИ МЕНЮ === */
 .header-link {
   position: relative;
@@ -201,10 +208,41 @@
 .dropdown-menu {
   position: relative;
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .header-link--dropdown {
   padding: 0;
+}
+
+/* Обёртка ссылки и кнопки стрелки в одном ряду, без роста по высоте */
+.header-link-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Кнопка стрелки: компактная, не влияет на высоту строки */
+.header-link-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  line-height: 1;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.header-link-dropdown-btn:focus {
+  outline: none;
 }
 
 /* === ПОДМЕНЮ === */
@@ -221,6 +259,8 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
   padding: 16px;
   min-width: 520px;
+  max-width: 90vw;
+  width: max-content;
   z-index: 200;
   opacity: 0;
   pointer-events: none;
@@ -229,6 +269,8 @@
   gap: 0.8rem;
   list-style: none;
   margin: 0;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .submenu.two-columns {
@@ -267,6 +309,9 @@
   position: relative;
   white-space: normal;
   word-break: break-word;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .submenu-link:hover {
@@ -373,8 +418,8 @@
 .nav-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex-shrink: 0;
+  gap: 14px;
+  flex: 0 1 auto;
 }
 
 .nav-login,
@@ -538,6 +583,11 @@
 
   .menu-wrapper {
     display: none;
+  }
+
+  /* Скрываем аватар и кнопку входа/выхода на маленьких экранах */
+  .nav-actions {
+    display: none !important;
   }
 
   .nav-burger {
