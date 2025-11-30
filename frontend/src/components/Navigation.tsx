@@ -63,17 +63,47 @@ export default function Navigation() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLLIElement>(null);
 
-  // Prevent scrolling when mobile menu is open
+  // Lock scroll when mobile menu is open (body/html + preserve scroll position)
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
+    const html = document.documentElement;
+    const body = document.body;
 
-    return () => {
-      document.body.style.overflow = '';
-    };
+    if (isOpen) {
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      html.style.overflow = 'hidden';
+      body.style.overflow = 'hidden';
+      body.style.position = 'fixed';
+      body.style.top = `-${scrollY}px`;
+      body.style.width = '100%';
+
+      const preventTouch = (e: TouchEvent) => {
+        e.preventDefault();
+      };
+      window.addEventListener('touchmove', preventTouch, { passive: false });
+
+      return () => {
+        window.removeEventListener('touchmove', preventTouch as any);
+        html.style.overflow = '';
+        body.style.overflow = '';
+        body.style.position = '';
+        const top = body.style.top;
+        body.style.top = '';
+        body.style.width = '';
+        const y = top ? parseInt(top, 10) : 0;
+        window.scrollTo(0, -y);
+      };
+    } else {
+      html.style.overflow = '';
+      body.style.overflow = '';
+      body.style.position = '';
+      const top = body.style.top;
+      body.style.top = '';
+      body.style.width = '';
+      if (top) {
+        const y = parseInt(top, 10) || 0;
+        window.scrollTo(0, -y);
+      }
+    }
   }, [isOpen]);
 
   // Закрытие дропдауна при клике вне его области
@@ -258,61 +288,90 @@ export default function Navigation() {
           <AuthButton />
         </div>
 
-        {/* Бургер меню */}
-        <button className={`nav-burger ${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(!isOpen)}>
-          <X size={28} />
-          <Menu size={28} />
-        </button>
+        <button
+  className={`nav-burger ${isOpen ? 'open close-icon-active' : ''}`}
+  onClick={() => setIsOpen(!isOpen)}
+>
+  <X size={60} />
+  <Menu size={60} />
+</button>
 
-        {/* МОБИЛЬНОЕ МЕНЮ */}
-        <div className={`mobile-menu-backdrop ${isOpen ? 'open' : ''}`} onClick={() => setIsOpen(false)}>
-          <div className={`nav-mobile ${isOpen ? 'open' : ''}`} onClick={(e) => e.stopPropagation()}>
-            {/* Логотип в мобильном меню */}
-            <Link href="/" className="nav-mobile-logo" onClick={() => setIsOpen(false)}>
-              <span className="logo-wrapper">
-                <span className="logo-bg"></span>
-                <Image
-                  src="/logo.jpg"
-                  width={40}
-                  height={40}
-                  alt="YourScamProof Logo"
-                  className="nav-logo-img"
-                />
-                <span className="nav-logo-text">YourScamProof</span>
-              </span>
-            </Link>
 
-            {/* Центрированный контент */}
-            <div className="nav-mobile-content">
-              {/* Аватар пользователя */}
-              <UserAvatar />
-              
-              {/* Основные ссылки */}
-              <Link href="/database" className="nav-mobile-link" onClick={() => setIsOpen(false)}>
-                Схемы
-              </Link>
+        {/* === МОБИЛЬНОЕ МЕНЮ === */}
+<div
+  className={`mobile-menu-backdrop ${isOpen ? "open" : ""}`}
+  onClick={() => setIsOpen(false)}
+>
+  <div
+    className={`nav-mobile ${isOpen ? "open" : ""}`}
+    onClick={(e) => e.stopPropagation()}
+  >
 
-              <Link href="/forum" className="nav-mobile-link" onClick={() => setIsOpen(false)}>
-                Форум
-              </Link>
+    <div className="nav-mobile-content">
 
-              <a
-                href="https://t.me/yourscamproof"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="nav-mobile-link telegram-mobile"
-                onClick={() => setIsOpen(false)}
-              >
-                Telegram
-              </a>
+      {/* 🔵 1. ЛОГОТИП (клик — на главную) */}
+      <div className="mobile-logo-container">
+        <Link
+          href="/"
+          className="nav-logo"
+          onClick={() => setIsOpen(false)}
+        >
+          <span className="logo-wrapper">
+            <span className="logo-bg"></span>
+            <Image
+              src="/logo.jpg"
+              width={50}
+              height={50}
+              alt="YourScamProof Logo"
+              className="nav-logo-img"
+            />
+            <span className="nav-logo-text">YourScamProof</span>
+          </span>
+        </Link>
+      </div>
 
-              {/* Кнопка входа/выхода в самом низу */}
-              <div className="nav-mobile-auth-section">
-                <AuthButton isMobile />
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* 🔵 2. Аватар пользователя (если залогинен) */}
+      <div className="mobile-avatar-container">
+        <UserAvatar />
+      </div>
+
+      {/* 🔵 3. Основные ссылки */}
+      <div className="mobile-links">
+        <Link
+          href="/database"
+          className="nav-mobile-link"
+          onClick={() => setIsOpen(false)}
+        >
+          Схемы
+        </Link>
+
+        <Link
+          href="/forum"
+          className="nav-mobile-link"
+          onClick={() => setIsOpen(false)}
+        >
+          Форум
+        </Link>
+
+        <a
+          href="https://t.me/yourscamproof"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="nav-mobile-link"
+          onClick={() => setIsOpen(false)}
+        >
+          Telegram
+        </a>
+      </div>
+
+      {/* 🔵 4. Кнопка входа / выхода */}
+      <div className="nav-mobile-auth-section">
+        <AuthButton isMobile />
+      </div>
+    </div>
+  </div>
+</div>
+
       </div>
     </nav>
   );

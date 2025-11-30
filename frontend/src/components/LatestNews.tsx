@@ -8,34 +8,50 @@ interface CategorizedArticle extends NormalizedArticle {
   category: string;
 }
 
+// Update interval to check for new data (every 30 minutes)
+const CHECK_INTERVAL = 30 * 60 * 1000; // 30 minutes
+
 export default function LatestNews() {
   const [articles, setArticles] = useState<CategorizedArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+ const [error, setError] = useState<string | null>(null);
+  const [lastUpdated, setLastUpdated] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchLatestFraudNews = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/news');
-        const result = await response.json();
-        
-        if (result.success) {
-          // Ensure we always have exactly 6 articles
-          const articlesToDisplay = result.data.slice(0, 6);
-          setArticles(articlesToDisplay);
-        } else {
-          setError('Не удалось загрузить последние новости');
-        }
-      } catch (err) {
-        setError('Не удалось загрузить последние новости');
-        console.error('Error fetching fraud news:', err);
-      } finally {
-        setLoading(false);
+  const fetchLatestFraudNews = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/news');
+      const result = await response.json();
+      
+      if (result.success) {
+        // Ensure we always have exactly 6 articles
+        const articlesToDisplay = result.data.slice(0, 6);
+        setArticles(articlesToDisplay);
+        setLastUpdated(result.lastUpdated || new Date().toISOString());
+        setError(null);
+      } else {
+        throw new Error(result.error || 'Failed to load news');
       }
-    };
+    } catch (err) {
+      setError('Не удалось загрузить последние новости');
+      console.error('Error fetching fraud news:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // Initial fetch
+  useEffect(() => {
     fetchLatestFraudNews();
+  }, []);
+
+  // Set up interval to check for updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchLatestFraudNews();
+    }, CHECK_INTERVAL);
+
+    return () => clearInterval(interval);
   }, []);
 
   if (loading) {
@@ -55,8 +71,8 @@ export default function LatestNews() {
         <div className="container">
           <h2>Последние новости</h2>
           <p>{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="retry-button"
           >
             Повторить попытку
@@ -71,40 +87,47 @@ export default function LatestNews() {
       <div className="container">
         <h2>Последние новости</h2>
         {articles.length > 0 ? (
-          <div className="news-grid">
-            {articles.map((article) => (
-              <div key={article.id} className="news-card">
-                <div className="news-card-content">
-                  <div className="news-header">
-                    <span className="news-source">{article.source}</span>
-                    <span className="news-category">{article.category}</span>
-                  </div>
-                  <h3 className="news-title">{article.title}</h3>
-                  {article.description && (
-                    <p className="news-excerpt">
-                      {article.description.substring(0, 150)}...
-                    </p>
-                  )}
-                  <div className="news-meta">
-                    <span className="news-date">
-                      {new Date(article.published_at).toLocaleDateString('ru-RU')}
-                    </span>
-                    {article.author && (
-                      <span className="news-author">Источник: {article.author}</span>
+          <>
+            <div className="news-grid">
+              {articles.map((article) => (
+                <div key={article.id} className="news-card">
+                  <div className="news-card-content">
+                    <div className="news-header">
+                      <span className="news-source">{article.source}</span>
+                      <span className="news-category">{article.category}</span>
+                    </div>
+                    <h3 className="news-title">{article.title}</h3>
+                    {article.description && (
+                      <p className="news-excerpt">
+                        {article.description.substring(0, 150)}...
+                      </p>
                     )}
+                    <div className="news-meta">
+                      <span className="news-date">
+                        {new Date(article.published_at).toLocaleDateString('ru-RU')}
+                      </span>
+                      {article.author && (
+                        <span className="news-author">Источник: {article.author}</span>
+                      )}
+                    </div>
+                    <a
+                      href={article.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="news-link"
+                    >
+                      Читать далее
+                    </a>
                   </div>
-                  <a 
-                    href={article.url} 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    className="news-link"
-                  >
-                    Читать далее
-                  </a>
                 </div>
+              ))}
+            </div>
+            {lastUpdated && (
+              <div className="last-updated">
+                Обновлено: {new Date(lastUpdated).toLocaleString('ru-RU')}
               </div>
-            ))}
-          </div>
+            )}
+          </>
         ) : (
           <p>Новости пока отсутствуют.</p>
         )}

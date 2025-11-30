@@ -1,6 +1,6 @@
 // News pipeline types
 
-export type RawSource = 'gnews' | 'newscatcher' | 'newsdata' | 'own';
+export type RawSource = 'gnews' | 'newscatcher' | 'newsdata' | 'mediastack' | 'serpapi' | 'gdelt' | 'own';
 
 export interface NormalizedArticle {
   id: string;           // hash (url or source+id)
@@ -10,11 +10,11 @@ export interface NormalizedArticle {
   description?: string;
   content?: string;
   published_at: string; // ISO
-  author?: string;
-  image?: string;
+  author?: string | null;
+  image?: string | null;
   language?: string;
   category?: string;    // Category for the article
-  raw?: any;            // original data
+  raw?: unknown;            // original data
 }
 
 export interface FilterResult {

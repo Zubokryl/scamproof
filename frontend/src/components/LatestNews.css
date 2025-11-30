@@ -222,7 +222,7 @@
 @media (max-width: 768px) {
   .latest-news-section {
     padding: 2rem 1rem;
-  }
+ }
   
   .latest-news-section h2 {
     font-size: 1.75rem;
@@ -236,7 +236,7 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
-  }
+ }
   
   .news-header {
     flex-direction: column;
@@ -249,4 +249,11 @@
     opacity: 1;
     transform: none;
   }
+}
+
+.last-updated {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: right;
 }
