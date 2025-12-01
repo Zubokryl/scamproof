@@ -92,22 +92,34 @@
   transform: scaleX(1);
 }
 
-.articleTitle {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: #00d9ff;
-  transition: color 0.3s ease;
+.articleLink {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.articleCard:hover .articleTitle {
-  color: #00b3ff;
+.articleLink:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+}
+
+.articleTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #fff;
+  transition: color 0.2s ease;
+}
+
+.articleLink:hover .articleTitle {
+  color: #00c6ff;
 }
 
 .articleContent {
-  color: #94a3b8;
-  margin-bottom: 1.5rem;
+  color: #aaa;
   line-height: 1.6;
+  margin-bottom: 1.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -118,20 +130,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.875rem;
-  color: #94a3b8;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  color: #777;
+  font-size: 0.9rem;
 }
 
 .counters {
   display: flex;
-  align-items: center;
   gap: 1rem;
 }
 
 .counterItem {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.3rem;
 }
 
 .loadingContainer {

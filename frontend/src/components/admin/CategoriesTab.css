@@ -1,0 +1,225 @@
+/* Categories Tab Styles */
+.categories-tab-container {
+  background: rgba(10, 14, 30, 0.4);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 217, 255, 0.1);
+  padding: 1.5rem;
+}
+
+.categories-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.categories-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #00d9ff 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.categories-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.categories-card {
+  background: rgba(20, 30, 60, 0.5);
+  border-radius: 16px;
+  border: 1px solid rgba(0, 217, 255, 0.15);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.categories-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 217, 255, 0.3);
+  box-shadow: 0 10px 25px rgba(0, 217, 255, 0.1);
+}
+
+.categories-card-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.categories-card-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00d9ff, #3b82f6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+  color: #0a0e27;
+  font-size: 1.5rem;
+}
+
+.categories-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: white;
+  margin: 0;
+}
+
+.categories-card-description {
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+.categories-card-stats {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid rgba(0, 217, 255, 0.1);
+  padding-top: 1rem;
+}
+
+.categories-card-stat {
+  text-align: center;
+}
+
+.categories-stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #00d9ff;
+}
+
+.categories-stat-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.categories-card-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.categories-action-button {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.categories-edit-button {
+  background: rgba(0, 217, 255, 0.1);
+  color: #00d9ff;
+  border: 1px solid rgba(0, 217, 255, 0.3);
+}
+
+.categories-edit-button:hover {
+  background: rgba(0, 217, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.categories-delete-button {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.categories-delete-button:hover {
+  background: rgba(239, 68, 68, 0.2);
+  transform: translateY(-2px);
+}
+
+.categories-empty-state {
+  text-align: center;
+  padding: 3rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.categories-empty-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: rgba(0, 217, 255, 0.3);
+}
+
+.categories-empty-text {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.categories-create-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00d9ff, #3b82f6);
+  color: #0a0e27;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.categories-create-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 217, 255, 0.4);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .categories-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .categories-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .categories-tab-container {
+    padding: 1rem;
+  }
+  
+  .categories-card {
+    padding: 1rem;
+  }
+  
+  .categories-card-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.25rem;
+  }
+  
+  .categories-card-title {
+    font-size: 1.1rem;
+  }
+  
+  .categories-action-button {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}

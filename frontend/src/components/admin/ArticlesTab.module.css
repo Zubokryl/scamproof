@@ -1,0 +1,151 @@
+.articles-editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  background: #f8f9fa;
+  border: 1px solid #e1e5e9;
+  border-radius: 6px 6px 0 0;
+  border-bottom: none;
+}
+
+.articles-editor-button {
+  padding: 6px 10px;
+  background: white;
+  border: 1px solid #d1d5da;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.articles-editor-button:hover {
+  background: #0366d6;
+  color: white;
+  border-color: #0366d6;
+}
+
+.articles-editor-button:active {
+  background: #0256c5;
+}
+
+.articles-editor-select {
+  padding: 4px 8px;
+  border: 1px solid #d1d5da;
+  border-radius: 4px;
+  background: white;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.articles-editor-select:focus {
+  outline: none;
+  border-color: #0366d6;
+  box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+}
+
+.articles-editor-color-picker {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #d1d5da;
+  border-radius: 4px;
+  cursor: pointer;
+  background: white;
+  padding: 2px;
+}
+
+.articles-editor-color-picker::-webkit-color-swatch {
+  border: none;
+  border-radius: 2px;
+}
+
+.articles-editor-color-picker::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+
+.articles-editor-divider {
+  width: 1px;
+  background: #d1d5da;
+  margin: 4px 6px;
+}
+
+.articles-form-header {
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.articles-form-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.articles-form-textarea {
+  min-height: 300px;
+  padding: 12px;
+  border: 1px solid #e1e5e9;
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  outline: none;
+  overflow-y: auto;
+  background: white;
+}
+
+.articles-form-textarea:focus {
+  border-color: #0366d6;
+  box-shadow: 0 0 0 3px rgba(3, 102, 214, 0.1);
+}
+
+.articles-preview-container {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+}
+
+.articles-preview-image,
+.articles-preview-video {
+  max-width: 200px;
+  max-height: 150px;
+  border-radius: 4px;
+  border: 1px solid #e1e5e9;
+}
+
+.articles-remove-preview {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #ff4757;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.articles-remove-preview:hover {
+  background: #ff2e43;
+}
+
+.article-title-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.article-content-preview {
+  font-size: 0.8rem;
+  color: #666;
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

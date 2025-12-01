@@ -89,10 +89,7 @@ class CategoryController extends Controller
         return response()->json([
             'category' => new CategoryResource($category),
             'articles' => $articles,
-            'articles_count' => $category = Category::where('slug', $slug)
-                                ->withCount(['articles' => fn($q) => $q->published()])
-                                ->firstOrFail()
-
+            'articles_count' => $category->articles()->published()->count()
         ]);
     }
 

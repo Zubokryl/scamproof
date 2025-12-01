@@ -144,25 +144,46 @@ class UserController extends Controller
             }
         }
 
-        $user->delete();
+        User::destroy($user->id);
 
         return response()->json(['message' => 'Your account has been deleted successfully']);
     }
 
     public function activityLog($id)
-{
-    $logs = \App\Models\UserActivityLog::where('user_id', $id)->latest()->get();
-    return response()->json($logs);
-}
+    {
+        $user = Auth::user();
+        
+        // Users can only view their own activity logs, or admins can view any
+        if ($user->id != $id && $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        
+        $logs = \App\Models\UserActivityLog::where('user_id', $id)->latest()->get();
+        return response()->json($logs);
+    }
 
 public function loginHistory($id)
 {
+    $user = Auth::user();
+    
+    // Users can only view their own login history, or admins can view any
+    if ($user->id != $id && $user->role !== 'admin') {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+    
     $logins = \App\Models\UserLogin::where('user_id', $id)->latest()->get();
     return response()->json($logins);
 }
 
 public function userBadges($id)
 {
+    $user = Auth::user();
+    
+    // Users can only view their own badges, or admins can view any
+    if ($user->id != $id && $user->role !== 'admin') {
+        return response()->json(['message' => 'Unauthorized'], 403);
+    }
+    
     $badges = \App\Models\UserBadge::where('user_id', $id)->get();
     return response()->json($badges);
 }

@@ -10,7 +10,7 @@ export interface Article {
   content?: string;
   category: string;
   slug?: string;
-  published_at: string;
+  published_at?: string;
   pdf_url?: string;
   views_count?: number;
 }

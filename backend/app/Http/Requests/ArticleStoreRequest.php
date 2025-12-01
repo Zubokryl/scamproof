@@ -8,15 +8,14 @@ class ArticleStoreRequest extends FormRequest
 {
     public function authorize()
     {
-        // разрешаем создать статью авторизованным редакторам/админам
-        return $this->user() && in_array($this->user()->role, ['admin', 'editor']);
+        // разрешаем создать статью только админам
+        return $this->user() && $this->user()->role === 'admin';
     }
 
     public function rules(): array
     {
         return [
             'title' => 'required|string|max:255',
-            'slug' => 'required|string|unique:articles,slug',
             'content' => 'required|string',
             'category_id' => 'required|exists:categories,id',
             'pdf_url' => 'nullable|string',

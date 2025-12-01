@@ -85,83 +85,84 @@ export function ProfileHeader({ user, isOwnProfile = false }: ProfileHeaderProps
 
   return (
     <section className="profile-header">
-      <div className="profile-header-content">
-        {/* Avatar */}
-        <div className="profile-avatar-container">
-          <Avatar className="profile-avatar">
-            <AvatarImage src={user.avatar} alt={user.name} />
-            <AvatarFallback className="bg-secondary text-xl sm:text-2xl font-bold">
-              {user.name.slice(0, 2).toUpperCase()}
-            </AvatarFallback>
-          </Avatar>
-          <span
-            className={`profile-status-indicator ${statusColors[user.status]}`}
-            title={statusLabels[user.status]}
-          />
+      {/* First block: Avatar on the left, user info and buttons on the right */}
+      <div className="profile-first-block">
+        {/* Blue neon circle with avatar */}
+        <div className="profile-neon-avatar-container">
+          <div className="profile-neon-circle">
+            <Avatar className="profile-avatar">
+              <AvatarImage src={user.avatar} alt={user.name} />
+              <AvatarFallback className="bg-secondary text-xl sm:text-2xl font-bold">
+                {user.name.slice(0, 2).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+            <span
+              className={`profile-status-indicator ${statusColors[user.status]}`}
+              title={statusLabels[user.status]}
+            />
+          </div>
         </div>
 
-        {/* Info */}
-        <div className="profile-info">
-          <div className="profile-name-container">
-            <h1 className="profile-name">{user.name}</h1>
-            {user.isVerified && (
-              <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-            )}
-            {/* Badges next to name */}
-            {user.badges.slice(0, 2).map((badge) => (
-              <Badge
-                key={badge}
-                className="bg-purple/20 text-accent border-accent/30 text-[10px] sm:text-xs"
-              >
-                <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
-                {badge}
-              </Badge>
-            ))}
+        {/* User info and buttons column */}
+        <div className="profile-info-buttons-column">
+          {/* User name and reputation */}
+          <div className="profile-name-reputation-row">
+            <div className="profile-name-container">
+              <h1 className="profile-name">{user.name}</h1>
+              {user.isVerified && (
+                <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              )}
+              {/* Badges next to name */}
+              {user.badges.slice(0, 2).map((badge) => (
+                <Badge
+                  key={badge}
+                  className="bg-purple/20 text-accent border-accent/30 text-[10px] sm:text-xs"
+                >
+                  <Star className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-0.5 sm:mr-1" />
+                  {badge}
+                </Badge>
+              ))}
+            </div>
+            
+            {/* Reputation */}
+            <div className="profile-reputation-container">
+              <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+              <span className="profile-reputation-text">Репутация</span>
+              <span className="profile-reputation-value">{user.reputation.toLocaleString()}</span>
+            </div>
           </div>
 
-          <p className="profile-username">@{user.username}</p>
-          
-          <Badge variant="outline" className="profile-level-badge">
-            {user.level}
-          </Badge>
-
+          {/* User description */}
           <p className="profile-bio">{user.bio}</p>
 
-          {/* Reputation metric */}
-          <div className="profile-reputation-container">
-            <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-            <span className="profile-reputation-text">Репутация</span>
-            <span className="profile-reputation-value">{user.reputation.toLocaleString()}</span>
+          {/* Buttons row */}
+          <div className="profile-action-buttons">
+            {isOwnProfile ? (
+              <Button className="profile-button">
+                <Settings className="w-4 h-4 mr-2" />
+                Редактировать
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={handleMessage}
+                  className="profile-button"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Написать
+                </Button>
+                <Button
+                  onClick={handleAddFriend}
+                  variant="outline"
+                  className="profile-button profile-button-outline"
+                >
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  В друзья
+                </Button>
+              </>
+            )}
           </div>
         </div>
-      </div>
-
-      {/* Action buttons */}
-      <div className="profile-actions">
-        {isOwnProfile ? (
-          <Button className="profile-button">
-            <Settings className="w-4 h-4 mr-2" />
-            Редактировать
-          </Button>
-        ) : (
-          <>
-            <Button
-              onClick={handleMessage}
-              className="profile-button"
-            >
-              <Send className="w-4 h-4 mr-2" />
-              Написать
-            </Button>
-            <Button
-              onClick={handleAddFriend}
-              variant="outline"
-              className="profile-button profile-button-outline"
-            >
-              <UserPlus className="w-4 h-4 mr-2" />
-              В друзья
-            </Button>
-          </>
-        )}
       </div>
     </section>
   );
