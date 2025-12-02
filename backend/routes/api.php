@@ -50,11 +50,21 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('/categories/{id}', [CategoryController::class, 'update'])->middleware('role:admin');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->middleware('role:admin');
 
-    // Group article routes with both auth and role middleware
-    Route::post('/articles', [ArticleController::class, 'store'])->middleware('auth:sanctum')->middleware('role:admin');
-    Route::put('/articles/{article}', [ArticleController::class, 'update'])->middleware('auth:sanctum')->middleware('role:admin');
-    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->middleware('auth:sanctum')->middleware('role:admin');
-    Route::post('/articles/{article}/like', [ArticleLikeController::class, 'toggle'])->middleware('auth:sanctum')->middleware('role:admin');
+    // Group article routes with role middleware (auth:sanctum already applied to group)
+    Route::post('/articles', [ArticleController::class, 'store'])->middleware('role:admin');
+    Route::post('/articles/{article}', [ArticleController::class, 'update'])->middleware('role:admin');
+    Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->middleware('role:admin');
+    Route::post('/articles/{article}/like', [ArticleLikeController::class, 'toggle'])->middleware('auth:sanctum');
+    
+    // Article comments routes
+    Route::get('/articles/{article}/comments', [ArticleCommentController::class, 'index']);
+    Route::post('/articles/{article}/comments', [ArticleCommentController::class, 'store']);
+    Route::put('/comments/{comment}', [ArticleCommentController::class, 'update']);
+    Route::delete('/comments/{comment}', [ArticleCommentController::class, 'destroy']);
+    Route::post('/comments/{comment}/like', [ArticleCommentController::class, 'toggleLike']);
+    
+    // Forum topic creation (regular users can create topics)
+    Route::post('/forum/topics', [ForumTopicController::class, 'store']);
 
     // Admin manage badges
     Route::post('/admin/badges/{userId}', [UserBadgeController::class, 'assignBadge'])->middleware('role:admin');
@@ -72,6 +82,9 @@ Route::middleware('auth:sanctum')->group(function () {
     // User activities route
     Route::get('/users/{userId}/activities', [UserController::class, 'activityLog']);
     
+    // User statistics route
+    Route::get('/users/{userId}/statistics', [UserController::class, 'getStatistics']);
+    
     // Private messaging
     Route::post('/messages', [PrivateMessageController::class, 'send']);
     Route::get('/messages', [PrivateMessageController::class, 'index']);
@@ -84,11 +97,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/users/{userId}/followers', [UserInteractionController::class, 'followers']);
     Route::get('/users/{userId}/following', [UserInteractionController::class, 'following']);
     
-    // Article comments
-    Route::post('/articles/{article}/comments', [ArticleCommentController::class, 'store']);
-    Route::put('/comments/{comment}', [ArticleCommentController::class, 'update']);
-    Route::delete('/comments/{comment}', [ArticleCommentController::class, 'destroy']);
-    Route::post('/comments/{comment}/like', [ArticleCommentController::class, 'toggleLike']);
 });
 
 // Admin + moderator moderation endpoints

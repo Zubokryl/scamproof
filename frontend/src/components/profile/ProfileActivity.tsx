@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./Profile.css";
+import styles from "./ProfileActivity.module.css";
 import { MessageSquare, FileText, Bell, Clock, ThumbsUp, AlertTriangle, ChevronRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,22 +25,22 @@ interface ProfileActivityProps {
 
 const typeConfig = {
   post: {
-    icon: <FileText className="profile-activity-icon" />,
+    icon: <FileText className={styles.activityIcon} />,
     label: "Топик",
-    color: "text-primary",
-    bgColor: "profile-activity-icon-container post",
+    color: styles.textPrimary,
+    bgColor: styles.bgPrimary10,
   },
   comment: {
-    icon: <MessageSquare className="profile-activity-icon" />,
+    icon: <MessageSquare className={styles.activityIcon} />,
     label: "Комментарий",
-    color: "text-accent",
-    bgColor: "profile-activity-icon-container comment",
+    color: styles.textAccent,
+    bgColor: styles.bgAccent10,
   },
   subscription: {
-    icon: <Bell className="profile-activity-icon" />,
+    icon: <Bell className={styles.activityIcon} />,
     label: "Подписка",
-    color: "text-muted-foreground",
-    bgColor: "profile-activity-icon-container subscription",
+    color: styles.textMutedForeground,
+    bgColor: styles.bgMuted50,
   },
 };
 
@@ -57,39 +57,39 @@ export function ProfileActivity({ activities }: ProfileActivityProps) {
   };
 
   return (
-    <section className="profile-activity">
-      <h2 className="profile-activity-header">
-        <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+    <section className={styles.profileActivity}>
+      <h2 className={styles.activityHeading}>
+        <Clock className={styles.activityIcon} />
         Активность
       </h2>
 
       <Tabs defaultValue="all" onValueChange={setFilter}>
-        <TabsList className="profile-tabs-list">
-          <TabsTrigger
-            value="all"
-            className="profile-tab-trigger"
+        <TabsList className={styles.tabsList}>
+          <TabsTrigger 
+            value="all" 
+            className={styles.tabTrigger}
           >
             Все
           </TabsTrigger>
-          <TabsTrigger
-            value="post"
-            className="profile-tab-trigger"
+          <TabsTrigger 
+            value="post" 
+            className={styles.tabTrigger}
           >
             Темы
           </TabsTrigger>
-          <TabsTrigger
-            value="comment"
-            className="profile-tab-trigger"
+          <TabsTrigger 
+            value="comment" 
+            className={styles.tabTrigger}
           >
             Коммент.
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value={filter} className="mt-0">
-          <div className="profile-activity-list">
+        <TabsContent value={filter} className={styles.tabsContent}>
+          <div className={styles.activityList}>
             {filteredActivities.length === 0 ? (
-              <div className="profile-activity-empty">
-                <AlertTriangle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <div className={styles.emptyState}>
+                <AlertTriangle className={styles.activityIcon} />
                 <p>Нет активности</p>
               </div>
             ) : (
@@ -101,13 +101,13 @@ export function ProfileActivity({ activities }: ProfileActivityProps) {
 
           {/* View all buttons */}
           {filter !== "all" && filteredActivities.length > 0 && (
-            <Button
-              variant="ghost"
-              className="profile-view-all-button"
+            <Button 
+              variant="ghost" 
+              className={styles.viewAllButton}
               onClick={() => handleViewAll(filter)}
             >
               Смотреть все {filter === "post" ? "темы" : "комментарии"}
-              <ChevronRight className="w-4 h-4 ml-1" />
+              <ChevronRight className={styles.activityIcon} />
             </Button>
           )}
         </TabsContent>
@@ -120,35 +120,38 @@ function ActivityCard({ activity, index }: { activity: ActivityItem; index: numb
   const config = typeConfig[activity.type];
 
   return (
-    <article className="profile-activity-card" style={{ animationDelay: `${index * 0.05}s` }}>
-      <div className="profile-activity-content">
-        <div className={config.bgColor}>
+    <article
+      className={styles.activityCard}
+      style={{ animationDelay: `${index * 0.05}s` }}
+    >
+      <div className={styles.activityContent}>
+        <div className={`${styles.iconContainer} ${config.bgColor} ${config.color}`}>
           {config.icon}
         </div>
 
-        <div className="profile-activity-details">
-          <div className="flex items-center gap-2 mb-1 flex-wrap">
-            <Badge variant="outline" className="profile-activity-badge">
+        <div className={styles.activityDetails}>
+          <div className={styles.badgeContainer}>
+            <Badge variant="outline" className={`${styles.activityBadge} ${config.color}`}>
               {config.label}
             </Badge>
           </div>
 
-          <h3 className="profile-activity-title">
+          <h3 className={styles.activityTitle}>
             {activity.title}
           </h3>
 
           {activity.preview && (
-            <p className="profile-activity-preview">{activity.preview}</p>
+            <p className={styles.activityPreview}>{activity.preview}</p>
           )}
 
-          <div className="profile-activity-meta">
-            <span className="flex items-center gap-1">
-              <Clock className="w-3 h-3" />
+          <div className={styles.activityMeta}>
+            <span className={styles.metaItem}>
+              <Clock className={styles.activityIcon} />
               {activity.timestamp}
             </span>
             {activity.likes !== undefined && (
-              <span className="flex items-center gap-1">
-                <ThumbsUp className="w-3 h-3" />
+              <span className={styles.metaItem}>
+                <ThumbsUp className={styles.activityIcon} />
                 {activity.likes}
               </span>
             )}

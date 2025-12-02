@@ -1,13 +1,14 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Article } from '@/lib/types';
+import { useRouter, useSearchParams } from 'next/navigation';
+import api from '@/api/api';
 import ArticlesTab from './ArticlesTab';
 import CategoriesTab from './CategoriesTab';
 import GlossaryTab from './GlossaryTab';
 import ToolsTab from './ToolsTab';
 import ServicesTab from './ServicesTab';
-import api from '@/api/api';
+import CommentModerationTab from './CommentModerationTab';
 import './AdminPanel.css';
 
 // Define extended interfaces
@@ -21,23 +22,23 @@ interface ExtendedCategory {
 }
 
 interface ExtendedArticle {
-  id?: number;
-  title?: string;
-  content?: string;
-  slug?: string;
+  id: number;
+  title: string;
+  content: string;
+  slug: string;
   published_at?: string;
   pdf_url?: string;
   views_count?: number;
   
   // Additional fields from API response
-  category?: {
+  category: {
     id: number;
     name: string;
     slug: string;
   };
   
   // Fields used in the component
-  category_id?: number;
+  category_id: number;
   image_url?: string;
   video_url?: string;
   status?: string;
@@ -45,10 +46,21 @@ interface ExtendedArticle {
 }
 
 const AdminPanel = () => {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [categories, setCategories] = useState<ExtendedCategory[]>([]);
   const [articles, setArticles] = useState<ExtendedArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<'articles' | 'categories' | 'glossary' | 'tools' | 'services'>('articles');
+  const [activeTab, setActiveTab] = useState<'articles' | 'categories' | 'glossary' | 'tools' | 'services' | 'comments'>('articles');
+
+  // Check for edit parameter on component mount
+  useEffect(() => {
+    const editParam = searchParams.get('edit');
+    if (editParam) {
+      // If edit parameter exists, make sure we're on the articles tab
+      setActiveTab('articles');
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -180,19 +192,36 @@ const AdminPanel = () => {
               </svg>
               Сервисы
             </button>
+            <button
+              onClick={() => setActiveTab('comments')}
+              className={`admin-tab-button ${activeTab === 'comments' ? 'active' : ''}`}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="admin-tab-icon" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clipRule="evenodd" />
+              </svg>
+              Комментарии
+            </button>
           </div>
         </div>
 
         {/* Content Area */}
         <div className="admin-content-area">
           {activeTab === 'articles' ? (
-            <ArticlesTab categories={categories} articles={articles} setArticles={setArticles} setCategories={setCategories} />
+            <ArticlesTab 
+              categories={categories} 
+              articles={articles} 
+              setArticles={setArticles} 
+              setCategories={setCategories}
+              editArticleId={searchParams.get('edit') ? parseInt(searchParams.get('edit') || '0', 10) : undefined}
+            />
           ) : activeTab === 'categories' ? (
             <CategoriesTab categories={categories} setCategories={setCategories} />
           ) : activeTab === 'glossary' ? (
             <GlossaryTab />
           ) : activeTab === 'tools' ? (
             <ToolsTab />
+          ) : activeTab === 'comments' ? (
+            <CommentModerationTab />
           ) : (
             <ServicesTab />
           )}

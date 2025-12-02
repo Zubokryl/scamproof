@@ -104,6 +104,32 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
 }
 
+.articleThumbnailContainer {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.articleThumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+  /* Ensure the image doesn't exceed its container */
+  max-width: none;
+  max-height: none;
+}
+
+.articleLink:hover .articleThumbnail {
+  transform: scale(1.05);
+}
+
 .articleTitle {
   font-size: 1.5rem;
   font-weight: 600;

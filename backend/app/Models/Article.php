@@ -24,6 +24,12 @@ class Article extends Model
         'published_at' => 'datetime',
     ];
 
+    // Route key name is now 'id' by default
+    // public function getRouteKeyName()
+    // {
+    //     return 'slug';
+    // }
+
     public function category()
     {
         return $this->belongsTo(\App\Models\Category::class, 'category_id');
@@ -50,12 +56,6 @@ class Article extends Model
                 ->latest('last_activity_at')
                 ->limit(5);
 }
-
-// Route key name is now 'id' by default
-// public function getRouteKeyName()
-// {
-//     return 'slug';
-// }
 
 
     // ===== Скоупы =====

@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->enum('role', ['user', 'moderator', 'admin'])->default('user');
             $table->integer('reputation')->default(0);
-            $table->boolean('trusted_badge')->default(false);
             $table->string('two_factor_secret')->nullable(); // для 2FA
             $table->boolean('two_factor_enabled')->default(false); // включён ли 2FA
             $table->timestamp('last_password_change_at')->nullable();

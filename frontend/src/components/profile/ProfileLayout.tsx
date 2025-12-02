@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import "./Profile.css";
+import styles from "./ProfileLayout.module.css";
 
 interface ProfileLayoutProps {
   header: ReactNode;
@@ -9,24 +9,29 @@ interface ProfileLayoutProps {
 
 export function ProfileLayout({ header, leftColumn, rightColumn }: ProfileLayoutProps) {
   return (
-    <div className="profile-layout">
+    <main className={styles.main}>
+      {/* Background decoration */}
+      <div className={styles.backgroundDecoration}>
+        <div 
+          className={styles.backgroundGradient}
+        />
+        <div className={styles.cyanCircle} />
+        <div className={styles.purpleCircle} />
+      </div>
 
-      {/* HEADER */}
-      {header}
+      <div className={styles.container}>
+        {/* Header section */}
+        <header className={styles.header}>{header}</header>
 
-      {/* GRID */}
-      <div className="profile-grid">
+        {/* Two column layout - stacked on mobile */}
+        <div className={styles.grid}>
+          {/* Left column - stats */}
+          <aside className={styles.leftColumn}>{leftColumn}</aside>
 
-        {/* LEFT COLUMN */}
-        <div className="profile-left-column">
-          {leftColumn}
-        </div>
-
-        {/* RIGHT COLUMN */}
-        <div className="profile-right-column">
-          {rightColumn}
+          {/* Right column - activity feed */}
+          <section className={styles.rightColumn}>{rightColumn}</section>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

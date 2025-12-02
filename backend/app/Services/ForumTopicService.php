@@ -43,7 +43,12 @@ class ForumTopicService
             $topic = ForumTopic::create($payload);
 
             // Инвалидация кэша списков топиков
-            Cache::tags(['forum_topics'])->flush();
+            if (Cache::getStore() instanceof \Illuminate\Cache\TaggableStore) {
+                Cache::tags(['forum_topics'])->flush();
+            } else {
+                // For non-tagging stores, use targeted cache clearing
+                Cache::forget('forum_topics_list');
+            }
 
             return $topic;
         });
@@ -59,7 +64,13 @@ class ForumTopicService
             }
             $topic->save();
 
-            Cache::tags(['forum_topics'])->flush();
+            if (Cache::getStore() instanceof \Illuminate\Cache\TaggableStore) {
+                Cache::tags(['forum_topics'])->flush();
+            } else {
+                // For non-tagging stores, use targeted cache clearing
+                Cache::forget('forum_topics_list');
+                Cache::forget('forum_topic_' . $topic->id);
+            }
 
             return $topic->fresh();
         });
@@ -70,7 +81,13 @@ class ForumTopicService
         return DB::transaction(function () use ($topic, $pinned) {
             $topic->is_pinned = (bool) $pinned;
             $topic->save();
-            Cache::tags(['forum_topics'])->flush();
+            if (Cache::getStore() instanceof \Illuminate\Cache\TaggableStore) {
+                Cache::tags(['forum_topics'])->flush();
+            } else {
+                // For non-tagging stores, use targeted cache clearing
+                Cache::forget('forum_topics_list');
+                Cache::forget('forum_topic_' . $topic->id);
+            }
             return $topic->fresh();
         });
     }
@@ -79,7 +96,13 @@ class ForumTopicService
     {
         DB::transaction(function () use ($topic) {
             $topic->delete();
-            Cache::tags(['forum_topics'])->flush();
+            if (Cache::getStore() instanceof \Illuminate\Cache\TaggableStore) {
+                Cache::tags(['forum_topics'])->flush();
+            } else {
+                // For non-tagging stores, use targeted cache clearing
+                Cache::forget('forum_topics_list');
+                Cache::forget('forum_topic_' . $topic->id);
+            }
         });
     }
 }

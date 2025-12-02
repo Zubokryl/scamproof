@@ -77,7 +77,9 @@ export async function filterFraudArticles(articles: NormalizedArticle[]): Promis
   for (const article of articles) {
     const check = await isLikelyFraud(article);
     if (check.match) {
-      results.push({ ...article, raw: { ...article.raw, filter_reason: check.reason } });
+      // Create a new object with the filter reason added to raw data
+      const rawWithReason = article.raw ? { ...article.raw as any, filter_reason: check.reason } : { filter_reason: check.reason };
+      results.push({ ...article, raw: rawWithReason });
     }
   }
   

@@ -109,7 +109,12 @@ class AuthController extends Controller
         if ($user->hasVerifiedEmail()) {
             return response()->json(['message' => 'Already verified'], 400);
         }
-        $user->sendEmailVerificationNotification();
+        
+        // Check if the method exists before calling it
+        if (method_exists($user, 'sendEmailVerificationNotification')) {
+            $user->sendEmailVerificationNotification();
+        }
+
         return response()->json(['message' => 'Verification sent']);
     }
 

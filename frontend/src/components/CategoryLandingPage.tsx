@@ -16,6 +16,7 @@ interface Article {
   content: string;
   slug: string;
   thumbnail?: string;
+  thumbnail_url?: string;
   video_url?: string;
   pdf_url?: string;
   published_at: string;
@@ -59,6 +60,7 @@ const CategoryLandingPage = () => {
   console.log('Category params:', params);
   console.log('Category slug:', slug);
   
+  
   // Additional debug: try to get slug from window location for static routes
   const [resolvedSlug, setResolvedSlug] = useState<string | null>(null);
   
@@ -80,7 +82,9 @@ const CategoryLandingPage = () => {
     // If we have a slug from useParams, use that
     if (slug) {
       console.log('Using slug from useParams:', slug);
-      setResolvedSlug(slug as string);
+      // Handle case where slug might be an array
+      const slugValue = Array.isArray(slug) ? slug[0] : slug;
+      setResolvedSlug(slugValue as string);
     }
   }, [slug]);
   
@@ -103,6 +107,14 @@ const CategoryLandingPage = () => {
     category,
     error
   });
+
+  // Helper function to strip HTML tags and get plain text
+  const stripHtmlTags = (html: string): string => {
+    if (!html) return '';
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
 
   // Memoized function to fetch category and articles data from the real backend API
   const fetchCategoryData = useCallback(async (pageNum = 1) => {
@@ -328,89 +340,118 @@ const CategoryLandingPage = () => {
               <h1 className={styles.title}>
                 {category?.name || 'Категория'}
               </h1>
-            </div>
-            <p className={styles.description}>
-              {category?.description || 'Описание категории'}
-            </p>
-            <div className={styles.stats}>
-              <span>{category?.articles_count || 0} статей</span>
-              <span>•</span>
-              <span>Обновляется ежедневно</span>
+              <p className={styles.description}>
+                {category?.description || 'Описание категории'}
+              </p>
             </div>
           </motion.div>
+        </div>
 
-          {/* Articles Grid or Empty State */}
-          <div>
-            {articles.length === 0 && !loading ? (
-              <div className={styles.emptyState}>
-                <div className={styles.emptyIcon}>📄</div>
-                <h2 className={styles.emptyTitle}>Статей пока нет</h2>
-                <p className={styles.emptyDescription}>
-                  В этой категории пока нет опубликованных статей. 
-                  Новые материалы появятся в ближайшее время.
-                </p>
-              </div>
-            ) : (
+        {/* Articles Grid */}
+        <div className="container mx-auto px-4 py-8">
+          {articles.length === 0 && !loading ? (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIcon}>📰</div>
+              <h3 className={styles.emptyTitle}>Статей пока нет</h3>
+              <p className={styles.emptyText}>В этой категории пока нет опубликованных статей.</p>
+            </div>
+          ) : (
+            <>
               <div className={styles.articlesGrid}>
                 {articles.map((article, index) => (
-                  <motion.article
+                  <motion.div
                     key={article.id}
+                    ref={index === articles.length - 1 ? lastArticleRef : null}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
                     className={styles.articleCard}
                   >
                     <Link href={`/article/${article.id}`} className={styles.articleLink}>
-                      <h2 className={styles.articleTitle}>{article.title}</h2>
-                      <p className={styles.articleContent}>{article.content}</p>
+                      <div className={styles.articleImageWrapper}>
+                        {article.thumbnail_url ? (
+                          <img 
+                            src={article.thumbnail_url} 
+                            alt={article.title}
+                            className={styles.articleImage}
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                              target.nextSibling?.addEventListener('load', () => {
+                                target.style.display = 'block';
+                              });
+                            }}
+                          />
+                        ) : (
+                          <div className={styles.placeholderImage}>
+                            <span className={styles.placeholderIcon}>📄</span>
+                          </div>
+                        )}
+                        {article.video_url && (
+                          <div className={styles.videoIndicator}>
+                            <span className={styles.videoIcon}>▶️</span>
+                          </div>
+                        )}
+                      </div>
                       
-                      <div className={styles.metaInfo}>
-                        <div className={styles.counters}>
-                          <div className={styles.counterItem}>
-                            <Eye size={14} />
-                            <span>{article.views_count}</span>
+                      <div className={styles.articleContent}>
+                        <h2 className={styles.articleTitle}>
+                          {article.title}
+                        </h2>
+                        
+                        <p className={styles.articleExcerpt}>
+                          {stripHtmlTags(article.content).substring(0, 120)}
+                          {stripHtmlTags(article.content).length > 120 ? '...' : ''}
+                        </p>
+                        
+                        <div className={styles.articleMeta}>
+                          <div className={styles.metaItem}>
+                            <Clock className={styles.metaIcon} size={14} />
+                            <span className={styles.metaText}>
+                              {new Date(article.published_at).toLocaleDateString('ru-RU')}
+                            </span>
                           </div>
-                          <div className={styles.counterItem}>
-                            <ThumbsUp size={14} />
-                            <span>{article.likes_count}</span>
+                          
+                          <div className={styles.metaItem}>
+                            <ThumbsUp className={styles.metaIcon} size={14} />
+                            <span className={styles.metaText}>
+                              {article.likes_count}
+                            </span>
                           </div>
-                          <div className={styles.counterItem}>
-                            <MessageCircle size={14} />
-                            <span>{article.comments_count}</span>
+                          
+                          <div className={styles.metaItem}>
+                            <MessageCircle className={styles.metaIcon} size={14} />
+                            <span className={styles.metaText}>
+                              {article.comments_count}
+                            </span>
                           </div>
-                        </div>
-                        <div className={styles.counterItem}>
-                          <Clock size={14} />
-                          <span>{new Date(article.published_at).toLocaleDateString()}</span>
                         </div>
                       </div>
                     </Link>
-                  </motion.article>
+                  </motion.div>
                 ))}
               </div>
-            )}
-          </div>
 
-          {/* Loading indicator for more articles */}
-          {loading && page !== 1 && (
-            <div className={styles.loadingContainer}>
-              <div className={styles.spinner}></div>
-            </div>
-          )}
+              {/* Loading indicator for pagination */}
+              {loading && page > 1 && (
+                <div className={styles.paginationLoader}>
+                  <div className={styles.loadingSpinner}></div>
+                  <p>Загрузка еще статей...</p>
+                </div>
+              )}
 
-          {/* Ref element for infinite scroll */}
-          <div ref={lastArticleRef} className="h-1 w-full"></div>
-
-          {!hasMore && articles.length > 0 && (
-            <div className={styles.endMessage}>
-              <p>Вы достигли конца статей</p>
-            </div>
+              {/* End of results indicator */}
+              {!hasMore && articles.length > 0 && (
+                <div className={styles.endOfResults}>
+                  <p>🎉 Вы достигли конца списка</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>
     </LayoutWithNavAndFooter>
   );
 };
-
 
 export default CategoryLandingPage;

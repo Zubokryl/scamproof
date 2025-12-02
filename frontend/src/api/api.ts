@@ -22,6 +22,13 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
+    
+    // For file uploads, ensure we're using multipart/form-data
+    if (config.data instanceof FormData) {
+      // Remove Content-Type header to let browser set it with boundary
+      delete config.headers['Content-Type'];
+    }
+    
     return config;
   },
   (error) => {

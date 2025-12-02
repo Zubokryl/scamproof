@@ -5,8 +5,9 @@ namespace App\Models;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, Notifiable;
 
@@ -15,7 +16,7 @@ class User extends Authenticatable
         'trusted_badge', 'two_factor_secret', 'two_factor_enabled',
         'last_password_change_at', 'account_status', 'failed_login_attempts',
         'bio', 'social_links', 'timezone', 'locale', 'notification_settings',
-        'favorites', 'blocked_users'
+        'favorites', 'blocked_users', 'last_active'
     ];
 
     protected $hidden = [
@@ -30,7 +31,8 @@ class User extends Authenticatable
         'blocked_users' => 'array',
         'two_factor_enabled' => 'boolean',
         'trusted_badge' => 'boolean',
-        'remember_token' => 'string'
+        'remember_token' => 'string',
+        'last_active' => 'datetime'
     ];
 
     // Связи

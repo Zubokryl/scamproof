@@ -10,6 +10,7 @@ use App\Models\Article;
 use App\Models\ArticleComment;
 use App\Services\CommentService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ArticleCommentController extends Controller
 {
@@ -28,7 +29,7 @@ class ArticleCommentController extends Controller
     {
         $query = $article->comments()->with('user:id,name');
 
-        if (! (auth()->check() && in_array(auth()->user()->role, ['admin', 'moderator']))) {
+        if (! ($request->user() && in_array($request->user()->role, ['admin', 'moderator']))) {
             $query->approved();
         }
 
@@ -114,5 +115,23 @@ class ArticleCommentController extends Controller
         ];
 
         return response()->json($stats);
+    }
+
+    public function toggleLike(Request $request, ArticleComment $comment) {
+        $like = \App\Models\CommentLike::where('comment_id', $comment->id)
+            ->where('user_id', $request->user()->id)
+            ->first();
+
+        if ($like) {
+            $like->delete();
+            return response()->json(['liked' => false]);
+        }
+
+        \App\Models\CommentLike::create([
+            'comment_id' => $comment->id,
+            'user_id' => $request->user()->id,
+        ]);
+
+        return response()->json(['liked' => true]);
     }
 }

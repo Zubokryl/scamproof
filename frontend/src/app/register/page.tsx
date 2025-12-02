@@ -33,8 +33,8 @@ const RegisterPage = () => {
       setError('Введите корректный email');
       return;
     }
-    if (password.length < 6) {
-      setError('Пароль должен быть не меньше 6 символов');
+    if (password.length < 8) {
+      setError('Пароль должен быть не меньше 8 символов');
       return;
     }
     if (password !== passwordConfirm) {
@@ -109,37 +109,49 @@ const RegisterPage = () => {
                   {error && <p className="register-error">{error}</p>}
                   {success && <p className="register-success">{success}</p>}
 
-                  <input
-                    type="text"
-                    placeholder="Имя (обязательно)"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="register-input"
-                  />
+                  <div className="input-group">
+                    <input
+                      type="text"
+                      placeholder="Имя (обязательно)"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="register-input"
+                    />
+                    <p className="input-hint">Обязательное поле. Используйте настоящее имя.</p>
+                  </div>
 
-                  <input
-                    type="email"
-                    placeholder="Email (например, test@mail.com)"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="register-input"
-                  />
+                  <div className="input-group">
+                    <input
+                      type="email"
+                      placeholder="Email (например, test@mail.com)"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      className="register-input"
+                    />
+                    <p className="input-hint">Обязательное поле. Пример: user@example.com</p>
+                  </div>
 
-                  <input
-                    type="password"
-                    placeholder="Пароль (не менее 6 символов)"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="register-input"
-                  />
+                  <div className="input-group">
+                    <input
+                      type="password"
+                      placeholder="Пароль (не менее 8 символов)"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className="register-input"
+                    />
+                    <p className="input-hint">Минимум 8 символов. Используйте буквы, цифры и специальные символы для надежности.</p>
+                  </div>
 
-                  <input
-                    type="password"
-                    placeholder="Повторите пароль"
-                    value={passwordConfirm}
-                    onChange={(e) => setPasswordConfirm(e.target.value)}
-                    className="register-input"
-                  />
+                  <div className="input-group">
+                    <input
+                      type="password"
+                      placeholder="Повторите пароль"
+                      value={passwordConfirm}
+                      onChange={(e) => setPasswordConfirm(e.target.value)}
+                      className="register-input"
+                    />
+                    <p className="input-hint">Повторите пароль для подтверждения.</p>
+                  </div>
 
                   <button type="submit" className="register-button">Зарегистрироваться</button>
                 </form>

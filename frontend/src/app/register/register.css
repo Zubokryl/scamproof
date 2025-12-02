@@ -954,3 +954,15 @@
     font-size: 2.2rem;
   }
 }
+
+/* Input hint styles */
+.input-group {
+  margin-bottom: 1rem;
+}
+
+.input-hint {
+  font-size: 0.8rem;
+  color: #a0aec0;
+  margin-top: 0.25rem;
+  margin-left: 0.25rem;
+}

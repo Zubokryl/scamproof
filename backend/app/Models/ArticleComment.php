@@ -33,6 +33,11 @@ class ArticleComment extends Model
         return $this->belongsTo(User::class, 'moderated_by');
     }
 
+    public function likes()
+    {
+        return $this->hasMany(CommentLike::class, 'comment_id');
+    }
+
     // ===== СКОУПЫ =====
     
     // Только одобренные комментарии

@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
 import Image from 'next/image';
 import api from '@/api/api';
 import { Category } from '@/lib/types';
 import './ArticlesTab.css'; // локальные стили
-import QuillEditor from './QuillEditor';
+import SunEditorClient from './SunEditorClient';
 
 interface ExtendedArticle {
   id: number;
@@ -33,6 +34,7 @@ interface ArticlesTabProps {
   articles: ExtendedArticle[];
   setArticles: React.Dispatch<React.SetStateAction<ExtendedArticle[]>>;
   setCategories: React.Dispatch<React.SetStateAction<Category[]>>;
+  editArticleId?: number;
 }
 
 // Иконки
@@ -41,7 +43,8 @@ const EditIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-
 const TrashIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" /></svg>;
 const FileTextIcon = () => <svg xmlns="http://www.w3.org/2000/svg" className="articles-empty-icon" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 002 2H6a2 2 0 002-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7a1 1 0 00-1-1z" clipRule="evenodd" /></svg>;
 
-const ArticlesTab: React.FC<ArticlesTabProps> = ({ categories, articles, setArticles }) => {
+const ArticlesTab: React.FC<ArticlesTabProps> = ({ categories, articles, setArticles, editArticleId }) => {
+  const router = useRouter();
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [editingArticle, setEditingArticle] = useState<ExtendedArticle | null>(null);
   const [formData, setFormData] = useState({
@@ -55,6 +58,34 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ categories, articles, setArti
   const [previewVideo, setPreviewVideo] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
+
+  const handleEdit = (article: ExtendedArticle) => {
+    setEditingArticle(article);
+    setFormData({
+      title: article.title || '',
+      content: article.content || '',
+      category_id: article.category_id?.toString() || '',
+      thumbnail: null,
+      video: null
+    });
+    setPreviewImage(article.image_url || null);
+    setPreviewVideo(article.video_url || null);
+    setIsFormVisible(true);
+  };
+
+  // Effect to handle automatic editing when editArticleId is provided
+  useEffect(() => {
+    if (editArticleId && articles.length > 0) {
+      const articleToEdit = articles.find(article => article.id === editArticleId);
+      if (articleToEdit) {
+        // Use setTimeout to defer the state update to the next render cycle
+        const timer = setTimeout(() => {
+          handleEdit(articleToEdit);
+        }, 0);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [editArticleId, articles]);
 
   const articlesPerPage = 10;
   const safeArticles = Array.isArray(articles) ? articles : [];
@@ -75,20 +106,6 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ categories, articles, setArti
     setIsFormVisible(true);
   };
 
-  const handleEdit = (article: ExtendedArticle) => {
-    setEditingArticle(article);
-    setFormData({
-      title: article.title || '',
-      content: article.content || '',
-      category_id: article.category_id?.toString() || '',
-      thumbnail: null,
-      video: null
-    });
-    setPreviewImage(article.image_url || null);
-    setPreviewVideo(article.video_url || null);
-    setIsFormVisible(true);
-  };
-
   const handleDelete = async (id: number) => {
     if (!window.confirm('Вы уверены, что хотите удалить эту статью?')) return;
     try {
@@ -101,13 +118,25 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ categories, articles, setArti
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'thumbnail' | 'video') => {
     const file = e.target.files?.[0];
-    if (!file) return;
+    console.log(`=== FILE SELECTED FOR ${type.toUpperCase()} ===`);
+    console.log(`File details:`, file);
+    if (file) {
+      console.log(`File name: ${file.name}`);
+      console.log(`File size: ${file.size}`);
+      console.log(`File type: ${file.type}`);
+      console.log(`File lastModified: ${file.lastModified}`);
+    }
+    if (!file) {
+      console.log(`No file selected for ${type}`);
+      return;
+    }
 
     setFormData(prev => ({ ...prev, [type]: file }));
 
     const reader = new FileReader();
     reader.onload = (e: ProgressEvent<FileReader>) => {
       const result = e.target?.result as string;
+      console.log(`File preview for ${type}:`, result);
       if (type === 'thumbnail') {
         setPreviewImage(result);
       } else {
@@ -124,39 +153,91 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ categories, articles, setArti
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('=== ARTICLE SUBMIT STARTED ===');
+    console.log('Form data:', formData);
+    console.log('Editing article:', editingArticle);
+    
     try {
       const data = new FormData();
       data.append('title', formData.title);
       data.append('content', formData.content);
       data.append('category_id', formData.category_id);
 
-      if (formData.thumbnail) data.append('thumbnail', formData.thumbnail);
-      if (formData.video) data.append('video', formData.video);
+      console.log('Appending form fields to FormData:');
+      console.log('- title:', formData.title);
+      console.log('- content:', formData.content);
+      console.log('- category_id:', formData.category_id);
+
+      if (formData.thumbnail) {
+        console.log('Appending thumbnail to FormData:', formData.thumbnail);
+        console.log('Thumbnail file details - name:', formData.thumbnail.name, 'size:', formData.thumbnail.size, 'type:', formData.thumbnail.type);
+        data.append('thumbnail', formData.thumbnail, formData.thumbnail.name);
+      } else {
+        console.log('No thumbnail to append');
+      }
+      
+      if (formData.video) {
+        console.log('Appending video to FormData:', formData.video);
+        console.log('Video file details - name:', formData.video.name, 'size:', formData.video.size, 'type:', formData.video.type);
+        data.append('video', formData.video, formData.video.name);
+      } else {
+        console.log('No video to append');
+      }
+
+      // Log the FormData contents for debugging
+      console.log('=== FINAL FORMDATA CONTENTS ===');
+      for (const [key, value] of data.entries()) {
+        console.log(key, value);
+        if (value instanceof File) {
+          console.log(`  File details for ${key}: name=${value.name}, size=${value.size}, type=${value.type}`);
+        }
+      }
 
       let res;
       if (editingArticle) {
-        data.append('_method', 'PUT');
+        console.log(`Making POST request to update article ${editingArticle.id}`);
+        console.log('Request URL:', `/articles/${editingArticle.id}`);
         res = await api.post(`/articles/${editingArticle.id}`, data);
       } else {
+        console.log('Making POST request to create new article');
+        console.log('Request URL:', '/articles');
         res = await api.post('/articles', data);
       }
 
+      console.log('=== RESPONSE RECEIVED ===');
+      console.log('Response status:', res.status);
+      console.log('Response data:', res.data);
+      console.log('Response headers:', res.headers);
+
       setArticles(prev => editingArticle ? prev.map(a => a.id === editingArticle.id ? res.data : a) : [res.data, ...prev]);
 
+      // Reset form state
       setFormData({ title: '', content: '', category_id: '', thumbnail: null, video: null });
       setPreviewImage(null);
       setPreviewVideo(null);
       setEditingArticle(null);
       setIsFormVisible(false);
 
-      alert(editingArticle ? 'Статья обновлена!' : 'Статья создана!');
+      if (editingArticle) {
+        // Redirect to the updated article page
+        alert('Статья обновлена!');
+        // Get the category slug from the updated article data
+        const categorySlug = res.data.category?.slug || res.data.category_slug || 'unknown';
+        router.push(`/article/${res.data.slug || res.data.id}`);
+      } else {
+        alert('Статья создана!');
+      }
     } catch (err: unknown) {
+      console.error('=== ERROR DURING SUBMIT ===');
+      console.error('Full error details:', err);
       if (err instanceof Error) {
+        console.error('Error message:', err.message);
+        console.error('Error stack:', err.stack);
         alert(err.message || 'Ошибка сохранения статьи');
       } else {
         alert('Ошибка сохранения статьи');
       }
-      console.error(err);
+      console.error('Error uploading files:', err);
     }
   };
 
@@ -220,7 +301,7 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ categories, articles, setArti
             <div className="articles-form-group">
               <label className="articles-form-label">Содержание</label>
               
-              <QuillEditor
+              <SunEditorClient
                 value={formData.content}
                 onChange={(value: string) => setFormData(prev => ({ ...prev, content: value }))}
               />
@@ -371,16 +452,27 @@ const ArticlesTab: React.FC<ArticlesTabProps> = ({ categories, articles, setArti
                       <button 
                         className="articles-action-button articles-edit-button"
                         onClick={() => {
-                          article.id && handleEdit(article);
+                          console.log('Edit button clicked for article:', article);
+                          if (article.id) {
+                            handleEdit(article);
+                          } else {
+                            console.error('Article has no ID:', article);
+                          }
                         }}
-                        disabled={!article.id}
                       >
                         <EditIcon />
                         Редактировать
                       </button>
                       <button 
                         className="articles-action-button articles-delete-button"
-                        onClick={() => article.id && handleDelete(article.id)}
+                        onClick={() => {
+                          console.log('Delete button clicked for article:', article);
+                          if (article.id) {
+                            handleDelete(article.id);
+                          } else {
+                            console.error('Article has no ID for deletion:', article);
+                          }
+                        }}
                       >
                         <TrashIcon />
                         Удалить

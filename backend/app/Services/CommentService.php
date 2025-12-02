@@ -21,7 +21,11 @@ class CommentService
                 'content' => $data['content'],
                 'status' => 'pending',
             ]);
-            Cache::tags(['articles', 'comments'])->flush();
+            
+            // Use cache forget instead of tags for drivers that don't support tagging
+            Cache::forget('article_comments_' . $article->id);
+            Cache::forget('articles_with_comments_count');
+            
             return $comment;
         });
     }
@@ -31,9 +35,14 @@ class CommentService
      */
     public function delete(ArticleComment $comment): void
     {
+        $articleId = $comment->article_id;
+        
         DB::transaction(function () use ($comment) {
             $comment->delete();
-            Cache::tags(['articles', 'comments'])->flush();
+            
+            // Use cache forget instead of tags for drivers that don't support tagging
+            Cache::forget('article_comments_' . $articleId);
+            Cache::forget('articles_with_comments_count');
         });
     }
 
@@ -42,7 +51,9 @@ class CommentService
      */
     public function approve(ArticleComment $comment, int $moderatorId, ?string $note = null): ArticleComment
     {
-        return DB::transaction(function () use ($comment, $moderatorId, $note) {
+        $articleId = $comment->article_id;
+        
+        return DB::transaction(function () use ($comment, $moderatorId, $note, $articleId) {
             $comment->status = 'approved';
             $comment->moderated_by = $moderatorId;
             $comment->moderated_at = now();
@@ -50,7 +61,11 @@ class CommentService
                 $comment->moderation_note = $note;
             }
             $comment->save();
-            Cache::tags(['articles', 'comments'])->flush();
+            
+            // Use cache forget instead of tags for drivers that don't support tagging
+            Cache::forget('article_comments_' . $articleId);
+            Cache::forget('articles_with_comments_count');
+            
             return $comment->fresh();
         });
     }
@@ -60,13 +75,19 @@ class CommentService
      */
     public function reject(ArticleComment $comment, int $moderatorId, string $note): ArticleComment
     {
-        return DB::transaction(function () use ($comment, $moderatorId, $note) {
+        $articleId = $comment->article_id;
+        
+        return DB::transaction(function () use ($comment, $moderatorId, $note, $articleId) {
             $comment->status = 'rejected';
             $comment->moderated_by = $moderatorId;
             $comment->moderated_at = now();
             $comment->moderation_note = $note;
             $comment->save();
-            Cache::tags(['articles', 'comments'])->flush();
+            
+            // Use cache forget instead of tags for drivers that don't support tagging
+            Cache::forget('article_comments_' . $articleId);
+            Cache::forget('articles_with_comments_count');
+            
             return $comment->fresh();
         });
     }

@@ -12,6 +12,7 @@ import Navigation from "@/components/Navigation";
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileActivity } from "@/components/profile/ProfileActivity";
 import { ProfileLayout } from "@/components/profile/ProfileLayout";
+import { ProfileStats } from "@/components/profile/ProfileStats";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -26,11 +27,36 @@ interface UserProfile {
   trusted_badge: boolean;
   profile_photo_url?: string;
   social_links?: string[];
+  last_active?: string;
 }
+
+interface UserStats {
+  postsCreated: number;
+  commentsWritten: number;
+  peopleHelped: number;
+}
+
+// Function to determine user status based on last_active timestamp
+const getUserStatus = (lastActive?: string): "online" | "offline" | "helping" => {
+  // If no last_active timestamp, default to offline
+  if (!lastActive) return "offline";
+  
+  const lastActiveTime = new Date(lastActive);
+  const now = new Date();
+  const diffInMinutes = Math.floor((now.getTime() - lastActiveTime.getTime()) / (1000 * 60));
+  
+  // User is online if they were active in the last 15 minutes
+  if (diffInMinutes <= 15) {
+    return "online";
+  }
+  
+  return "offline";
+};
 
 export default function ProfilePage() {
   const { user, loading } = useAuth();
   const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [stats, setStats] = useState<UserStats | null>(null);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
   
@@ -44,8 +70,17 @@ export default function ProfilePage() {
       return;
     }
 
+    // Fetch user profile
     api.get("/users/profile")
-      .then(res => setProfile(res.data))
+      .then(res => {
+        setProfile(res.data);
+        
+        // Fetch user statistics
+        return api.get(`/users/${res.data.id}/statistics`);
+      })
+      .then(res => {
+        setStats(res.data);
+      })
       .catch(err => {
         setError("Ошибка при загрузке профиля");
         console.error(err);
@@ -87,7 +122,7 @@ export default function ProfilePage() {
     }
   }, [profile]);
 
- if (loading || !profile) {
+ if (loading || !profile || !stats) {
     return (
       <div className="auth-layout">
         <Navigation />
@@ -132,59 +167,20 @@ export default function ProfilePage() {
     reputation: profile.reputation,
     level: profile.trusted_badge ? "Доверенный пользователь" : "Новичок",
     isVerified: profile.trusted_badge,
-    status: "online" as const,
     badges: ["Надёжный", "Активный"],
+    last_active: profile.last_active,
+    status: getUserStatus(profile.last_active),
   };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Navigation />
 
-      <main className="max-w-6xl mx-auto px-4 py-6">
-        {/* --- ГЛАВНЫЙ LAYOUT ПРОФИЛЯ --- */}
-        <ProfileLayout
-          header={<ProfileHeader user={headerData} isOwnProfile={true} />}
-          leftColumn={
-            <section className="glass-card p-4 sm:p-6 cyber-border animate-fade-in">
-              <h2 className="font-semibold text-lg mb-3 gradient-text">О пользователе</h2>
-              <p className="text-muted-foreground text-sm mb-4">{profile.bio || "Пользователь ещё не заполнил описание."}</p>
-
-              <h3 className="font-semibold text-sm mb-2">Социальные ссылки</h3>
-              {profile.social_links && profile.social_links.length > 0 ? (
-                <ul className="space-y-1">
-                  {profile.social_links.map((link, i) => (
-                    <li key={i}>
-                      <a
-                        href={link.startsWith('http') ? link : `https://${link}`}
-                        className="text-primary hover:underline break-all"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {link}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-muted-foreground text-xs">Нет соц-сетей</p>
-              )}
-
-              <div className="mt-4">
-                <h3 className="font-semibold text-sm mb-2">Роль</h3>
-                <Badge variant="outline" className="border-primary/50 text-primary">
-                  {profile.role}
-                </Badge>
-              </div>
-              
-              <div className="mt-4">
-                <h3 className="font-semibold text-sm mb-2">Контактная информация</h3>
-                <p className="text-xs text-muted-foreground break-all">{profile.email}</p>
-              </div>
-            </section>
-          }
-          rightColumn={<ProfileActivity activities={activities} />}
-        />
-      </main>
+      <ProfileLayout
+        header={<ProfileHeader user={headerData} isOwnProfile={true} />}
+        leftColumn={<ProfileStats stats={stats} />}
+        rightColumn={<ProfileActivity activities={activities} />}
+      />
     </div>
   );
 }

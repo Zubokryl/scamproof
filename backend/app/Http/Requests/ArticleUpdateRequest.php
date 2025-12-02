@@ -15,9 +15,13 @@ class ArticleUpdateRequest extends FormRequest
 
     public function rules()
     {
-        $articleId = $this->route('article') instanceof \App\Models\Article
-            ? $this->route('article')->id
-            : $this->route('article');
+        // Get the article ID from the route parameter
+        $articleId = $this->route('article');
+        
+        // If it's an Article model instance, get the ID
+        if ($articleId instanceof \App\Models\Article) {
+            $articleId = $articleId->id;
+        }
 
         Log::info('ArticleUpdateRequest rules debug', [
             'article_id' => $articleId,

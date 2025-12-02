@@ -12,7 +12,7 @@ class CommentResource extends JsonResource
             'id' => $this->id,
             'content' => $this->content,
             'status' => $this->status,
-            'user' => new \App\Http\Resources\UserResource($this->whenLoaded('user')),
+            'user' => new \App\Http\Resources\UserResource($this->user),
             'article' => $this->whenLoaded('article', function () {
                 return [
                     'id' => $this->article->id,
@@ -24,6 +24,12 @@ class CommentResource extends JsonResource
             'moderation_note' => $this->moderation_note,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'likes_count' => $this->likes()->count(),
+            'user_has_liked' => $this->when($request->user(), function () use ($request) {
+                return \App\Models\CommentLike::where('comment_id', $this->id)
+                    ->where('user_id', $request->user()->id)
+                    ->exists();
+            }),
         ];
     }
 }

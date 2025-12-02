@@ -4,6 +4,8 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Models\Article;
+use App\Models\ArticleComment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -62,6 +64,7 @@ class UserController extends Controller
             'blocked_users' => $user->blocked_users ?? [],
             'notification_settings' => $user->notification_settings ?? [],
             'profile_photo_url' => $this->getAvatarUrl($user->avatar),
+            'last_active' => $user->last_active, // Add last_active field
         ]);
     }
 
@@ -187,5 +190,39 @@ public function userBadges($id)
     $badges = \App\Models\UserBadge::where('user_id', $id)->get();
     return response()->json($badges);
 }
+
+    // Method to get user statistics
+    public function getStatistics($id)
+    {
+        $user = Auth::user();
+        
+        // Users can only view their own statistics, or admins can view any
+        if ($user->id != $id && $user->role !== 'admin') {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        
+        // Get the user we're fetching stats for
+        $targetUser = User::findOrFail($id);
+        
+        // Calculate statistics
+        $postsCreated = Article::where('created_by', $targetUser->id)->count();
+        $commentsWritten = ArticleComment::where('user_id', $targetUser->id)->count();
+        
+        // For people helped, we'll count unique users who have replied to the same articles
+        // where this user has commented (as a simple proxy for helping others)
+        $peopleHelped = ArticleComment::whereIn('article_id', function($query) use ($targetUser) {
+            $query->select('article_id')
+                  ->from('article_comments')
+                  ->where('user_id', $targetUser->id);
+        })->where('user_id', '!=', $targetUser->id)
+          ->distinct('user_id')
+          ->count('user_id');
+        
+        return response()->json([
+            'postsCreated' => $postsCreated,
+            'commentsWritten' => $commentsWritten,
+            'peopleHelped' => $peopleHelped
+        ]);
+    }
 
 }

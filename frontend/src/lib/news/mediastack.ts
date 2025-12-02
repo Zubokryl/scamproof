@@ -1,4 +1,4 @@
-import { NormalizedArticle } from '@/lib/news/types';
+import { NormalizedArticle, RawSource } from '@/lib/news/types';
 
 interface MediastackEntry {
   title: string;
@@ -27,7 +27,7 @@ export async function fetchFromMediastack(key: string, query: string, limit: num
 
   return data.data.map((item) => ({
     id: `${item.url}-${item.published_at}`,
-    source: item.source || 'mediastack',
+    source: 'mediastack' as RawSource,
     url: item.url,
     title: item.title,
     description: item.description || '',

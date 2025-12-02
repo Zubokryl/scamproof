@@ -4,7 +4,7 @@ import ArticlePage from '@/components/ArticlePage';
 import LayoutWithNavAndFooter from '@/app/layout-with-nav-footer';
 import { useEffect } from 'react';
 
-const ArticleSlugPage = () => {
+const ArticleIdPage = () => {
   return (
     <LayoutWithNavAndFooter>
       <ArticlePage />
@@ -12,4 +12,4 @@ const ArticleSlugPage = () => {
   );
 };
 
-export default ArticleSlugPage;
+export default ArticleIdPage;

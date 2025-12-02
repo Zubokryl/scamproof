@@ -1,5 +1,5 @@
 import { FileText, MessageSquare, Users } from "lucide-react";
-import "./Profile.css";
+import styles from "./ProfileStats.module.css";
 
 interface ProfileStatsProps {
   stats: {
@@ -11,26 +11,26 @@ interface ProfileStatsProps {
 
 export function ProfileStats({ stats }: ProfileStatsProps) {
   return (
-    <section className="profile-stats">
-      <h2 className="profile-stats-title">
+    <section className={styles.profileStats}>
+      <h2 className={styles.statsHeading}>
         Статистика
       </h2>
 
-      <div className="profile-stats-grid">
-        <StatCard
-          icon={<FileText className="profile-stat-icon" />}
-          label="Тем"
-          value={stats.postsCreated}
+      <div className={styles.statsGrid}>
+        <StatCard 
+          icon={<FileText className={styles.statIcon} />} 
+          label="Тем" 
+          value={stats.postsCreated} 
         />
-        <StatCard
-          icon={<MessageSquare className="profile-stat-icon" />}
-          label="Коммент."
-          value={stats.commentsWritten}
+        <StatCard 
+          icon={<MessageSquare className={styles.statIcon} />} 
+          label="Коммент." 
+          value={stats.commentsWritten} 
         />
-        <StatCard
-          icon={<Users className="profile-stat-icon" />}
-          label="Помог"
-          value={stats.peopleHelped}
+        <StatCard 
+          icon={<Users className={styles.statIcon} />} 
+          label="Помог" 
+          value={stats.peopleHelped} 
         />
       </div>
     </section>
@@ -39,10 +39,10 @@ export function ProfileStats({ stats }: ProfileStatsProps) {
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: number }) {
   return (
-    <div className="profile-stat-card">
-      <div className="profile-stat-icon">{icon}</div>
-      <div className="profile-stat-value">{value}</div>
-      <div className="profile-stat-label">{label}</div>
+    <div className={styles.statCard}>
+      <div className={styles.statIconWrapper}>{icon}</div>
+      <div className={styles.statValue}>{value}</div>
+      <div className={styles.statLabel}>{label}</div>
     </div>
   );
 }

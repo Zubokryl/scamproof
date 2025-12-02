@@ -16,7 +16,14 @@ class CategoryService
         return DB::transaction(function () use ($data) {
             $category = Category::create($data);
             // Инвалидация кэша: единая точка очистки для категорий/страниц
-            Cache::tags(['categories', 'articles'])->flush();
+            if (Cache::getStore() instanceof \Illuminate\Cache\TaggableStore) {
+                Cache::tags(['categories', 'articles'])->flush();
+            } else {
+                // For non-tagging stores, use targeted cache clearing
+                Cache::forget('categories_list');
+                Cache::forget('articles_list');
+                Cache::forget('articles_with_comments_count');
+            }
             return $category;
         });
     }
@@ -28,7 +35,15 @@ class CategoryService
     {
         return DB::transaction(function () use ($category, $data) {
             $category->update($data);
-            Cache::tags(['categories', 'articles'])->flush();
+            if (Cache::getStore() instanceof \Illuminate\Cache\TaggableStore) {
+                Cache::tags(['categories', 'articles'])->flush();
+            } else {
+                // For non-tagging stores, use targeted cache clearing
+                Cache::forget('categories_list');
+                Cache::forget('articles_list');
+                Cache::forget('articles_with_comments_count');
+                Cache::forget('category_' . $category->id);
+            }
             return $category->fresh();
         });
     }
@@ -40,7 +55,15 @@ class CategoryService
     {
         DB::transaction(function () use ($category) {
             $category->delete();
-            Cache::tags(['categories', 'articles'])->flush();
+            if (Cache::getStore() instanceof \Illuminate\Cache\TaggableStore) {
+                Cache::tags(['categories', 'articles'])->flush();
+            } else {
+                // For non-tagging stores, use targeted cache clearing
+                Cache::forget('categories_list');
+                Cache::forget('articles_list');
+                Cache::forget('articles_with_comments_count');
+                Cache::forget('category_' . $category->id);
+            }
         });
     }
 }

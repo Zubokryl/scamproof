@@ -13,6 +13,7 @@ export interface Article {
   published_at?: string;
   pdf_url?: string;
   views_count?: number;
+  thumbnail_url?: string;
 }
 
 export interface FormData {

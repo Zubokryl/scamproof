@@ -87,15 +87,26 @@ class ArticleController extends Controller
         // Authorize admin
         $this->authorizeAdmin($request);
         
+        Log::info('=== ARTICLE CONTROLLER STORE METHOD CALLED ===');
         Log::info('Article store request received', [
             'user' => $request->user() ? $request->user()->toArray() : null,
             'validated_data' => $request->validated(),
-            'all_data' => $request->all()
+            'all_data' => $request->all(),
+            'has_thumbnail' => $request->hasFile('thumbnail'),
+            'has_video' => $request->hasFile('video'),
+            'content_type' => $request->header('Content-Type'),
+            'request_method' => $request->method(),
         ]);
         
         try {
             $article = $this->service->create($request);
             $article->load(['category', 'author']);
+
+            Log::info('Article created successfully in controller', [
+                'article_id' => $article->id,
+                'article_thumbnail' => $article->thumbnail,
+                'article_video_url' => $article->video_url
+            ]);
 
             return new ArticleResource($article);
         } catch (\Exception $e) {
@@ -111,11 +122,23 @@ class ArticleController extends Controller
     /**
      * GET /articles/{article}
      */
-    public function show(Article $article)
+    public function show($identifier)
     {
         Log::info('Article show method called', [
+            'identifier' => $identifier,
+            'type' => is_numeric($identifier) ? 'id' : 'slug'
+        ]);
+        
+        // Handle both ID and slug
+        $article = is_numeric($identifier) 
+            ? Article::findOrFail($identifier)
+            : Article::where('slug', $identifier)->firstOrFail();
+        
+        Log::info('Article found', [
             'article_id' => $article->id,
-            'article_exists' => $article->exists
+            'article_exists' => $article->exists,
+            'article_thumbnail' => $article->thumbnail,
+            'article_video_url' => $article->video_url
         ]);
         
         $article->load(['category', 'author']);
@@ -125,17 +148,26 @@ class ArticleController extends Controller
     /**
      * PUT/PATCH /articles/{article}
      */
-    public function update(ArticleUpdateRequest $request, Article $article)
+    public function update(ArticleUpdateRequest $request, $identifier)
     {
         // Authorize admin
         $this->authorizeAdmin($request);
         
+        Log::info('=== ARTICLE CONTROLLER UPDATE METHOD CALLED ===');
+        
+        // Handle both ID and slug for updates
+        $article = is_numeric($identifier) 
+            ? Article::findOrFail($identifier)
+            : Article::where('slug', $identifier)->firstOrFail();
+        
         // Debug route model binding
         Log::info('Route model binding debug', [
-            'article_id_from_route' => $request->route('article'),
+            'identifier' => $identifier,
             'article_model_instance' => $article,
             'article_exists' => $article->exists,
-            'article_id' => $article->id
+            'article_id' => $article->id,
+            'article_thumbnail_before' => $article->thumbnail,
+            'article_video_url_before' => $article->video_url
         ]);
         
         Log::info('Article update request received', [
@@ -145,7 +177,9 @@ class ArticleController extends Controller
             'all_data' => $request->all(),
             'request_method' => $request->method(),
             'content_type' => $request->header('Content-Type'),
-            'request_keys' => array_keys($request->all())
+            'request_keys' => array_keys($request->all()),
+            'has_thumbnail' => $request->hasFile('thumbnail'),
+            'has_video' => $request->hasFile('video'),
         ]);
         
         // Add a simple test to verify the request is working
@@ -164,7 +198,9 @@ class ArticleController extends Controller
                 'article_id' => $article->id,
                 'title_before' => $article->title,
                 'content_before' => $article->content,
-                'category_id_before' => $article->category_id
+                'category_id_before' => $article->category_id,
+                'thumbnail_before' => $article->thumbnail,
+                'video_url_before' => $article->video_url
             ]);
             
             $updatedArticle = $this->service->update($article, $request);
@@ -174,7 +210,9 @@ class ArticleController extends Controller
                 'article_id' => $updatedArticle->id,
                 'title_after_service' => $updatedArticle->title,
                 'content_after_service' => $updatedArticle->content,
-                'category_id_after_service' => $updatedArticle->category_id
+                'category_id_after_service' => $updatedArticle->category_id,
+                'thumbnail_after_service' => $updatedArticle->thumbnail,
+                'video_url_after_service' => $updatedArticle->video_url
             ]);
             
             $updatedArticle->load(['category', 'author']);
@@ -186,7 +224,10 @@ class ArticleController extends Controller
                 'content_before_response' => $updatedArticle->content,
                 'category_before_response' => $updatedArticle->category,
                 'category_loaded' => $updatedArticle->relationLoaded('category'),
-                'author_loaded' => $updatedArticle->relationLoaded('author')
+                'author_loaded' => $updatedArticle->relationLoaded('author'),
+                'thumbnail_before_response' => $updatedArticle->thumbnail,
+                'thumbnail_url_before_response' => $updatedArticle->thumbnail_url,
+                'video_url_before_response' => $updatedArticle->video_url
             ]);
 
             $response = new ArticleResource($updatedArticle);
@@ -208,10 +249,15 @@ class ArticleController extends Controller
     /**
      * DELETE /articles/{article}
      */
-    public function destroy(Request $request, Article $article)
+    public function destroy(Request $request, $identifier)
     {
         // Authorize admin
         $this->authorizeAdmin($request);
+        
+        // Handle both ID and slug for deletion
+        $article = is_numeric($identifier) 
+            ? Article::findOrFail($identifier)
+            : Article::where('slug', $identifier)->firstOrFail();
         
         try {
             $this->service->delete($article);
