@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ArticleLike extends Model
 {
-    protected $fillable = ['article_id', 'user_id'];
+    protected $fillable = ['article_id', 'user_id', 'session_id'];
 
     public function user()
     {
@@ -18,4 +18,3 @@ class ArticleLike extends Model
         return $this->belongsTo(Article::class, 'article_id');
     }
 }
-

@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Article;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryStoreRequest;
 use App\Http\Requests\CategoryUpdateRequest;
-use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Services\CategoryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 
 class CategoryController extends Controller
 {
@@ -17,7 +17,6 @@ class CategoryController extends Controller
     public function __construct(CategoryService $service)
     {
         $this->service = $service;
-        // Примечание: для админских методов применяйте middleware в routes (см. заметки)
     }
 
     // GET /categories
@@ -31,23 +30,17 @@ class CategoryController extends Controller
             $query->forHomepage();
         }
 
-        // Пагинация может быть добавлена при необходимости; сейчас возвращаем полный список
-        return CategoryResource::collection($query->orderBy('name')->get());
+        return response()->json($query->orderBy('name')->get());
     }
 
     // GET /categories/{slug}
     public function show($slug)
     {
         $category = Category::where('slug', $slug)
-            ->with([
-                'articles' => function ($q) {
-                    $q->published()->latest('published_at');
-                }
-            ])
             ->withCount(['articles' => fn($q) => $q->published(), 'forumTopics'])
             ->firstOrFail();
 
-        return new CategoryResource($category);
+        return response()->json($category);
     }
 
     // GET /categories/{slug}/landing
@@ -65,8 +58,21 @@ class CategoryController extends Controller
             ->get();
 
         return response()->json([
-            'category' => new CategoryResource($category),
-            'recent_articles' => \App\Http\Resources\ArticleResource::collection($recentArticles),
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'description' => $category->description,
+                'icon' => $category->icon,
+                'landing_enabled' => (bool) $category->landing_enabled,
+                'articles_count' => $category->articles_count,
+                'seo' => [
+                    'title' => $category->meta_title ?? $category->name,
+                    'description' => $category->meta_description ?? substr($category->description, 0, 160),
+                    'keywords' => $category->meta_keywords ?? null,
+                ],
+            ],
+            'recent_articles' => $recentArticles,
         ]);
     }
     
@@ -75,19 +81,30 @@ class CategoryController extends Controller
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         
-        $perPage = (int) $request->query('per_page', 9); // Default 9 articles per page for grid layout
+        $perPage = (int) $request->query('per_page', 9);
         $page = (int) $request->query('page', 1);
         
         $articles = $category->articles()
             ->published()
-            ->with(['author', 'category'])
             ->withCount(['likes', 'comments'])
             ->latest('published_at')
             ->paginate($perPage, ['*'], 'page', $page);
         
-        // Include category information in the response
         return response()->json([
-            'category' => new CategoryResource($category),
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name,
+                'slug' => $category->slug,
+                'description' => $category->description,
+                'icon' => $category->icon,
+                'landing_enabled' => (bool) $category->landing_enabled,
+                'articles_count' => $category->articles()->published()->count(),
+                'seo' => [
+                    'title' => $category->meta_title ?? $category->name,
+                    'description' => $category->meta_description ?? substr($category->description, 0, 160),
+                    'keywords' => $category->meta_keywords ?? null,
+                ],
+            ],
             'articles' => $articles,
             'articles_count' => $category->articles()->published()->count()
         ]);
@@ -97,7 +114,7 @@ class CategoryController extends Controller
     public function store(CategoryStoreRequest $request)
     {
         $category = $this->service->create($request->validated());
-        return (new CategoryResource($category))->response()->setStatusCode(201);
+        return response()->json($category, 201);
     }
 
     // PUT/PATCH /categories/{id} (admin)
@@ -105,8 +122,7 @@ class CategoryController extends Controller
     {
         $category = Category::findOrFail($id);
         $category = $this->service->update($category, $request->validated());
-
-        return new CategoryResource($category);
+        return response()->json($category);
     }
 
     // DELETE /categories/{id} (admin)
@@ -119,7 +135,6 @@ class CategoryController extends Controller
         }
 
         $this->service->delete($category);
-
         return response()->json(['message' => 'Category deleted']);
     }
 
@@ -133,6 +148,6 @@ class CategoryController extends Controller
             ->orderBy('name')
             ->get();
 
-        return CategoryResource::collection($categories);
+        return response()->json($categories);
     }
 }

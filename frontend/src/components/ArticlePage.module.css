@@ -224,7 +224,7 @@
 .commentsSection {
   margin-top: 3rem;
   padding-top: 2rem;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .commentsTitle {
@@ -243,22 +243,30 @@
 }
 
 .commentForm {
-  background: linear-gradient(135deg, rgba(0, 217, 255, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
-  -webkit-backdrop-filter: blur(30px);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(0, 217, 255, 0.15);
-  border-radius: 16px;
+  background: rgba(30, 30, 40, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 198, 255, 0.3); /* Thin blue border as requested */
+  border-radius: 12px;
   padding: 1.5rem;
   margin-bottom: 2rem;
-  transform: skewX(-8deg);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-.commentForm > * {
-  transform: skewX(8deg);
+.commentForm:hover {
+  border-color: rgba(0, 198, 255, 0.5);
+  box-shadow: 0 6px 25px rgba(0, 198, 255, 0.2);
 }
 
 .formGroup {
-  margin-bottom: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.formLabel {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-weight: 500;
+  color: #f0f0f0;
+  font-size: 1.1rem;
 }
 
 .emojiPickerContainer {
@@ -267,24 +275,39 @@
   justify-content: flex-start;
 }
 
-.formLabel {
-  display: block;
-  margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #f0f0f0;
+/* Style for emoji picker button */
+.emojiButton {
+  background: rgba(0, 198, 255, 0.1);
+  border: 1px solid rgba(0, 198, 255, 0.2);
+  border-radius: 8px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.emojiButton:hover {
+  background: rgba(0, 198, 255, 0.2);
+  border-color: rgba(0, 198, 255, 0.4);
 }
 
 .textarea {
   width: 100%;
-  padding: 0.75rem;
-  border: 1px solid rgba(0, 217, 255, 0.15);
-  border-radius: 0.375rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
   font-family: inherit;
   font-size: 1rem;
   resize: vertical;
-  min-height: 100px;
-  background: rgba(255, 255, 255, 0.05);
+  min-height: 120px;
+  background: rgba(20, 20, 30, 0.6);
   color: #f0f0f0;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .textarea::placeholder {
@@ -293,54 +316,71 @@
 
 .textarea:focus {
   outline: none;
-  border-color: rgba(0, 217, 255, 0.5);
-  box-shadow: 0 0 0 2px rgba(0, 217, 255, 0.2);
+  border-color: rgba(0, 198, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(0, 198, 255, 0.2), inset 0 2px 6px rgba(0, 0, 0, 0.2);
+  background: rgba(25, 25, 35, 0.8);
+}
+
+.commentActions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  gap: 1rem;
+  flex-wrap: wrap;
 }
 
 .submitButton {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: linear-gradient(135deg, #00d9ff, #3b82f6);
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
   border: none;
   padding: 0.75rem 1.5rem;
-  border-radius: 8px;
+  border-radius: 8px; /* Rounded corners as requested */
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  transform: skewX(8deg);
+  box-shadow: 0 4px 15px rgba(0, 198, 255, 0.3);
+  font-size: 1rem;
+  color: white;
 }
 
-.submitButton:hover {
-  transform: skewX(8deg) translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
+.submitButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 198, 255, 0.4);
+}
+
+.submitButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 198, 255, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .loginPrompt {
-  background: linear-gradient(135deg, rgba(0, 217, 255, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
-  -webkit-backdrop-filter: blur(30px);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(0, 217, 255, 0.15);
-  border-radius: 16px;
+  background: rgba(30, 30, 40, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 198, 255, 0.3); /* Thin blue border as requested */
+  border-radius: 12px;
   padding: 1.5rem;
   text-align: center;
   margin-bottom: 2rem;
-  transform: skewX(-8deg);
-}
-
-.loginPrompt > * {
-  transform: skewX(8deg);
 }
 
 .loginLink,
 .registerLink {
-  color: #00d9ff;
+  color: #00c6ff;
   text-decoration: underline;
 }
 
 .loginLink:hover,
 .registerLink:hover {
-  color: #3b82f6;
+  color: #0072ff;
 }
 
 .commentsList {
@@ -350,17 +390,24 @@
 }
 
 .comment {
-  background: linear-gradient(135deg, rgba(0, 217, 255, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
-  -webkit-backdrop-filter: blur(30px);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(0, 217, 255, 0.15);
+  background: rgba(30, 30, 40, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   padding: 1.5rem;
+  transform: skewX(-8deg); /* Apply skew effect only to comments */
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.comment:hover {
   transform: skewX(-8deg);
+  box-shadow: 0 6px 25px rgba(0, 198, 255, 0.2);
+  border-color: rgba(0, 198, 255, 0.2);
 }
 
 .comment > * {
-  transform: skewX(8deg);
+  transform: skewX(8deg); /* Counter-skew inner content */
 }
 
 .commentHeader {
@@ -375,14 +422,20 @@
 .commentAuthor {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.75rem;
   font-weight: 600;
-  color: #00d9ff;
+  color: #00c6ff;
   text-decoration: none;
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  background: rgba(0, 198, 255, 0.1);
+  transition: all 0.2s ease;
 }
 
 .commentAuthor:hover {
   text-decoration: underline;
+  background: rgba(0, 198, 255, 0.2);
+  transform: translateY(-1px);
 }
 
 .authorIcon {
@@ -395,9 +448,29 @@
   color: rgba(255, 255, 255, 0.7);
 }
 
+.deleteButton {
+  background: rgba(239, 68, 68, 0.2);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.deleteButton:hover {
+  background: rgba(239, 68, 68, 0.3);
+  transform: translateY(-1px);
+  border-color: rgba(239, 68, 68, 0.5);
+}
+
 .commentContent {
   color: #f0f0f0;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 1.05rem;
+  padding: 0.5rem 0;
 }
 
 .commentReactions {
@@ -406,7 +479,7 @@
   gap: 1rem;
   margin-top: 1rem;
   padding-top: 1rem;
-  border-top: 1px solid rgba(0, 217, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .reactionsList {
@@ -419,25 +492,27 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  background: rgba(0, 217, 255, 0.1);
-  border: 1px solid rgba(0, 217, 255, 0.2);
+  background: rgba(0, 198, 255, 0.1);
+  border: 1px solid rgba(0, 198, 255, 0.2);
   border-radius: 20px;
-  padding: 0.25rem 0.75rem;
+  padding: 0.375rem 1rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
+  font-weight: 500;
 }
 
 .reactionButton:hover {
-  background: rgba(0, 217, 255, 0.2);
+  background: rgba(0, 198, 255, 0.2);
   transform: translateY(-2px);
-  border-color: rgba(0, 217, 255, 0.4);
+  border-color: rgba(0, 198, 255, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .userReacted {
-  background: rgba(0, 217, 255, 0.3);
-  border-color: rgba(0, 217, 255, 0.6);
-  box-shadow: 0 0 8px rgba(0, 217, 255, 0.4);
+  background: linear-gradient(135deg, rgba(0, 198, 255, 0.3) 0%, rgba(0, 114, 255, 0.25) 100%);
+  border-color: rgba(0, 198, 255, 0.6);
+  box-shadow: 0 0 12px rgba(0, 198, 255, 0.4);
 }
 
 .reactionEmoji {
@@ -461,17 +536,41 @@
   text-align: center;
   padding: 2rem;
   color: rgba(255, 255, 255, 0.7);
-  background: linear-gradient(135deg, rgba(0, 217, 255, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
-  -webkit-backdrop-filter: blur(30px);
-  backdrop-filter: blur(30px);
-  border: 1px solid rgba(0, 217, 255, 0.15);
-  border-radius: 16px;
-  transform: skewX(-8deg);
+  background: rgba(30, 30, 40, 0.8);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 198, 255, 0.3); /* Thin blue border as requested */
+  border-radius: 12px;
 }
 
-.loadingComments > *,
-.noComments > * {
-  transform: skewX(8deg);
+.loadMoreContainer {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.loadMoreButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(0, 198, 255, 0.1);
+  border: 1px solid rgba(0, 198, 255, 0.2);
+  color: #00c6ff;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px; /* Rounded corners as requested */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.loadMoreButton:hover:not(:disabled) {
+  background: rgba(0, 198, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 198, 255, 0.3);
+}
+
+.loadMoreButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Responsive styles */

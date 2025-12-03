@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Session;
 
 class ArticleComment extends Model
 {
     protected $fillable = [
-        'article_id', 'user_id', 'content', 
+        'article_id', 'user_id', 'session_id', 'content', 
         'status', 'moderated_by', 'moderated_at', 'moderation_note'
     ];
 
@@ -37,6 +38,18 @@ class ArticleComment extends Model
     {
         return $this->hasMany(CommentLike::class, 'comment_id');
     }
+    
+    public function reactions()
+    {
+        return $this->hasMany(CommentReaction::class, 'comment_id');
+    }
+
+    // ===== АКСЕССОРЫ =====
+    
+    public function getLikesCountAttribute()
+    {
+        return $this->likes()->count();
+    }
 
     // ===== СКОУПЫ =====
     
@@ -56,45 +69,5 @@ class ArticleComment extends Model
     public function scopeRejected($query)
     {
         return $query->where('status', 'rejected');
-    }
-
-    // ===== МЕТОДЫ =====
-    
-    // Одобрить комментарий
-    public function approve($moderatorId, $note = null)
-    {
-        $this->update([
-            'status' => 'approved',
-            'moderated_by' => $moderatorId,
-            'moderated_at' => now(),
-            'moderation_note' => $note
-        ]);
-    }
-
-    // Отклонить комментарий
-    public function reject($moderatorId, $note = null)
-    {
-        $this->update([
-            'status' => 'rejected',
-            'moderated_by' => $moderatorId,
-            'moderated_at' => now(),
-            'moderation_note' => $note
-        ]);
-    }
-
-    // Проверка статуса
-    public function isApproved()
-    {
-        return $this->status === 'approved';
-    }
-
-    public function isPending()
-    {
-        return $this->status === 'pending';
-    }
-
-    public function isRejected()
-    {
-        return $this->status === 'rejected';
     }
 }

@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef, useCallback } from 'react';
-import { useParams } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Clock, MessageCircle, ThumbsUp, Eye } from 'lucide-react';
 import api from "@/api/api";
@@ -52,61 +51,17 @@ interface CategoryData {
   };
 }
 
-const CategoryLandingPage = () => {
-  console.log('CategoryLandingPage component mounting');
-  
-  const params = useParams();
-  const slug = params.category;
-  console.log('Category params:', params);
-  console.log('Category slug:', slug);
-  
-  
-  // Additional debug: try to get slug from window location for static routes
-  const [resolvedSlug, setResolvedSlug] = useState<string | null>(null);
-  
-  useEffect(() => {
-    console.log('useEffect for slug resolution running');
-    // For static routes, we might need to extract slug from the URL
-    if (typeof window !== 'undefined') {
-      // More robust URL parsing
-      const pathParts = window.location.pathname.split('/').filter(part => part.length > 0);
-      console.log('Path parts:', pathParts);
-      const databaseIndex = pathParts.indexOf('database');
-      if (databaseIndex !== -1 && pathParts[databaseIndex + 1]) {
-        const urlSlug = pathParts[databaseIndex + 1];
-        console.log('URL-based slug:', urlSlug);
-        setResolvedSlug(urlSlug);
-      }
-    }
-    
-    // If we have a slug from useParams, use that
-    if (slug) {
-      console.log('Using slug from useParams:', slug);
-      // Handle case where slug might be an array
-      const slugValue = Array.isArray(slug) ? slug[0] : slug;
-      setResolvedSlug(slugValue as string);
-    }
-  }, [slug]);
-  
-  console.log('Resolved slug:', resolvedSlug);
-  
+interface CategoryLandingPageProps {
+  slug?: string;
+}
+
+const CategoryLandingPage = ({ slug }: CategoryLandingPageProps) => {
   const [category, setCategory] = useState<CategoryData | null>(null);
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const lastArticleRef = useRef<HTMLDivElement>(null);
-  const observer = useRef<IntersectionObserver | null>(null);
-
-  // Debug log for component re-rendering
-  console.log('Component re-rendering with state:', {
-    resolvedSlug,
-    articlesLength: articles.length,
-    loading,
-    category,
-    error
-  });
 
   // Helper function to strip HTML tags and get plain text
   const stripHtmlTags = (html: string): string => {
@@ -116,179 +71,89 @@ const CategoryLandingPage = () => {
     return tmp.textContent || tmp.innerText || '';
   };
 
-  // Memoized function to fetch category and articles data from the real backend API
-  const fetchCategoryData = useCallback(async (pageNum = 1) => {
-  try {
-    console.log('fetchCategoryData called with pageNum:', pageNum);
-    
-    if (pageNum === 1) setLoading(true);
+  // Function to fetch category and articles data
+  const fetchCategoryData = async (pageNum = 1) => {
+    try {
+      if (pageNum === 1) setLoading(true);
 
-    // Check if slug exists and is valid
-    const effectiveSlug = resolvedSlug;
-    console.log('Using slug for API call:', effectiveSlug);
-    
-    if (!effectiveSlug) {
-      console.log('No slug available, skipping API call');
-      // Instead of showing error, we'll just show empty state
-      setLoading(false);
-      return;
+      if (!slug) {
+        setLoading(false);
+        return;
+      }
+
+      const response = await api.get(`/categories/${slug}/articles`, {
+        params: {
+          page: pageNum,
+          per_page: 9,
+        },
+      });
+
+      const result = response.data;
+
+      if (!result) {
+        setError("Не удалось загрузить данные категории");
+        setLoading(false);
+        return;
+      }
+
+      if (pageNum === 1) {
+        setCategory(result.category);
+        // Handle paginated response - articles are in result.articles.data
+        const articlesData = result.articles?.data || [];
+        setArticles(articlesData);
+      } else {
+        // Handle paginated response - articles are in result.articles.data
+        const articlesData = result.articles?.data || [];
+        setArticles(prev => [
+          ...prev,
+          ...articlesData
+        ]);
+      }
+
+      // Handle pagination metadata
+      setHasMore(!!result.articles?.next_page_url);
+
+    } catch (err: any) {
+      // Check if it's a 404 error (category not found)
+      if (err.response && err.response.status === 404) {
+        setError("Категория не найдена");
+      } else if (err.response && err.response.status === 500) {
+        setError("Ошибка сервера. Попробуйте позже.");
+      } else {
+        setError("Не удалось загрузить данные категории");
+      }
+    } finally {
+      if (pageNum === 1) setLoading(false);
     }
-
-    // Validate slug format (basic validation)
-    if (typeof effectiveSlug !== 'string' || effectiveSlug.trim() === '') {
-      console.log('Invalid slug format:', effectiveSlug);
-      setError("Некорректный формат категории");
-      setLoading(false);
-      return;
-    }
-
-    console.log('Making API call to:', `/categories/${effectiveSlug}/articles`);
-    const response = await api.get(`/categories/${effectiveSlug}/articles`, {
-      params: {
-        page: pageNum,
-        per_page: 9,
-      },
-    });
-
-    const result = response.data;
-    console.log('API Response:', result);
-
-    // Check if we received valid data
-    if (!result) {
-      setError("Не удалось загрузить данные категории");
-      setLoading(false);
-      return;
-    }
-
-    // Handle case where category exists but has no articles yet
-    if (result.category && (!result.articles || !result.articles.data || result.articles.data.length === 0)) {
-      console.log('No articles found for category');
-      // Fixed: correctly set category data without trying to access .data property
-      setCategory(result.category);
-      setArticles([]);
-      setHasMore(false);
-      setLoading(false);
-      return;
-    }
-
-    if (pageNum === 1) {
-      // Fixed: correctly set category data without trying to access .data property
-      setCategory(result.category);
-      // Fixed: correctly extract articles data from paginator
-      const articlesData = result.articles?.data || [];
-      console.log('Setting articles:', articlesData);
-      setArticles(articlesData);
-    } else {
-      // Fixed: correctly extract articles data from paginator
-      const articlesData = result.articles?.data || [];
-      console.log('Adding more articles:', articlesData);
-      setArticles(prev => [
-        ...prev,
-        ...articlesData
-      ]);
-    }
-
-    setHasMore(!!result.articles?.next_page_url);
-
-  } catch (err: any) {
-    console.error('API call failed:', err);
-    // Log more detailed error information
-    if (err.response) {
-      console.error('Error response:', err.response);
-      console.error('Error status:', err.response.status);
-      console.error('Error data:', err.response.data);
-    }
-    
-    // Check if it's a 404 error (category not found)
-    if (err.response && err.response.status === 404) {
-      setError("Категория не найдена");
-    } else if (err.response && err.response.status === 500) {
-      setError("Ошибка сервера. Попробуйте позже.");
-    } else {
-      setError("Не удалось загрузить данные категории");
-    }
-  } finally {
-    if (pageNum === 1) setLoading(false);
-  }
-}, [resolvedSlug]);
-
+  };
 
   // Initial data fetch
   useEffect(() => {
-    console.log('Initial useEffect running with resolvedSlug:', resolvedSlug);
-    if (resolvedSlug) {
+    if (slug) {
+      // Reset state when slug changes
+      setCategory(null);
+      setArticles([]);
+      setPage(1);
+      setHasMore(true);
+      setError(null);
       fetchCategoryData(1);
     } else {
-      // Only set loading to false if we're sure there's no slug
-      // Wait a bit to see if slug resolution happens
-      const timer = setTimeout(() => {
-        if (!resolvedSlug) {
-          console.log('No slug found after timeout, setting loading to false');
-          setLoading(false);
-        }
-      }, 100);
-      
-      return () => clearTimeout(timer);
+      setLoading(false);
     }
-  }, [resolvedSlug]);
+  }, [slug]);
 
-  // Debug effect to log state changes
-  useEffect(() => {
-    console.log('Articles state updated:', articles);
-    console.log('Articles length:', articles.length);
-    console.log('Loading state:', loading);
-    console.log('Category state:', category);
-  }, [articles, loading, category]);
-  
-  // Additional debug for state updates
-  const prevArticlesLength = useRef(articles.length);
-  useEffect(() => {
-    if (prevArticlesLength.current !== articles.length) {
-      console.log('Articles length changed from', prevArticlesLength.current, 'to', articles.length);
-      prevArticlesLength.current = articles.length;
-    }
-  }, [articles.length]);
-  
-  // Debug log for articles state changes
-  const prevArticles = useRef(articles);
-  useEffect(() => {
-    if (prevArticles.current !== articles) {
-      console.log('Articles array changed:', articles);
-      prevArticles.current = articles;
-    }
-  }, [articles]);
-  
   // Fetch additional pages when page number changes
   useEffect(() => {
-    if (resolvedSlug && page > 1) {
+    if (slug && page > 1) {
       fetchCategoryData(page);
     }
-  }, [resolvedSlug, page]);
+  }, [page, slug]);
 
-  // Set up intersection observer for infinite scrolling
-  useEffect(() => {
-    if (loading || !hasMore) return;
-
-    const currentObserver = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
-          setPage(prev => prev + 1);
-        }
-      },
-      { threshold: 1.0 }
-    );
-
-    if (lastArticleRef.current) {
-      observer.current = currentObserver;
-      observer.current.observe(lastArticleRef.current);
+  const loadMore = () => {
+    if (hasMore && !loading) {
+      setPage(prev => prev + 1);
     }
-
-    return () => {
-      if (observer.current && lastArticleRef.current) {
-        observer.current.unobserve(lastArticleRef.current);
-      }
-    };
-  }, [loading, hasMore]);
+  };
 
   if (error) {
     return (
@@ -311,7 +176,7 @@ const CategoryLandingPage = () => {
     );
   }
 
-  if (loading && !category) {
+  if (loading && !category && articles.length === 0) {
     return (
       <LayoutWithNavAndFooter>
         <div className={styles.loadingScreen}>
@@ -361,7 +226,6 @@ const CategoryLandingPage = () => {
                 {articles.map((article, index) => (
                   <motion.div
                     key={article.id}
-                    ref={index === articles.length - 1 ? lastArticleRef : null}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
@@ -374,13 +238,7 @@ const CategoryLandingPage = () => {
                             src={article.thumbnail_url} 
                             alt={article.title}
                             className={styles.articleImage}
-                            onError={(e) => {
-                              const target = e.target as HTMLImageElement;
-                              target.style.display = 'none';
-                              target.nextSibling?.addEventListener('load', () => {
-                                target.style.display = 'block';
-                              });
-                            }}
+                            loading="lazy"
                           />
                         ) : (
                           <div className={styles.placeholderImage}>
@@ -437,6 +295,18 @@ const CategoryLandingPage = () => {
                 <div className={styles.paginationLoader}>
                   <div className={styles.loadingSpinner}></div>
                   <p>Загрузка еще статей...</p>
+                </div>
+              )}
+
+              {/* Load more button */}
+              {hasMore && !loading && (
+                <div className={styles.loadMoreContainer}>
+                  <button 
+                    onClick={loadMore}
+                    className={styles.loadMoreButton}
+                  >
+                    Загрузить еще
+                  </button>
                 </div>
               )}
 

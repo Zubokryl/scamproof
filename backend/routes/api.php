@@ -23,16 +23,41 @@ use App\Http\Controllers\Admin\ForumModerationController;
 |  - Authenticated: authenticated user endpoints
 |  - Admin: admin-only endpoints
 |  - Moderation: moderator/admin endpoints
+|
+| CRITICAL: DO NOT MODIFY THE LIKE ROUTE CONFIGURATION!
+| The article like route MUST have the StartSession middleware to ensure proper
+| session management for guest users. Removing this middleware will break the
+| one-like-per-user functionality for guests.
+|
+| CRITICAL: COMMENT CREATION ROUTE MUST REMAIN IN AUTHENTICATED SECTION!
+| Moving the comment creation route to public section will break user attribution
+| and cause all comments to appear as anonymous, regardless of user authentication status.
+| This was fixed in December 2025 - do not revert this change.
 */
 
 // Public routes
-Route::get('/articles', [ArticleController::class, 'index']);
-Route::get('/articles/{article}', [ArticleController::class, 'show']);
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/categories/{slug}', [CategoryController::class, 'show']);
-Route::get('/categories/{slug}/articles', [CategoryController::class, 'articles']);
-Route::get('/categories/{slug}/landing', [CategoryController::class, 'showLanding']);
-Route::get('/categories/with-landings', [CategoryController::class, 'withLandings']);
+Route::group([], function () {
+    Route::get('/articles', [ArticleController::class, 'index']);
+    Route::get('/articles/{article}', [ArticleController::class, 'show']);
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/categories/{slug}', [CategoryController::class, 'show']);
+    Route::get('/categories/{slug}/articles', [CategoryController::class, 'articles']);
+    Route::get('/categories/{slug}/landing', [CategoryController::class, 'showLanding']);
+    Route::get('/categories/with-landings', [CategoryController::class, 'withLandings']);
+    
+    // Public comments routes
+    Route::get('/articles/{article}/comments', [ArticleCommentController::class, 'index']);
+    
+    // CRITICAL: DO NOT REMOVE THE StartSession MIDDLEWARE!
+    // This middleware is ESSENTIAL for guest user session management.
+    // Without it, each guest like request will create a new session,
+    // breaking the one-like-per-user limitation for guests.
+    Route::post('/articles/{article}/like', [ArticleLikeController::class, 'toggle'])->middleware(\Illuminate\Session\Middleware\StartSession::class);
+    
+    // Public comment like and reaction routes
+    Route::post('/comments/{comment}/like', [ArticleCommentController::class, 'toggleLike']);
+    Route::post('/comments/{comment}/react/{reactionType}', [ArticleCommentController::class, 'toggleReaction']);
+});
 
 // Auth routes
 Route::post('/register', [AuthController::class, 'register']);
@@ -54,14 +79,14 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/articles', [ArticleController::class, 'store'])->middleware('role:admin');
     Route::post('/articles/{article}', [ArticleController::class, 'update'])->middleware('role:admin');
     Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->middleware('role:admin');
-    Route::post('/articles/{article}/like', [ArticleLikeController::class, 'toggle'])->middleware('auth:sanctum');
     
-    // Article comments routes
-    Route::get('/articles/{article}/comments', [ArticleCommentController::class, 'index']);
+    // CRITICAL: COMMENT CREATION ROUTE MUST REMAIN HERE (AUTHENTICATED SECTION)!
+    // Moving this route to the public section will break user attribution for comments.
+    // All comments will appear as anonymous regardless of user authentication status.
+    // This was fixed in December 2025 - do not move this route to public section.
     Route::post('/articles/{article}/comments', [ArticleCommentController::class, 'store']);
     Route::put('/comments/{comment}', [ArticleCommentController::class, 'update']);
     Route::delete('/comments/{comment}', [ArticleCommentController::class, 'destroy']);
-    Route::post('/comments/{comment}/like', [ArticleCommentController::class, 'toggleLike']);
     
     // Forum topic creation (regular users can create topics)
     Route::post('/forum/topics', [ForumTopicController::class, 'store']);

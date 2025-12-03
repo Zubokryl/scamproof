@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Article;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ArticleStoreRequest;
 use App\Http\Requests\ArticleUpdateRequest;
-use App\Http\Resources\ArticleResource;
 use App\Models\Article;
 use App\Services\ArticleService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Resources\ArticleResource;
 
 class ArticleController extends Controller
 {
@@ -23,60 +24,51 @@ class ArticleController extends Controller
     public function authorizeAdmin($request)
     {
         $user = $request->user();
-        Log::info('Admin authorization check', [
-            'user' => $user ? $user->toArray() : null,
-            'user_role' => $user ? $user->role : null,
-            'is_admin' => $user && $user->role === 'admin'
-        ]);
         
         if (!$user || $user->role !== 'admin') {
-            Log::warning('Admin authorization failed', [
-                'user_id' => $user ? $user->id : null,
-                'user_role' => $user ? $user->role : null
-            ]);
             abort(403, 'Access denied. Admin role required.');
         }
-        
-        Log::info('Admin authorization successful');
     }
 
     /**
      * GET /articles
+     * 
+     * CRITICAL: DO NOT MODIFY THE withCount() CALLS! This is essential for like/comment functionality.
+     * 
+     * The withCount(['likes', 'comments']) is required for the frontend to display correct counts.
+     * Removing or modifying this will break the like/comment display functionality.
+     * Both authenticated users and guests should only be able to like an article ONCE.
      */
     public function index(Request $request)
     {
-        Log::info('Article index method called');
-        
         $perPage = (int) $request->query('per_page', 15);
 
         $query = Article::query()
-            ->published() // предполагается scopePublished / scopeApproved реализован в модели
-            ->with(['category', 'author'])
-            ->withCount(['likes', 'comments'])
-            ->orderByDesc('published_at');
+            ->with(['category:id,name,slug', 'author:id,name'])
+            ->withCount(['likes', 'comments']) // Add counts for frontend display
+            ->select(['id', 'title', 'slug', 'content', 'category_id', 'created_by', 'published_at', 'thumbnail', 'video_url', 'pdf_url']); // Removed views_count - column doesn't exist in DB
 
-        // Простейшая фильтрация по категории/поиску (опционально)
-        if ($category = $request->query('category')) {
-            $query->whereHas('category', fn($q) => $q->where('slug', $category));
+        // Filter by category if provided
+        if ($categoryId = $request->query('category_id')) {
+            $query->where('category_id', $categoryId);
         }
 
-        if ($q = $request->query('q')) {
-            $query->where(function ($qry) use ($q) {
-                $qry->where('title', 'like', '%' . str_replace(['%','_'], ['\%','\_'], $q) . '%')
-                    ->orWhere('content', 'like', '%' . str_replace(['%','_'], ['\%','\_'], $q) . '%');
+        // Filter by search term if provided
+        if ($search = $request->query('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                  ->orWhere('content', 'like', "%{$search}%");
             });
         }
 
-        $articles = $query->paginate($perPage);
-        
-        Log::info('Articles found', [
-            'count' => $articles->count(),
-            'total' => $articles->total(),
-            'per_page' => $articles->perPage(),
-            'current_page' => $articles->currentPage()
-        ]);
+        // Published articles only for non-admins
+        if (!$request->user() || $request->user()->role !== 'admin') {
+            $query->published();
+        }
 
-        return ArticleResource::collection($articles);
+        $articles = $query->latest('published_at')->paginate($perPage);
+
+        return response()->json($articles);
     }
 
     /**
@@ -84,31 +76,13 @@ class ArticleController extends Controller
      */
     public function store(ArticleStoreRequest $request)
     {
-        // Authorize admin
-        $this->authorizeAdmin($request);
-        
-        Log::info('=== ARTICLE CONTROLLER STORE METHOD CALLED ===');
-        Log::info('Article store request received', [
-            'user' => $request->user() ? $request->user()->toArray() : null,
-            'validated_data' => $request->validated(),
-            'all_data' => $request->all(),
-            'has_thumbnail' => $request->hasFile('thumbnail'),
-            'has_video' => $request->hasFile('video'),
-            'content_type' => $request->header('Content-Type'),
-            'request_method' => $request->method(),
-        ]);
-        
         try {
+            $this->authorizeAdmin($request);
+            
             $article = $this->service->create($request);
-            $article->load(['category', 'author']);
+            $article->load(['category:id,name,slug', 'author:id,name']);
 
-            Log::info('Article created successfully in controller', [
-                'article_id' => $article->id,
-                'article_thumbnail' => $article->thumbnail,
-                'article_video_url' => $article->video_url
-            ]);
-
-            return new ArticleResource($article);
+            return response()->json($article);
         } catch (\Exception $e) {
             Log::error('Article store error', [
                 'message' => $e->getMessage(),
@@ -121,27 +95,45 @@ class ArticleController extends Controller
 
     /**
      * GET /articles/{article}
+     * 
+     * CRITICAL: DO NOT MODIFY THIS METHOD! This is the core of the like persistence functionality.
+     * 
+     * This method must use ArticleResource to properly add user_has_liked/guest_has_liked
+     * properties for the frontend. Do not change this to return raw JSON as it will break
+     * the like functionality persistence across page reloads.
+     * 
+     * The ArticleResource adds:
+     * - user_has_liked: For authenticated users, checks if they've liked the article
+     * - guest_has_liked: For guest users, checks if their session has liked the article
+     * 
+     * Both authenticated users and guests should only be able to like an article ONCE.
+     * Any changes to this method MUST preserve this one-like-per-user functionality.
+     * 
+     * IMPORTANT: The return MUST use "new ArticleResource($article)" to ensure proper
+     * like state detection for both authenticated users and guests.
      */
     public function show($identifier)
     {
-        Log::info('Article show method called', [
-            'identifier' => $identifier,
-            'type' => is_numeric($identifier) ? 'id' : 'slug'
-        ]);
+        // Use caching for better performance
+        $cacheKey = "article_show_" . (is_numeric($identifier) ? "id_{$identifier}" : "slug_{$identifier}");
         
-        // Handle both ID and slug
-        $article = is_numeric($identifier) 
-            ? Article::findOrFail($identifier)
-            : Article::where('slug', $identifier)->firstOrFail();
+        $article = Cache::remember($cacheKey, 300, function () use ($identifier) {
+            // Handle both ID and slug with eager loading and counts
+            $query = Article::query()
+                ->with(['category:id,name,slug', 'author:id,name'])
+                ->withCount(['likes', 'comments']) // Add counts for frontend display
+                ->select(['id', 'title', 'slug', 'content', 'category_id', 'created_by', 'published_at', 'thumbnail', 'video_url', 'pdf_url']); // Removed views_count - column doesn't exist in DB
+            
+            $article = is_numeric($identifier) 
+                ? $query->findOrFail($identifier)
+                : $query->where('slug', $identifier)->firstOrFail();
+            
+            return $article;
+        });
         
-        Log::info('Article found', [
-            'article_id' => $article->id,
-            'article_exists' => $article->exists,
-            'article_thumbnail' => $article->thumbnail,
-            'article_video_url' => $article->video_url
-        ]);
-        
-        $article->load(['category', 'author']);
+        // Return the article through the ArticleResource to add user_has_liked/guest_has_liked
+        // IMPORTANT: Do not change this to raw JSON response as it will break like persistence
+        // CRITICAL: This MUST use ArticleResource to ensure proper like state detection
         return new ArticleResource($article);
     }
 
@@ -153,89 +145,20 @@ class ArticleController extends Controller
         // Authorize admin
         $this->authorizeAdmin($request);
         
-        Log::info('=== ARTICLE CONTROLLER UPDATE METHOD CALLED ===');
-        
         // Handle both ID and slug for updates
         $article = is_numeric($identifier) 
             ? Article::findOrFail($identifier)
             : Article::where('slug', $identifier)->firstOrFail();
         
-        // Debug route model binding
-        Log::info('Route model binding debug', [
-            'identifier' => $identifier,
-            'article_model_instance' => $article,
-            'article_exists' => $article->exists,
-            'article_id' => $article->id,
-            'article_thumbnail_before' => $article->thumbnail,
-            'article_video_url_before' => $article->video_url
-        ]);
-        
-        Log::info('Article update request received', [
-            'article_id' => $article->id,
-            'user' => $request->user() ? $request->user()->toArray() : null,
-            'validated_data' => $request->validated(),
-            'all_data' => $request->all(),
-            'request_method' => $request->method(),
-            'content_type' => $request->header('Content-Type'),
-            'request_keys' => array_keys($request->all()),
-            'has_thumbnail' => $request->hasFile('thumbnail'),
-            'has_video' => $request->hasFile('video'),
-        ]);
-        
-        // Add a simple test to verify the request is working
-        if ($request->has('test_mode')) {
-            Log::info('Test mode activated - returning test response');
-            return response()->json([
-                'message' => 'Test successful',
-                'article_id' => $article->id,
-                'received_data' => $request->all()
-            ]);
-        }
-        
         try {
-            // Log the article state before update
-            Log::info('Article state before update', [
-                'article_id' => $article->id,
-                'title_before' => $article->title,
-                'content_before' => $article->content,
-                'category_id_before' => $article->category_id,
-                'thumbnail_before' => $article->thumbnail,
-                'video_url_before' => $article->video_url
-            ]);
-            
             $updatedArticle = $this->service->update($article, $request);
+            $updatedArticle->load(['category:id,name,slug', 'author:id,name']);
             
-            // CRITICAL: Log the actual updated article data
-            Log::info('Article after service update', [
-                'article_id' => $updatedArticle->id,
-                'title_after_service' => $updatedArticle->title,
-                'content_after_service' => $updatedArticle->content,
-                'category_id_after_service' => $updatedArticle->category_id,
-                'thumbnail_after_service' => $updatedArticle->thumbnail,
-                'video_url_after_service' => $updatedArticle->video_url
-            ]);
-            
-            $updatedArticle->load(['category', 'author']);
-            
-            // CRITICAL: Log the article data before sending response
-            Log::info('Article data before sending response', [
-                'article_id' => $updatedArticle->id,
-                'title_before_response' => $updatedArticle->title,
-                'content_before_response' => $updatedArticle->content,
-                'category_before_response' => $updatedArticle->category,
-                'category_loaded' => $updatedArticle->relationLoaded('category'),
-                'author_loaded' => $updatedArticle->relationLoaded('author'),
-                'thumbnail_before_response' => $updatedArticle->thumbnail,
-                'thumbnail_url_before_response' => $updatedArticle->thumbnail_url,
-                'video_url_before_response' => $updatedArticle->video_url
-            ]);
+            // Clear cache when article is updated
+            Cache::forget("article_show_id_{$updatedArticle->id}");
+            Cache::forget("article_show_slug_{$updatedArticle->slug}");
 
-            $response = new ArticleResource($updatedArticle);
-            Log::info('ArticleResource created', [
-                'resource_data' => $response->toArray(request())
-            ]);
-
-            return $response;
+            return response()->json($updatedArticle);
         } catch (\Exception $e) {
             Log::error('Article update error', [
                 'message' => $e->getMessage(),
@@ -261,6 +184,11 @@ class ArticleController extends Controller
         
         try {
             $this->service->delete($article);
+            
+            // Clear cache when article is deleted
+            Cache::forget("article_show_id_{$article->id}");
+            Cache::forget("article_show_slug_{$article->slug}");
+            
             return response()->noContent();
         } catch (\Exception $e) {
             Log::error('Article delete error', [

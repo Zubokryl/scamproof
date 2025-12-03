@@ -80,6 +80,7 @@ class Article extends Model
 
     public function getCommentsCountAttribute()
     {
+        // Count all comments to match what users see
         return $this->comments()->count();
     }
 

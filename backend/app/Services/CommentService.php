@@ -6,21 +6,30 @@ use App\Models\Article;
 use App\Models\ArticleComment;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Session;
 
 class CommentService
 {
     /**
-     * Создать комментарий (ставится pending) и инвалидация кеша.
+     * Создать комментарий (ставится approved сразу) и инвалидация кеша.
      */
     public function create(Article $article, $userId, array $data): ArticleComment
     {
         return DB::transaction(function () use ($article, $userId, $data) {
-            $comment = ArticleComment::create([
+            $commentData = [
                 'article_id' => $article->id,
-                'user_id' => $userId,
                 'content' => $data['content'],
-                'status' => 'pending',
-            ]);
+                'status' => 'approved', // Change from 'pending' to 'approved'
+            ];
+            
+            // Add user_id if user is authenticated, otherwise use session_id for guests
+            if ($userId) {
+                $commentData['user_id'] = $userId;
+            } else {
+                $commentData['session_id'] = Session::getId();
+            }
+            
+            $comment = ArticleComment::create($commentData);
             
             // Use cache forget instead of tags for drivers that don't support tagging
             Cache::forget('article_comments_' . $article->id);
@@ -37,7 +46,7 @@ class CommentService
     {
         $articleId = $comment->article_id;
         
-        DB::transaction(function () use ($comment) {
+        DB::transaction(function () use ($comment, $articleId) {
             $comment->delete();
             
             // Use cache forget instead of tags for drivers that don't support tagging

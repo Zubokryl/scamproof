@@ -55,16 +55,18 @@ class Category extends Model
 
     // ===== АКСЕССОРЫ =====
     
-    // Количество статей в категории
+    // Количество статей в категории (cached)
     public function getArticlesCountAttribute()
     {
-        return $this->articles()->published()->count();
+        // This will be set by withCount in the query
+        return $this->attributes['articles_count'] ?? 0;
     }
 
-    // Количество тем форума в категории
+    // Количество тем форума в категории (cached)
     public function getForumTopicsCountAttribute()
     {
-        return $this->forumTopics()->count();
+        // This will be set by withCount in the query
+        return $this->attributes['forum_topics_count'] ?? 0;
     }
 
     // URL лендинга (если включен)

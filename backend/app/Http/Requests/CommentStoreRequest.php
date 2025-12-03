@@ -8,7 +8,8 @@ class CommentStoreRequest extends FormRequest
 {
     public function authorize()
     {
-        return $this->user() !== null;
+        // Allow both authenticated and anonymous users to submit comments
+        return true;
     }
 
     public function rules()
