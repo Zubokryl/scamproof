@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CSRF Test</title>
+</head>
+<body>
+    <h1>CSRF Token Test</h1>
+    <button onclick="testCSRF()">Test CSRF Token</button>
+    <div id="result"></div>
+
+    <script>
+        async function testCSRF() {
+            const resultDiv = document.getElementById('result');
+            
+            try {
+                resultDiv.innerHTML = 'Initializing CSRF token...';
+                
+                // Get CSRF token
+                const response = await fetch('http://localhost:8000/sanctum/csrf-cookie', {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                
+                resultDiv.innerHTML += '<br>Status: ' + response.status;
+                
+                // Check if we have the XSRF-TOKEN cookie
+                const cookies = document.cookie.split(';');
+                let xsrfToken = null;
+                
+                for (let cookie of cookies) {
+                    const [name, value] = cookie.trim().split('=');
+                    if (name === 'XSRF-TOKEN') {
+                        xsrfToken = decodeURIComponent(value);
+                        break;
+                    }
+                }
+                
+                resultDiv.innerHTML += '<br>XSRF-TOKEN cookie: ' + (xsrfToken ? 'Found' : 'Not found');
+                if (xsrfToken) {
+                    resultDiv.innerHTML += '<br>Token: ' + xsrfToken;
+                }
+                
+                // Try to login
+                if (xsrfToken) {
+                    resultDiv.innerHTML += '<br><br>Trying to login...';
+                    
+                    const loginResponse = await fetch('http://localhost:8000/api/login', {
+                        method: 'POST',
+                        credentials: 'include',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-XSRF-TOKEN': xsrfToken
+                        },
+                        body: JSON.stringify({
+                            email: 'zubokryl777@example.com',
+                            password: 'ArikMarik888'
+                        })
+                    });
+                    
+                    resultDiv.innerHTML += '<br>Login Status: ' + loginResponse.status;
+                    
+                    if (loginResponse.ok) {
+                        const data = await loginResponse.json();
+                        resultDiv.innerHTML += '<br>Login Success: ' + JSON.stringify(data);
+                    } else {
+                        const errorText = await loginResponse.text();
+                        resultDiv.innerHTML += '<br>Login Error: ' + errorText;
+                    }
+                }
+                
+            } catch (error) {
+                resultDiv.innerHTML += '<br>Error: ' + error.message;
+                console.error(error);
+            }
+        }
+    </script>
+</body>
+</html>

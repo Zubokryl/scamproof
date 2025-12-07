@@ -1,0 +1,76 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.section {
+  background: rgba(10, 14, 39, 0.7);
+  border: 1px solid rgba(0, 217, 255, 0.2);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  backdrop-filter: blur(10px);
+}
+
+.title {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: #00d9ff;
+  margin-bottom: 1rem;
+}
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: rgba(10, 14, 39, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #f5f7fa;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #00d9ff;
+  box-shadow: 0 0 0 3px rgba(0, 217, 255, 0.2);
+}
+
+.button {
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 0.5rem;
+  background: linear-gradient(135deg, #00d9ff, #3b82f6);
+  color: #0a0e27;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 15px rgba(0, 217, 255, 0.4);
+}
+
+.description {
+  color: #a0aec0;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+/* All buttons now use the same style */
+.emailButton {
+  background: linear-gradient(135deg, #00d9ff, #3b82f6);
+}
+
+.phoneButton {
+  background: linear-gradient(135deg, #00d9ff, #3b82f6);
+}
+
+.siteButton {
+  background: linear-gradient(135deg, #00d9ff, #3b82f6);
+}

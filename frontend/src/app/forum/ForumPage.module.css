@@ -1,0 +1,382 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.createButton {
+  background: linear-gradient(135deg, #00c6ff, #0072ff);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 114, 255, 0.3);
+}
+
+.createButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 114, 255, 0.4);
+}
+
+/* Search Section */
+.searchSection {
+  margin-bottom: 2rem;
+}
+
+.searchForm {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(30, 41, 59, 0.8);
+  color: #fff;
+  font-size: 1rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #00c6ff;
+  box-shadow: 0 0 0 2px rgba(0, 198, 255, 0.2);
+}
+
+.searchButton {
+  padding: 0.75rem 1.5rem;
+  background: linear-gradient(135deg, #00d9ff, #0080ff);
+  color: #0a0e27;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.searchButton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 217, 255, 0.3);
+}
+
+.searchButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Search Results */
+.searchResults {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.searchResultsTitle {
+  font-size: 1.3rem;
+  color: #00c6ff;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.searchResultsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.searchResultItem {
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(0, 217, 255, 0.1);
+}
+
+.searchResultLink {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.searchResultLink:hover {
+  color: #00c6ff;
+}
+
+.searchResultMeta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: #94a3b8;
+}
+
+.searchLoading, .noResults {
+  text-align: center;
+  padding: 1rem;
+  color: #94a3b8;
+}
+
+/* Main Content Layout */
+.content {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.sectionTitle {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Left Column - Categories */
+.leftColumn {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.categoriesList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.categoryItem {
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.categoryHeader {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.5);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.categoryHeader:hover {
+  background: rgba(15, 23, 42, 0.7);
+}
+
+.categoryIcon {
+  font-size: 1.5rem;
+}
+
+.categoryInfo {
+  grid-column: 2;
+}
+
+.categoryName {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #00c6ff;
+  margin: 0 0 0.25rem 0;
+}
+
+.categoryDescription {
+  color: #94a3b8;
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.categoryStats {
+  display: flex;
+  align-items: center;
+}
+
+.topicsCount {
+  background: rgba(0, 198, 255, 0.1);
+  color: #00c6ff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+.expandIcon {
+  color: #94a3b8;
+  font-size: 1.2rem;
+}
+
+/* Category Topics */
+.categoryTopics {
+  background: rgba(15, 23, 42, 0.3);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem;
+}
+
+.topicItem {
+  padding: 0.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.topicItem:last-child {
+  border-bottom: none;
+}
+
+.topicLink {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.topicLink:hover {
+  color: #00c6ff;
+}
+
+.pinnedBadge {
+  color: #ffd700;
+  margin-right: 0.5rem;
+}
+
+.topicMeta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
+  color: #94a3b8;
+}
+
+.topicAuthor, .topicDate, .topicReplies {
+  white-space: nowrap;
+}
+
+.noTopics {
+  text-align: center;
+  padding: 1rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+/* Right Column - Recent Topics */
+.rightColumn {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.recentTopicsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.recentTopicItem {
+  padding: 1rem;
+  border-radius: 8px;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(0, 217, 255, 0.1);
+}
+
+.recentTopicLink {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.recentTopicLink:hover {
+  color: #00c6ff;
+}
+
+.recentTopicMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.recentTopicCategory, .recentTopicAuthor, .recentTopicDate, .recentTopicReplies {
+  white-space: nowrap;
+}
+
+.noRecentTopics {
+  text-align: center;
+  padding: 2rem;
+  color: #94a3b8;
+  font-style: italic;
+}
+
+.loading, .error {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.2rem;
+  color: #94a3b8;
+}
+
+.error {
+  color: #f87171;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+  
+  .searchForm {
+    flex-direction: column;
+  }
+  
+  .content {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .categoryHeader {
+    grid-template-columns: auto 1fr auto;
+  }
+  
+  .categoryStats {
+    display: none;
+  }
+  
+  .recentTopicMeta {
+    font-size: 0.8rem;
+  }
+}

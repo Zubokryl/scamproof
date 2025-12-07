@@ -1,0 +1,19 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="64" height="64" fill="transparent"/>
+  <!-- Билет -->
+  <rect x="10" y="18" width="28" height="32" rx="1" stroke="#00d9ff" stroke-width="2.5" fill="rgba(0, 217, 255, 0.05)"/>
+  <!-- Пунктирная линия разрыва -->
+  <line x1="10" y1="26" x2="38" y2="26" stroke="#00d9ff" stroke-width="1" stroke-dasharray="3,2"/>
+  <!-- Текст на билете -->
+  <text x="14" y="22" font-size="6" fill="#00d9ff" opacity="0.7">TICKET</text>
+  <line x1="14" y1="30" x2="34" y2="30" stroke="#00d9ff" stroke-width="0.8" opacity="0.6"/>
+  <line x1="14" y1="34" x2="34" y2="34" stroke="#00d9ff" stroke-width="0.8" opacity="0.6"/>
+  <line x1="14" y1="38" x2="28" y2="38" stroke="#00d9ff" stroke-width="0.8" opacity="0.6"/>
+  <line x1="14" y1="44" x2="34" y2="44" stroke="#00d9ff" stroke-width="0.8" opacity="0.6"/>
+  <!-- Звезда 1 -->
+  <path d="M45 16L47 22L53 22L48 26L50 32L45 28L40 32L42 26L37 22L43 22Z" stroke="#00d9ff" stroke-width="1.5" fill="rgba(0, 217, 255, 0.3)"/>
+  <!-- Звезда 2 -->
+  <path d="M52 36L53 40L57 40L54 43L55 47L52 44L49 47L50 43L47 40L51 40Z" stroke="#00d9ff" stroke-width="1.5" fill="rgba(0, 217, 255, 0.2)"/>
+  <!-- Звезда 3 -->
+  <path d="M42 48L43 51L46 51L44 53L44 56L42 54L40 56L40 53L38 51L41 51Z" stroke="#00d9ff" stroke-width="1.5" fill="rgba(0, 217, 255, 0.2)"/>
+</svg>

@@ -1,0 +1,13 @@
+<svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <rect width="64" height="64" fill="transparent"/>
+  <!-- Стопка монет/денег -->
+  <ellipse cx="24" cy="26" rx="10" ry="4" stroke="#00d9ff" stroke-width="2" fill="rgba(0, 217, 255, 0.1)"/>
+  <path d="M14 26V34C14 36 18 38 24 38C30 38 34 36 34 34V26" stroke="#00d9ff" stroke-width="2" fill="none"/>
+  <ellipse cx="24" cy="34" rx="10" ry="4" stroke="#00d9ff" stroke-width="2" fill="rgba(0, 217, 255, 0.1)"/>
+  <!-- Доллар на верхней монете -->
+  <line x1="24" y1="22" x2="24" y2="30" stroke="#00d9ff" stroke-width="1.5"/>
+  <path d="M20 24H28" stroke="#00d9ff" stroke-width="1"/>
+  <!-- Стрелка вниз -->
+  <line x1="44" y1="20" x2="44" y2="44" stroke="#00d9ff" stroke-width="3" stroke-linecap="round"/>
+  <path d="M40 40L44 46L48 40" stroke="#00d9ff" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

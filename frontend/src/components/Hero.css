@@ -1,0 +1,634 @@
+/* Import Google Fonts - Edgy and stylish options */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Oswald:wght@600;700&family=Roboto+Slab:wght@400;500;600;700;800&family=Playfair+Display:wght@400;500;600;700;800&family=Raleway:wght@400;500;600;700;800&family=Source+Sans+Pro:wght@400;600;700&family=Nunito:wght@400;600;700&family=Lato:wght@400;700&family=Bebas+Neue&family=Anton&family=Orbitron:wght@400;500;600;700;800&family=Audiowide&family=Black+Ops+One&display=swap');
+
+.feature-card p {
+  color: #a0aec0;
+  font-size: 0.95rem;
+  font-family: 'Source Sans Pro', 'Nunito', 'Lato', 'Raleway', sans-serif; /* Complementary font for feature cards */
+}
+
+/* Gradient text effect for headings */
+.text-gradient {
+  background: linear-gradient(90deg, #00d9ff, #a855f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 200% auto;
+  animation: gradient 8s ease infinite;
+  display: inline;         /* Keep inline to prevent spacing issues */
+  white-space: nowrap;     /* Prevent word breaking */
+  opacity: 0.75; /* More transparent */
+  transition: opacity 0.3s;
+  font-family: 'Bebas Neue', 'Anton', 'Oswald', 'Montserrat', 'Raleway', sans-serif; /* Edgy font options */
+  font-weight: 400; /* Bebas Neue looks best at normal weight */
+  letter-spacing: -0.01em;
+}
+
+@keyframes gradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Hero gradient background */
+.hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, rgba(0, 217, 255, 0.1), rgba(168, 85, 247, 0.1));
+}
+
+/* Hero section */
+.hero-section {
+  position: relative;
+  width: 100%;
+  min-height: 50vh; /* Reduced from 100vh to 50vh */
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #0a0e27;
+  padding: 40px 0 0; /* Reduced padding */
+}
+
+/* Hero container */
+.hero-container {
+  position: relative;
+  z-index: 10;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem 1.5rem; /* Reduced padding */
+  display: flex;
+  flex-direction: column;
+  min-height: calc(50vh - 40px); /* Adjusted for reduced height */
+  justify-content: center;
+  align-items: center;
+}
+
+/* Hero text */
+.hero-text {
+  text-align: center;
+  margin: -1rem auto 1rem; /* Reduced margins */
+  padding: 0.25rem;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.8s forwards;
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+/* Hero title styles */
+.hero-text h1.responsive-hero-title {
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.05;
+  margin: 0 auto;
+  padding: 0 1rem;
+  
+  /* Reduced font size */
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  
+  /* Prevent word breaking */
+  word-break: keep-all;
+  white-space: normal;
+  
+  /* Visual enhancements */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  
+  /* Edgy font family */
+  font-family: 'Bebas Neue', 'Anton', 'Black Ops One', 'Oswald', 'Montserrat', 'Raleway', sans-serif;
+  letter-spacing: -0.01em;
+}
+
+/* Hero text paragraph */
+.hero-text p {
+  font-size: clamp(1rem, 4vw, 1.4rem); /* Reduced font size */
+  color: #a0aec0;
+  margin: 1rem auto 0; /* Reduced margin */
+  max-width: 800px;
+  line-height: 1.3;
+  padding: 0 1rem;
+  font-weight: 400;
+  text-wrap: pretty;
+  letter-spacing: -0.01em;
+  font-family: 'Source Sans Pro', 'Nunito', 'Lato', 'Raleway', sans-serif;
+}
+
+/* Hero search */
+.hero-search {
+  max-width: 800px;
+  width: 100%;
+  margin: 0 auto 2rem; /* Reduced margin */
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideUp 0.6s forwards;
+  position: relative;
+  z-index: 10;
+  margin-top: 2rem; /* Reduced from 4rem */
+}
+
+.search-card {
+  border: 2px solid rgba(0, 217, 255, 0.3);
+  padding: 1.5rem; /* Reduced padding */
+  border-radius: 1rem;
+  background-color: #0a0e27;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.2);
+  transition: box-shadow 0.3s, transform 0.3s;
+}
+
+.search-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  /* Original blue/cyan gradient matching project theme */
+  font-weight: 700;
+  margin-bottom: 0.75rem; /* Reduced margin */
+  font-size: 1rem; /* Reduced font size */
+  width: 100%;
+  justify-content: center;
+  background: linear-gradient(90deg, #00d9ff, #00aaff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.search-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Reduced gap */
+  margin-bottom: 0.75rem; /* Reduced margin */
+  margin-top: 1rem; /* Reduced margin */
+}
+
+.search-fields select,
+.search-fields input {
+  padding: 0.6rem 1rem; /* Reduced padding */
+  border-radius: 0.5rem;
+  border: 1px solid #00d9ff;
+  background-color: rgba(0, 217, 255, 0.05);
+  color: #fff;
+  outline: none;
+  transition: all 0.3s;
+}
+
+.search-fields button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1rem; /* Reduced padding */
+  background-color: #00d9ff;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  color: #0a0e27;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.fraud-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem; /* Reduced gap */
+}
+
+.fraud-types button {
+  padding: 0.2rem 0.6rem; /* Reduced padding */
+  border-radius: 9999px;
+  border: 1px solid #00d9ff;
+  color: #00d9ff;
+  background: rgba(0, 217, 255, 0.05);
+  cursor: pointer;
+  transition: all 0.3s;
+  font-size: 0.85rem; /* Reduced font size */
+}
+
+.hero-features {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem; /* Reduced gap */
+  position: relative;
+  z-index: 10;
+  margin-top: auto;
+  padding: 1.5rem 0 0; /* Reduced padding */
+  width: 100%;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Медиа-запросы */
+@media (min-width: 270px) {
+  .hero-text h1 {
+    font-size: 2.8rem;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+  }
+  
+  .hero-text p {
+    font-size: 1.3rem;
+    line-height: 1.4;
+  }
+}
+
+@media (min-width: 400px) {
+  .hero-text h1 {
+    font-size: 3.5rem;
+  }
+  
+  .hero-text p {
+    font-size: 1.4rem;
+  }
+}
+
+@media (min-width: 640px) {
+  .hero-text h1 {
+    font-size: 4.5rem;
+    line-height: 1.1;
+  }
+  
+  .hero-text p {
+    font-size: 1.6rem;
+    line-height: 1.4;
+    max-width: 800px;
+  }
+}
+
+@media (min-width: 768px) {
+  .hero-section {
+    padding: 40px 0 0; /* Reduced padding */
+    min-height: 50vh; /* Reduced height */
+  }
+
+  .hero-container {
+    padding: 2rem 1.5rem; /* Reduced padding */
+  }
+
+  .hero-text h1 {
+    font-size: 3.5rem; /* Reduced font size */
+    line-height: 1.1;
+    margin-bottom: 1rem; /* Reduced margin */
+  }
+
+  .hero-text p {
+    font-size: 1.4rem; /* Reduced font size */
+    line-height: 1.4;
+    max-width: 900px;
+  }
+
+  .search-fields {
+    flex-direction: row;
+  }
+
+  .search-fields select,
+  .search-fields input {
+    flex: 1;
+  }
+
+  .hero-features {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem; /* Reduced gap */
+    padding: 2rem 0 1.5rem; /* Reduced padding */
+    margin-top: 1rem; /* Reduced margin */
+  }
+  
+  .hero-container {
+    padding: 1rem 1.5rem 2rem; /* Reduced padding */
+  }
+}
+
+/* Specific fix for 762px and below */
+@media (max-width: 762px) {
+  .hero-section {
+    min-height: auto;
+    padding-bottom: 2rem;
+    align-items: flex-start;
+  }
+  
+  .hero-container {
+    min-height: auto;
+    padding-top: 1.5rem;
+    justify-content: flex-start;
+  }
+  
+  .hero-text {
+    margin: -1rem auto 2rem;  /* Reduced top margin */
+    padding-top: 1rem;
+    flex: 0 0 auto;
+  }
+  
+  .hero-text h1 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.1;
+  }
+  
+  .hero-text p {
+    font-size: 1.4rem;
+    line-height: 1.4;
+  }
+  
+  .hero-features {
+    margin-top: 2rem;
+  }
+}
+
+@media (min-width: 763px) {
+  .hero-section {
+    align-items: center;
+    padding: 80px 0 0;
+    min-height: 100vh;
+  }
+
+  .hero-container {
+    padding: 4rem 1.5rem;
+  }
+
+  .hero-text {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .hero-text h1 {
+    font-size: 5rem;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+  }
+
+  .hero-text p {
+    font-size: 1.8rem;
+    line-height: 1.4;
+    max-width: 900px;
+  }
+
+  .search-fields {
+    flex-direction: row;
+  }
+
+  .search-fields select,
+  .search-fields input {
+    flex: 1;
+  }
+
+  .hero-features {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    padding: 4rem 0 3rem;
+    margin-top: 2rem;
+  }
+  
+  .hero-container {
+    padding: 2rem 1.5rem 4rem;
+  }
+}
+
+/* Specific fixes for mobile and tablet */
+@media (max-width: 762px) {
+  .hero-section {
+    min-height: auto;
+    padding: 70px 0 1.5rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  
+  .hero-container {
+    min-height: auto;
+    padding: 0.5rem 0.75rem 1.5rem;
+    justify-content: flex-start;
+  }
+  
+  .hero-text {
+    margin: -0.5rem auto 1rem;  /* Reduced top margin */
+    padding: 0.25rem 0.25rem 0.75rem;
+    flex: 0 0 auto;
+  }
+  
+  .hero-text h1 {
+    margin-bottom: 0.75rem;
+  }
+  
+  .hero-text p {
+    font-size: 1.2rem;
+    line-height: 1.4;
+    margin: 0.5rem auto 0;
+    padding: 0 0.5rem;
+  }
+  
+  .hero-features {
+    margin-top: 1.25rem;
+  }
+  
+  /* Specific adjustments for very small screens */
+  @media (max-width: 360px) {
+    .hero-text {
+      padding: 0.25rem 0.25rem 0.75rem;
+      margin-top: -0.25rem !important;
+    }
+    
+    .hero-text h1 {
+      line-height: 1.1;
+      margin-bottom: 0.75rem;
+    }
+    
+    .hero-text p {
+      font-size: 1.2rem;
+      line-height: 1.3;
+    }
+  }
+}
+
+/* Скрытый label для доступности */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Video Background */
+.video-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.video-element {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  transform: translate(-50%, -50%);
+  object-fit: cover;
+}
+
+.video-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(10, 14, 39, 0.7) 0%,        /* Even more transparent at the top */
+    rgba(10, 14, 39, 0.6) 30%,      /* More transparent in the middle */
+    rgba(10, 14, 39, 0.55) 70%,     /* Very transparent towards the bottom */
+    rgba(10, 14, 39, 0.65) 100%     /* Slightly more opaque at the very bottom */
+  );
+  z-index: 2;
+  /* Add a subtle fade effect */
+  transition: background 0.5s ease;
+}
+
+/* Additional semi-transparent overlay for better text visibility */
+.video-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(10, 14, 39, 0.15);  /* Even more transparent overlay */
+  z-index: 1;
+  /* Smooth transition for any hover effects */
+  transition: background-color 0.5s ease;
+}
+
+/* Adjust z-index of existing elements to ensure they appear above the video */
+.hero-grid {
+  z-index: 3;
+}
+
+.hero-gradient {
+  z-index: 4;
+}
+
+.hero-container {
+  z-index: 10;
+}
+
+/* Responsive hero title for perfect fit from 270px+ */
+.responsive-hero-title {
+  font-weight: 800;
+  margin: 0 0 0.75rem;
+  letter-spacing: -0.02em;
+  max-width: 26ch;
+  text-wrap: balance;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  width: 100%;
+  padding: 0 0.5rem;
+  box-sizing: border-box;
+  font-size: clamp(1.6rem, 8.5vw, 5.5rem);
+  line-height: clamp(1.04, 2.2vw, 1.12);
+}
+
+@media (max-width: 359px) {
+  .responsive-hero-title {
+    font-size: clamp(1.5rem, 10vw, 2.2rem);
+    line-height: 1.05;
+    letter-spacing: -0.015em;
+  }
+}
+
+@media (min-width: 360px) and (max-width: 479px) {
+  .responsive-hero-title {
+    font-size: clamp(1.9rem, 8.5vw, 2.6rem);
+    line-height: 1.06;
+  }
+}
+
+@media (min-width: 480px) and (max-width: 639px) {
+  .responsive-hero-title {
+    font-size: clamp(2.2rem, 7.5vw, 3.2rem);
+    line-height: 1.08;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 767px) {
+  .responsive-hero-title {
+    font-size: clamp(2.6rem, 6.5vw, 3.8rem);
+    line-height: 1.08;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .responsive-hero-title {
+    font-size: clamp(3rem, 5.5vw, 4.3rem);
+    line-height: 1.1;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+  .responsive-hero-title {
+    font-size: clamp(3.6rem, 5vw, 4.8rem);
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1439px) {
+  .responsive-hero-title {
+    font-size: clamp(4rem, 4.5vw, 5.3rem);
+  }
+}
+
+@media (min-width: 1440px) {
+  .responsive-hero-title {
+    font-size: clamp(4.6rem, 4vw, 5.8rem);
+  }
+}
+
+/* 🟦 Дополнительная оптимизация для ОЧЕНЬ маленьких экранов */
+@media (max-width: 300px) {
+  .hero-text h1.responsive-hero-title {
+    font-size: clamp(1.1rem, 11vw, 2rem);
+    line-height: 1.1;
+    padding: 0 0.25rem;
+  }
+}
+
+/* Glossary link styles */
+.mt-4.text-center {
+  margin-top: 1rem;
+}
+
+.mt-4.text-center a {
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.mt-4.text-center a:hover {
+  text-decoration: underline;
+}

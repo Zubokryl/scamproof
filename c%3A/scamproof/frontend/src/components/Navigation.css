@@ -1,0 +1,877 @@
+/* Общий контейнер навигации */
+.nav {
+
+  width: 100%;
+  position: sticky;
+  background: rgba(10, 14, 30, 0.4);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(0, 217, 255, 0.1);
+  top: 0;
+  z-index: 999;
+}
+
+/* Внутренняя структура */
+.nav-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2.5rem;
+  margin-left: 0;
+}
+
+/* === ЛОГО === */
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.logo-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  
+}
+
+.logo-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
+  -webkit-backdrop-filter: blur(30px);
+  backdrop-filter: blur(30px);
+  border: 1px solid rgba(0, 217, 255, 0.15);
+  border-radius: 16px;
+  transform: skewX(-8deg);
+  z-index: -1;
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo-wrapper:hover .logo-bg {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+  box-shadow: 0 0 30px rgba(0, 217, 255, 0.3), 0 0 60px rgba(0, 217, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: skewX(-8deg) scale(1.03);
+}
+
+.nav-logo-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(0, 217, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(0, 217, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-wrapper:hover .nav-logo-img {
+  border-color: rgba(0, 217, 255, 0.6);
+  box-shadow: 0 6px 24px rgba(0, 217, 255, 0.4);
+  transform: rotate(360deg) scale(1.05);
+}
+
+.nav-logo-text {
+  font-size: 24px;
+  font-weight: 800;
+  background: linear-gradient(135deg, #00d9ff 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.logo-wrapper:hover .nav-logo-text {
+  letter-spacing: 0px;
+  filter: drop-shadow(0 0 8px rgba(0, 217, 255, 0.5));
+}
+
+/* === МЕНЮ === */
+.menu-wrapper {
+  flex: 2;
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+
+.header-menu {
+  
+  display: flex;
+  align-items: center;
+  gap: 1.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 6px 28px;
+  white-space: nowrap;
+  border-radius: 16px;
+  position: relative;
+  z-index: 40;
+  transform: translateY(0) scale(1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+              background 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Стеклянный эффект с перекрывающимися слоями */
+.header-menu::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 155, 200, 0.2);
+  border-radius: 16px;
+  transform: skewX(-8deg);
+  z-index: -1;
+  box-shadow: 0 0 10px rgba(0, 217, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.header-menu::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.08) 0%, rgba(59, 130, 246, 0.05) 100%);
+  border: 1px solid rgba(0, 155, 200, 0.3);
+  border-radius: 16px;
+  transform: skewX(-8deg);
+  box-shadow: 0 0 15px rgba(0, 217, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  transition: 0.6s ease;
+  z-index: -1;
+}
+
+.header-menu:hover::before {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+  box-shadow: 0 0 5px rgba(0, 217, 255, 0.3), 0 0 60px rgba(0, 217, 255, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: skewX(-8deg) scale(1.03);
+  transition: 0.7s ease;
+}
+
+.header-menu:hover::after {
+  transform: skewX(-8deg) scale(1.03);
+}
+
+/* Не позволяем элементам переноситься и выравниваем li по центру */
+.header-menu > li {
+  display: flex;
+  align-items: center;
+}
+
+/* === ССЫЛКИ МЕНЮ === */
+.header-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.5rem 0;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  border: none;
+  background: none;
+}
+
+.header-link__bottom {
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0%;
+  height: 2px;
+  background: linear-gradient(90deg, #00d9ff 0%, #3b82f6 100%);
+  transition: width 0.3s ease;
+  border-radius: 2px;
+}
+
+.header-link:hover .header-link__bottom,
+.header-link.active .header-link__bottom,
+.header-link--dropdown:hover .header-link__bottom {
+  width: 100%;
+}
+
+/* === DROPDOWN === */
+.dropdown-menu {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.header-link--dropdown {
+  padding: 0;
+}
+
+/* Обёртка ссылки и кнопки стрелки в одном ряду, без роста по высоте */
+.header-link-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* Кнопка стрелки: компактная, не влияет на высоту строки */
+.header-link-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.85);
+  cursor: pointer;
+  line-height: 1;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+.header-link-dropdown-btn:focus {
+  outline: none;
+}
+
+/* === ПОДМЕНЮ === */
+.submenu {
+  position: absolute;
+  top: calc(100% + 12px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-10px);
+  background: rgba(10, 14, 30, 0.95);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 217, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  padding: 16px;
+  min-width: 520px;
+  max-width: 90vw;
+  width: max-content;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.8rem;
+  list-style: none;
+  margin: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.submenu.two-columns {
+  display: grid;
+}
+
+/* Показываем подменю при ховере И при открытии (класс open) */
+.submenu.open,
+.dropdown-menu:hover .submenu {
+  display: grid;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+.submenu li {
+  list-style: none;
+  margin: 0;
+}
+
+.submenu-link {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(0, 217, 255, 0.15);
+  background: rgba(30, 40, 70, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: #dbe4ff;
+  font-weight: 500;
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  white-space: normal;
+  word-break: break-word;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.submenu-link:hover {
+  background: rgba(0, 140, 255, 0.25);
+  color: #00d9ff;
+  border-color: rgba(0, 217, 255, 0.4);
+  box-shadow: 0 0 16px rgba(0, 217, 255, 0.4);
+  transform: translateX(4px);
+}
+
+.submenu-link .image {
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.submenu-link .image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* === TELEGRAM === */
+.telegram-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #29a9eb;
+}
+
+.telegram-icon {
+  transition: 0.25s ease;
+}
+
+.telegram-link:hover .telegram-icon {
+  transform: translateY(-2px);
+  filter: drop-shadow(0 0 6px #29a9ebaa);
+}
+
+/* === АВАТАР ПОЛЬЗОВАТЕЛЯ === */
+.user-avatar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.15) 0%, rgba(59, 130, 246, 0.1) 100%);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  box-shadow: 0 0 12px rgba(0, 217, 255, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.user-avatar-container:hover {
+  background: linear-gradient(135deg, rgba(0, 217, 255, 0.25) 0%, rgba(59, 130, 246, 0.2) 100%);
+  border-color: rgba(0, 217, 255, 0.5);
+  box-shadow: 0 0 20px rgba(0, 217, 255, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.user-avatar-container a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  position: relative;
+  z-index: 2;
+}
+
+.user-avatar-container div[class*="avatar"] {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #00d9ff 0%, #3b82f6 100%) !important;
+  border: 2px solid rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 0 8px rgba(0, 217, 255, 0.5) !important;
+  transition: all 0.3s ease !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden;
+  position: relative;
+}
+
+.user-avatar-container:hover div[class*="avatar"] {
+  border-color: rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 0 16px rgba(0, 217, 255, 0.7) !important;
+  transform: scale(1.05);
+}
+
+/* === КНОПКИ === */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 0 1 auto;
+}
+
+.nav-login,
+.nav-logout,
+.nav-profile {
+  padding: 10px 22px;
+  background: linear-gradient(135deg, #00d9ff, #3b82f6);
+  border-radius: 14px;
+  font-weight: 700;
+  font-size: 17px;
+  color: #0a0e27;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-login:hover,
+.nav-logout:hover,
+.nav-profile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 16px rgba(0, 217, 255, 0.7);
+}
+
+/* === БУРГЕР === */
+.nav-burger {
+  display: none;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: white;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1001;
+}
+
+.nav-burger:hover {
+  transform: scale(1.1);
+}
+
+/* Animated burger icon */
+.nav-burger svg {
+  display: block;
+  vertical-align: middle;
+  transition: all 0.3s ease;
+width: 60px;
+  height: 60px;
+}
+
+.nav-burger svg:first-child {
+  /* Close icon initially hidden */
+  opacity: 0;
+  transform: rotate(180deg);
+}
+
+.nav-burger svg:last-child {
+  /* Menu icon initially visible */
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.nav-burger.open svg:first-child {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.nav-burger.open svg:last-child {
+  opacity: 0;
+  transform: rotate(-180deg);
+}
+
+/* === МОБИЛЬНОЕ МЕНЮ (NEW) === */
+.nav-mobile {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: #0A0E1D; /* Solid dark background */
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+.nav-mobile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 1rem;
+  height: 80px; /* Match main nav height */
+}
+
+.nav-mobile-close {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+.nav-mobile-links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.nav-mobile-link {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 1rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.nav-mobile-link:hover {
+  background: rgba(0, 217, 255, 0.1);
+}
+
+.nav-mobile .telegram-mobile {
+  color: #29a9eb !important;
+}
+
+.nav-mobile-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+  width: 100%;
+}
+
+.nav-mobile-footer .user-avatar-container {
+  width: 48px;
+  height: 48px;
+}
+.nav-mobile-footer .user-avatar-container div[class*="avatar"] {
+  width: 40px !important;
+  height: 40px !important;
+}
+
+.nav-mobile-login,
+.nav-mobile-logout {
+  flex-grow: 1;
+  max-width: 300px;
+  text-align: center;
+  padding: 14px;
+  font-size: 1.1rem;
+}
+
+/* Cleanup old mobile styles */
+.mobile-menu-backdrop,
+.nav-mobile-content,
+.nav-mobile-top,
+.nav-mobile-bottom,
+.nav-mobile-auth-section {
+  display: none !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .nav-inner {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  .menu-wrapper {
+    display: none;
+  }
+
+  /* Скрываем аватар и кнопку входа/выхода на маленьких экранах */
+  .nav-actions {
+    display: none !important;
+  }
+
+  .nav-burger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+    width: 64px;
+    height: 64px;
+    padding: 0;
+    margin-left: auto;
+    margin-right: 1rem;
+    cursor: pointer;
+  }
+  .nav-burger svg {
+    width: 32px;
+    height: 32px;
+    color: rgba(255, 255, 255, 0.9);
+    transition: transform 0.2s ease, color 0.2s ease;
+  }
+  .nav-burger:hover svg {
+    color: #00d9ff;
+    transform: scale(1.1);
+  }
+
+  .nav-login {
+    display: none;
+  }
+
+  .submenu {
+    min-width: auto;
+    max-width: 90vw;
+  }
+
+  /* Mobile menu animations */
+  .nav-mobile.open {
+    transform: translateX(0);
+  }
+
+  /* Adjust logo size */
+  .nav-logo-img {
+    width: 40px;
+    height: 40px;
+  }
+
+  .nav-logo-text {
+    font-size: 20px;
+  }
+
+  /* Adjust nav actions */
+  .nav-actions {
+    gap: 12px;
+  }
+}
+
+/* Small mobile devices (480px and below) */
+@media (max-width: 480px) {
+  .nav-inner {
+    padding: 0 0.75rem;
+    height: 70px;
+  }
+
+  .nav-logo-img {
+    width: 36px;
+    height: 36px;
+  }
+
+  .nav-logo-text {
+    font-size: 18px;
+  }
+
+  .nav-burger {
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    margin-right: 0.5rem;
+  }
+  .nav-burger svg {
+    width: 30px;
+    height: 30px;
+  }
+
+  .nav-mobile {
+    padding: 15px;
+    top: 70px;
+  }
+
+  .nav-mobile-link {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+  }
+
+  .nav-mobile-login,
+  .nav-mobile-logout,
+  .nav-mobile-profile {
+    padding: 12px;
+    font-size: 16px;
+  }
+}
+
+/* Extra small devices (320px and below) */
+@media (max-width: 320px) {
+  .nav-inner {
+    padding: 0 0.5rem;
+    height: 65px;
+  }
+
+  .logo-wrapper {
+    padding: 8px 12px;
+  }
+
+  .nav-logo-img {
+    width: 32px;
+    height: 32px;
+  }
+
+  .nav-logo-text {
+    font-size: 16px;
+  }
+
+  .nav-burger {
+    width: 56px;
+    height: 56px;
+    padding: 0;
+    margin-right: 0.25rem;
+  }
+  .nav-burger svg {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nav-mobile {
+    padding: 12px;
+    top: 65px;
+  }
+
+  .nav-mobile-link {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .nav-mobile-login,
+  .nav-mobile-logout,
+  .nav-mobile-profile {
+    padding: 10px;
+    font-size: 15px;
+  }
+}
+
+/* Ultra small devices (270px and below) */
+@media (max-width: 270px) {
+  .nav-inner {
+    padding: 0 0.25rem;
+    height: 60px;
+  }
+
+  .logo-wrapper {
+    padding: 6px 10px;
+    gap: 8px;
+  }
+
+  .nav-logo-img {
+    width: 28px;
+    height: 28px;
+  }
+
+  .nav-logo-text {
+    font-size: 14px;
+  }
+
+  .nav-burger {
+    width: 52px;
+    height: 52px;
+    padding: 0;
+    margin-right: 0;
+  }
+  .nav-burger svg {
+    width: 26px;
+    height: 26px;
+  }
+
+  .nav-mobile {
+    padding: 10px;
+    top: 60px;
+  }
+
+  .nav-mobile-link {
+    padding: 6px 8px;
+    font-size: 0.8rem;
+  }
+
+  .nav-mobile-login,
+  .nav-mobile-logout,
+  .nav-mobile-profile {
+    padding: 8px;
+    font-size: 14px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1040px) {
+  /* Reduce overall spacing */
+  .nav-inner {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+
+  /* Reduce logo size */
+  .logo-wrapper {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+  .nav-logo-img {
+    width: 40px;
+    height: 40px;
+  }
+  .nav-logo-text {
+    font-size: 20px;
+  }
+
+  /* Reduce menu links size and spacing */
+  .header-menu {
+    gap: 0.8rem;
+    padding: 4px 16px;
+  }
+  .header-link {
+    font-size: 1.3rem;
+    gap: 0.5rem;
+  }
+
+  /* Reduce user actions size */
+  .nav-actions {
+    gap: 10px;
+  }
+  .user-avatar-container {
+    width: 40px;
+    height: 40px;
+  }
+  .user-avatar-container div[class*="avatar"] {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .nav-login,
+  .nav-logout,
+  .nav-profile {
+    padding: 8px 16px;
+    font-size: 15px;
+  }
+}
+
+@media (min-width: 769px) {
+  .nav-mobile {
+    display: none !important;
+  }
+}

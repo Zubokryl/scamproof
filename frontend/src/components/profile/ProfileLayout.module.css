@@ -1,0 +1,124 @@
+.main {
+  min-height: 100vh;
+  background-color: var(--background);
+}
+
+.backgroundDecoration {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.backgroundGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom right, hsl(187 100% 50% / 0.05), hsl(270 60% 60% / 0.05));
+}
+
+.cyanCircle {
+  position: absolute;
+  top: 0;
+  left: 25%;
+  width: 16rem;
+  height: 16rem;
+  background-color: hsl(187 100% 50% / 0.05);
+  border-radius: 50%;
+  filter: blur(64px);
+}
+
+@media (min-width: 640px) {
+  .cyanCircle {
+    width: 24rem;
+    height: 24rem;
+  }
+}
+
+.purpleCircle {
+  position: absolute;
+  bottom: 25%;
+  right: 25%;
+  width: 12rem;
+  height: 12rem;
+  background-color: hsl(270 60% 60% / 0.05);
+  border-radius: 50%;
+  filter: blur(64px);
+}
+
+@media (min-width: 640px) {
+  .purpleCircle {
+    width: 20rem;
+    height: 20rem;
+  }
+}
+
+.container {
+  position: relative;
+  z-index: 10;
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+.header {
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .header {
+    margin-bottom: 1.5rem;
+  }
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    gap: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+  }
+}
+
+.leftColumn {
+  order: 2;
+}
+
+@media (min-width: 1024px) {
+  .leftColumn {
+    grid-column: span 4 / span 4;
+    order: 1;
+  }
+}
+
+.rightColumn {
+  order: 1;
+}
+
+@media (min-width: 1024px) {
+  .rightColumn {
+    grid-column: span 8 / span 8;
+    order: 2;
+  }
+}
