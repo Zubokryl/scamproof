@@ -3,3 +3,9 @@ node_modules/
 dist/
 .env
 backend/meilisearch.exe
+backend/meilisearch.exe
+*.exe
+*.zip
+*.7z
+node_modules/
+vendor/
