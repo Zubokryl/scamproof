@@ -52,7 +52,7 @@ export default function CreateTopicPage() {
       const requestData = {
         title,
         content,
-        ...(categoryId && { category_id: categoryId }),
+        category_id: categoryId || null,
       };
       
       console.log('Request data:', requestData);
