@@ -1,6 +1,7 @@
 import { ForumCategory } from "@/types/forum";
 import Link from "next/link";
 import { MessageSquare, Eye } from "lucide-react";
+import { pluralizeTopics, pluralizePosts } from '@/lib/pluralize';
 
 // Fixed import to use Next.js Link instead of react-router-dom
 
@@ -44,11 +45,11 @@ const CategoryCard = ({ category }: CategoryCardProps) => {
             <div className="flex items-center gap-4 text-muted-foreground">
               <span className="flex items-center gap-1">
                 <MessageSquare className="w-3 h-3" />
-                {category.topicsCount} тем
+                {pluralizeTopics(category.topicsCount)}
               </span>
               <span className="flex items-center gap-1">
                 <Eye className="w-3 h-3" />
-                {category.postsCount} постов
+                {pluralizePosts(category.postsCount)}
               </span>
             </div>
             

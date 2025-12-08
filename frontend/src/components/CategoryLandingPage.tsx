@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import api from '@/api/api';
 import styles from './CategoryLandingPage.module.css';
+import { pluralizeArticles } from '@/lib/pluralize';
 
 interface Article {
   id: number;
@@ -112,7 +113,7 @@ export default function CategoryLandingPage({ slug }: { slug?: string }) {
             <h1 className={styles.title}>{category.name}</h1>
             <p className={styles.description}>{category.description}</p>
             <div className={styles.stats}>
-              <span>{category.articles_count} статей в категории</span>
+              <span>{pluralizeArticles(category.articles_count)} в категории</span>
             </div>
           </div>
         </div>

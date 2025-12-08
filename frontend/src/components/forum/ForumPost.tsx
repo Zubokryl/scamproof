@@ -1,6 +1,7 @@
 import { ForumPost as ForumPostType } from "@/types/forum";
 import { User, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { pluralize } from '@/lib/pluralize';
 
 interface ForumPostProps {
   post: ForumPostType;
@@ -71,7 +72,7 @@ const ForumPost = ({ post, onReact, onDelete, canDelete }: ForumPostProps) => {
               >
                 <span>{emoji}</span>
                 {reaction?.count ? (
-                  <span>{reaction.count}</span>
+                  <span>{pluralize(reaction.count, ['реакция', 'реакции', 'реакций'])}</span>
                 ) : null}
               </button>
             );

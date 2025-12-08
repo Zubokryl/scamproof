@@ -321,6 +321,8 @@
   color: #e6f7ff;
   transition: all 0.2s ease;
   box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .textarea::placeholder {
@@ -543,18 +545,16 @@
 }
 
 .commentText {
-  color: #f0f0f0;
+  margin-top: 0.75rem;
   line-height: 1.6;
-  font-size: 1rem;
-  padding-left: 2.75rem;
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  letter-spacing: 0.01em;
+  color: #cbd5e1;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .reactionsList {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
   flex-wrap: wrap;
   margin-left: auto;
 }
@@ -562,16 +562,16 @@
 .reactionButton {
   display: flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.2rem;
   background: rgba(0, 198, 255, 0.2);
   border: 1px solid rgba(0, 198, 255, 0.3);
-  border-radius: 20px;
-  padding: 0.3rem 0.75rem;
+  border-radius: 16px;
+  padding: 0.2rem 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   font-weight: 500;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   color: #f0f0f0;
   letter-spacing: 0.02em;
 }
@@ -580,7 +580,7 @@
   background: rgba(0, 198, 255, 0.3);
   transform: translateY(-1px);
   border-color: rgba(0, 198, 255, 0.5);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .userReacted {
@@ -590,13 +590,89 @@
 }
 
 .reactionEmoji {
-  font-size: 0.9rem;
+  font-size: 0.75rem;
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
 }
 
 .reactionCount {
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: rgba(255, 255, 255, 0.9);
   font-weight: 500;
+}
+
+/* Emoji reactions container in comments */
+.relative {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Main reaction button styling */
+.relative button:first-child {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(0, 198, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 32px;
+  height: 32px;
+  justify-content: center;
+}
+
+.relative button:first-child:hover {
+  background: rgba(0, 198, 255, 0.25);
+  transform: scale(1.05);
+}
+
+/* Reaction picker dropdown */
+.relative > div:last-child {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 0.5rem;
+  z-index: 100;
+}
+
+/* Individual reaction buttons in picker */
+.relative > div:last-child button {
+  background: rgba(30, 41, 59, 0.9);
+  border: 1px solid rgba(0, 198, 255, 0.3);
+  border-radius: 50%;
+  padding: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.relative > div:last-child button:hover {
+  background: rgba(0, 198, 255, 0.2);
+  border-color: rgba(0, 198, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.relative > div:last-child button img {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+/* Active reaction styling */
+.relative > div:last-child button[class*='bg-blue-500'] {
+  background: rgba(0, 198, 255, 0.3);
+  border-color: rgba(0, 198, 255, 0.7);
+  box-shadow: 0 0 8px rgba(0, 198, 255, 0.4);
 }
 
 .noReactions {
@@ -834,6 +910,23 @@
   
   .content h3 {
     font-size: 1.4rem;
+  }
+  
+  /* Mobile reaction button adjustments */
+  .relative button:first-child {
+    width: 28px;
+    height: 28px;
+  }
+  
+  /* Mobile reaction picker adjustments */
+  .relative > div:last-child button {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .relative > div:last-child button img {
+    width: 20px;
+    height: 20px;
   }
 }
 

@@ -13,13 +13,15 @@ export interface ForumCategory {
 }
 
 export interface ForumTopic {
-  id: string;
+  id: number;
+  slug: string;
   title: string;
   postsCount: number;
   viewsCount: number;
   isPinned?: boolean;
   isLocked?: boolean;
   author: {
+    id: number;
     name: string;
   };
   createdAt: Date;

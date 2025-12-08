@@ -6,11 +6,14 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import api from "@/api/api";
 import { useAuth } from "@/context/AuthContext";
+import axios from 'axios';
 
 import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { ProfileActivity } from "@/components/profile/ProfileActivity";
 import { ProfileLayout } from "@/components/profile/ProfileLayout";
 import { ProfileStats } from "@/components/profile/ProfileStats";
+import { MessagesSection } from "@/components/profile/MessagesSection";
+import { MessagingSection } from "@/components/profile/MessagingSection";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
@@ -108,7 +111,11 @@ export default function ProfilePage() {
       const id = isOwnProfile ? currentUser?.id : userId;
       if (id) {
         console.log('Fetching user profile with ID:', id);
+        
+        // Try to fetch the user profile
+        // According to project requirements, user profiles should be publicly accessible
         const res = await api.get(`/users/${id}`);
+        
         console.log('User profile response:', res.data);
         setProfile(res.data);
         
@@ -142,6 +149,8 @@ export default function ProfilePage() {
       console.error('Error fetching user profile:', err);
       if (err.response?.status === 404) {
         setError("Пользователь не найден");
+      } else if (err.response?.status === 401) {
+        setError("Доступ к профилю запрещен");
       } else {
         setError("Ошибка при загрузке профиля");
       }
@@ -156,64 +165,59 @@ export default function ProfilePage() {
   // Fetch user's activities when profile is loaded
   useEffect(() => {
     if (profile) {
-      // Only fetch activities for own profile or if user has permission
-      if (isOwnProfile || (currentUser && currentUser.id === profile.id)) {
-        // Fetch user's actual activities from API
-        Promise.all([
-          api.get(`/users/${profile.id}/activities`).catch(err => {
-            console.error("Error fetching activities:", err);
-            return { data: [] };
-          }),
-          api.get(`/users/${profile.id}/comments`).catch(err => {
-            console.error("Error fetching comments:", err);
-            return { data: [] };
-          })
-        ])
-          .then(([activitiesRes, commentsRes]) => {
-            // Combine activities and comments
-            const allActivities = [
-              ...activitiesRes.data,
-              ...commentsRes.data
-            ];
-            
-            // Sort by date (newest first)
-            allActivities.sort((a, b) => {
-              return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-            });
-            
-            setActivities(allActivities);
-            setActivitiesLoading(false);
-          })
-          .catch(err => {
-            console.error("Ошибка при загрузке активности", err);
-            // Fallback to some sample activities if API call fails
-            setActivities([
-              {
-                id: "1",
-                type: "post",
-                title: "Обновление схемы мошенников по Binance",
-                preview: "Все ещё действует. Добавил скриншоты...",
-                timestamp: "2 часа назад",
-                likes: 12,
-              },
-              {
-                id: "2",
-                type: "comment",
-                title: "Комментарий к теме о телеграм-ботах",
-                preview: "Полностью согласен. Они скорее всего используют…",
-                timestamp: "5 часов назад",
-                likes: 3,
-              },
-            ]);
-            setActivitiesLoading(false);
+      // Fetch activities for all users (both own profile and other users)
+      // Removed the restriction that only allowed fetching activities for own profile
+      // Fetch user's actual activities from API
+      Promise.all([
+        api.get(`/users/${profile.id}/activities`).catch(err => {
+          console.error("Error fetching activities:", err);
+          return { data: [] };
+        }),
+        api.get(`/users/${profile.id}/comments`).catch(err => {
+          console.error("Error fetching comments:", err);
+          return { data: [] };
+        })
+      ])
+        .then(([activitiesRes, commentsRes]) => {
+          // Combine activities and comments
+          const allActivities = [
+            ...activitiesRes.data,
+            ...commentsRes.data
+          ];
+          
+          // Sort by date (newest first)
+          allActivities.sort((a, b) => {
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
           });
-      } else {
-        // For other users, show limited or no activities
-        setActivities([]);
-        setActivitiesLoading(false);
-      }
+          
+          setActivities(allActivities);
+          setActivitiesLoading(false);
+        })
+        .catch(err => {
+          console.error("Ошибка при загрузке активности", err);
+          // Fallback to some sample activities if API call fails
+          setActivities([
+            {
+              id: "1",
+              type: "post",
+              title: "Обновление схемы мошенников по Binance",
+              preview: "Все ещё действует. Добавил скриншоты...",
+              timestamp: "2 часа назад",
+              likes: 12,
+            },
+            {
+              id: "2",
+              type: "comment",
+              title: "Комментарий к теме о телеграм-ботах",
+              preview: "Полностью согласен. Они скорее всего используют…",
+              timestamp: "5 часов назад",
+              likes: 3,
+            },
+          ]);
+          setActivitiesLoading(false);
+        });
     }
-  }, [profile, isOwnProfile, currentUser]);
+  }, [profile]);
 
  if (authLoading || (!isOwnProfile && !userId)) {
     return (
@@ -289,13 +293,31 @@ export default function ProfilePage() {
     time_diff: profile.last_active ? Math.floor((new Date().getTime() - new Date(profile.last_active).getTime()) / (1000 * 60)) : null
   });
 
+  // Handle initiating a conversation from another user's profile
+  const handleInitiateConversation = (userId: number) => {
+    // This would be implemented to start a new conversation
+    console.log('Initiating conversation with user:', userId);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
-
       <ProfileLayout
         header={<ProfileHeader user={headerData} isOwnProfile={isOwnProfile} />}
         leftColumn={<ProfileStats stats={stats} />}
         rightColumn={<ProfileActivity activities={activities} />}
+        messagingSection={
+          // Show messages section only on own profile
+          isOwnProfile && currentUser ? (
+            <MessagesSection onInitiateConversation={handleInitiateConversation} />
+          ) : (
+            // Show messaging section when viewing another user's profile
+            <MessagingSection 
+              profileUserId={profile.id} 
+              profileUserName={profile.name} 
+              isOwnProfile={isOwnProfile} 
+            />
+          )
+        }
       />
     </div>
   );

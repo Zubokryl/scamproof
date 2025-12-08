@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/api/api';
 import styles from './ForumPage.module.css';
+import { pluralizeTopics, pluralizeReplies } from '@/lib/pluralize';
 
 interface ForumTopic {
   id: number;
@@ -75,9 +76,19 @@ export default function ForumPage() {
   const fetchRecentTopics = async () => {
     try {
       const response = await api.get('/forum/topics/latest');
-      setRecentTopics(response.data);
+      console.log('Latest topics raw response:', response);
+      
+      // Extract data properly - might be wrapped in a data object
+      const topicsData = response.data?.data || response.data || [];
+      console.log('Extracted topics data:', topicsData);
+      console.log('Number of topics received:', topicsData.length);
+      
+      setRecentTopics(topicsData);
     } catch (err) {
       console.error('Ошибка при загрузке последних тем:', err);
+      if (err instanceof Error) {
+        console.error('Error details:', err.message);
+      }
     }
   };
   
@@ -90,18 +101,25 @@ export default function ForumPage() {
 
     setSearchLoading(true);
     try {
-      const response = await api.get('/search', {
+      // Directly search forum topics instead of using the general search endpoint
+      const response = await api.get('/forum/topics/search', {
         params: { q: searchQuery.trim() }
       });
       
-      // Filter to only forum topics
-      const forumTopics = response.data.topics || [];
+      // Extract forum topics from response
+      const forumTopics = response.data.data || response.data || [];
       setSearchResults(forumTopics);
     } catch (err) {
       console.error('Ошибка поиска:', err);
       setSearchResults([]);
     } finally {
       setSearchLoading(false);
+    }
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch(e as any);
     }
   };
 
@@ -132,16 +150,8 @@ export default function ForumPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        {user && (
-          <Link href="/forum/create" className={styles.createButton}>
-            Создать новую тему
-          </Link>
-        )}
-      </div>
-
-      {/* Search Bar */}
-      <div className={styles.searchSection}>
+      {/* Search Bar and Create Button on the same line */}
+      <div className={styles.searchAndCreateSection}>
         <form onSubmit={handleSearch} className={styles.searchForm}>
           <input
             type="text"
@@ -149,40 +159,44 @@ export default function ForumPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Поиск по темам форума..."
             className={styles.searchInput}
+            onKeyDown={handleSearchKeyDown}
           />
-          <button type="submit" className={styles.searchButton} disabled={searchLoading}>
-            {searchLoading ? 'Поиск...' : 'Найти'}
-          </button>
         </form>
         
-        {/* Search Results */}
-        {searchQuery && (
-          <div className={styles.searchResults}>
-            <h3 className={styles.searchResultsTitle}>
-              Результаты поиска для "{searchQuery}":
-            </h3>
-            {searchLoading ? (
-              <div className={styles.searchLoading}>Поиск...</div>
-            ) : searchResults.length > 0 ? (
-              <div className={styles.searchResultsList}>
-                {searchResults.map((topic) => (
-                  <div key={topic.id} className={styles.searchResultItem}>
-                    <Link href={`/forum/topic/${topic.slug}`} className={styles.searchResultLink}>
-                      {topic.title}
-                    </Link>
-                    <div className={styles.searchResultMeta}>
-                      <span>Категория: {topic.category?.name || 'Без категории'}</span>
-                      <span>{formatDate(topic.created_at)}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className={styles.noResults}>Ничего не найдено</div>
-            )}
-          </div>
+        {user && (
+          <Link href="/forum/create" className={styles.createButton}>
+            Создать новую тему
+          </Link>
         )}
       </div>
+      
+      {/* Search Results */}
+      {searchQuery && (
+        <div className={styles.searchResults}>
+          <h3 className={styles.searchResultsTitle}>
+            Результаты поиска для "{searchQuery}":
+          </h3>
+          {searchLoading ? (
+            <div className={styles.searchLoading}>Поиск...</div>
+          ) : searchResults.length > 0 ? (
+            <div className={styles.searchResultsList}>
+              {searchResults.map((topic) => (
+                <div key={topic.id} className={styles.searchResultItem}>
+                  <Link href={`/forum/topic/${topic.slug}`} className={styles.searchResultLink}>
+                    {topic.title}
+                  </Link>
+                  <div className={styles.searchResultMeta}>
+                    <span>Категория: {topic.category?.name || 'Без категории'}</span>
+                    <span>{formatDate(topic.created_at)}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.noResults}>Ничего не найдено</div>
+          )}
+        </div>
+      )}
 
       <div className={styles.content}>
         {/* Left Column - Categories */}
@@ -202,7 +216,7 @@ export default function ForumPage() {
                     </div>
                   </Link>
                   <div className={styles.categoryStats}>
-                    <span className={styles.topicsCount}>{category.forum_topics_count} тем</span>
+                    <span className={styles.topicsCount}>{pluralizeTopics(category.forum_topics_count)}</span>
                   </div>
                 </div>
               </div>
@@ -246,7 +260,7 @@ export default function ForumPage() {
                       </span>
                       <span className={styles.recentTopicAuthor}>Автор: {topic.author.name}</span>
                       <span className={styles.recentTopicDate}>{formatDate(topic.created_at)}</span>
-                      <span className={styles.recentTopicReplies}>{topic.replies_count} ответов</span>
+                      <span className={styles.recentTopicReplies}>{pluralizeReplies(topic.replies_count)}</span>
                     </div>
                   </div>
                 ))
@@ -259,4 +273,5 @@ export default function ForumPage() {
       </div>
     </div>
   );
+
 }

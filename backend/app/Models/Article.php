@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
 
 class Article extends Model
 {
-    use Searchable;
-
     protected $fillable = [
     'title',
     'slug',
@@ -25,17 +22,6 @@ class Article extends Model
     protected $casts = [
         'published_at' => 'datetime',
     ];
-
-    // Define what fields should be indexed for search
-    public function toSearchableArray()
-    {
-        return [
-            'id' => $this->id,
-            'title' => $this->title,
-            'content' => strip_tags($this->content),
-            'category' => $this->category ? $this->category->name : '',
-        ];
-    }
 
     // Route key name is now 'id' by default
     // public function getRouteKeyName()

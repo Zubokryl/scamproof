@@ -3,6 +3,7 @@ import { User, Trash2 } from 'lucide-react';
 import styles from './ArticlePage.module.css';
 import { formatDate } from '@/utils/date';
 import { useAuth } from '@/context/AuthContext';
+import EmojiReactions from './EmojiReactions';
 
 interface Comment {
   id: number;
@@ -24,12 +25,11 @@ interface Comment {
 
 interface CommentItemProps {
   comment: Comment;
-  onReact: (commentId: number, reaction: string) => void;
   onDelete: (commentId: number) => void;
   index?: number; // Add index prop for staggered animations
 }
 
-const CommentItem: React.FC<CommentItemProps> = ({ comment, onReact, onDelete, index = 0 }) => {
+const CommentItem: React.FC<CommentItemProps> = ({ comment, onDelete, index = 0 }) => {
   const { user } = useAuth();
 
   const handleDelete = () => {
@@ -89,27 +89,14 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment, onReact, onDelete, i
           </div>
           <span className={styles.commentDate}>{formatDate(comment.created_at)}</span>
           <div className={styles.commentMetaSpacer} />
-          {comment.reactions && Object.keys(comment.reactions).length > 0 && (
-            <div className={styles.reactionsList}>
-              {Object.entries(comment.reactions).map(([reactionType, reactionData]) => (
-                <button
-                  key={reactionType}
-                  className={`${styles.reactionButton} ${reactionData.user_has_reacted ? styles.userReacted : ''}`}
-                  onClick={() => onReact(comment.id, reactionType)}
-                >
-                  <span className={styles.reactionEmoji}>{reactionType}</span>
-                  <span className={styles.reactionCount}>{reactionData.count}</span>
-                </button>
-              ))}
-            </div>
-          )}
+          {/* Emoji reactions removed */}
           {user?.role === 'admin' && (
             <button 
               className={styles.deleteButton}
               onClick={handleDelete}
               title="Удалить комментарий"
             >
-              <Trash2 size={16} />
+              <Trash2 className="w-4 h-4" />
             </button>
           )}
         </div>

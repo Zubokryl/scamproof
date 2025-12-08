@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Forum;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ForumReplyResource;
 use App\Models\ForumReply;
 use App\Models\ForumTopic;
 use Illuminate\Http\Request;
@@ -13,8 +14,11 @@ class ForumReplyController extends Controller
     /**
      * Store a newly created reply in storage.
      */
-    public function store(Request $request, ForumTopic $topic)
+    public function store(Request $request, $topicSlug)
     {
+        // Manually resolve the topic by slug
+        $topic = ForumTopic::where('slug', $topicSlug)->firstOrFail();
+        
         $request->validate([
             'content' => 'required|string|max:5000',
             'parent_id' => 'nullable|exists:forum_replies,id',
@@ -30,15 +34,14 @@ class ForumReplyController extends Controller
 
         // Update topic's last activity and replies count
         $topic->increment('replies_count');
-        $topic->last_activity_at = now();
-        $topic->save();
+        $topic->update(['last_activity_at' => now()]);
 
         // Load relationships for response
         $reply->load('author:id,name');
 
         return response()->json([
             'message' => 'Reply created successfully',
-            'reply' => $reply
+            'reply' => new ForumReplyResource($reply)
         ], 201);
     }
 
@@ -57,9 +60,12 @@ class ForumReplyController extends Controller
         $reply->content = $request->content;
         $reply->save();
 
+        // Load relationships for response
+        $reply->load('author:id,name');
+
         return response()->json([
             'message' => 'Reply updated successfully',
-            'reply' => $reply->fresh()
+            'reply' => new ForumReplyResource($reply->fresh())
         ]);
     }
 

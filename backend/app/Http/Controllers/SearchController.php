@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\SemanticSearchService;
+use App\Services\ImprovedSemanticSearchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -11,7 +11,7 @@ class SearchController extends Controller
 {
     protected $semanticSearchService;
     
-    public function __construct(SemanticSearchService $semanticSearchService)
+    public function __construct(ImprovedSemanticSearchService $semanticSearchService)
     {
         $this->semanticSearchService = $semanticSearchService;
     }

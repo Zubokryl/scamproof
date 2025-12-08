@@ -1,6 +1,9 @@
 <?php
 
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
+// Controller imports
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\User\UserController;
 use App\Http\Controllers\User\PrivateMessageController;
@@ -11,9 +14,21 @@ use App\Http\Controllers\Article\ArticleController;
 use App\Http\Controllers\Article\ArticleCommentController;
 use App\Http\Controllers\Article\ArticleLikeController;
 use App\Http\Controllers\Forum\ForumTopicController;
+use App\Http\Controllers\Forum\ForumReplyController;
 use App\Http\Controllers\Admin\ForumModerationController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\GlossaryTermController;
+
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API routes for your application. These
+| routes are loaded by the RouteServiceProvider and all of them will
+| be assigned to the "api" middleware group. Make something great!
+|
+*/
 
 /*
 |--------------------------------------------------------------------------
@@ -75,7 +90,9 @@ Route::group([], function () {
     Route::get('/forum/topics', [ForumTopicController::class, 'index']);
     Route::get('/forum/topics/latest', [ForumTopicController::class, 'latest']);
     Route::get('/forum/topics/category/{categorySlug}', [ForumTopicController::class, 'byCategory']);
+    Route::get('/forum/topics/search', [ForumTopicController::class, 'search']);
     Route::get('/forum/topics/{topic}', [ForumTopicController::class, 'show']);
+
 });
 
 // Auth routes
@@ -83,7 +100,7 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
-// Authenticated routes
+// Authenticated user routes
 Route::middleware('auth:sanctum')->group(function () {
     // Apply role middleware to specific routes
     Route::post('/categories', [CategoryController::class, 'store'])->middleware('role:admin');
@@ -108,34 +125,38 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/forum/topics/{topic}/like', [ForumTopicController::class, 'toggleLike']);
     
     // Forum replies
-    Route::post('/forum/topics/{topic}/replies', [\App\Http\Controllers\Forum\ForumReplyController::class, 'store']);
-    Route::put('/forum/replies/{reply}', [\App\Http\Controllers\Forum\ForumReplyController::class, 'update']);
-    Route::delete('/forum/replies/{reply}', [\App\Http\Controllers\Forum\ForumReplyController::class, 'destroy']);
-    Route::post('/forum/replies/{reply}/like', [\App\Http\Controllers\Forum\ForumReplyController::class, 'toggleLike']);
+    Route::post('/forum/topics/{topicSlug}/replies', [ForumReplyController::class, 'store']);
+    Route::put('/forum/replies/{reply}', [ForumReplyController::class, 'update']);
+    Route::delete('/forum/replies/{reply}', [ForumReplyController::class, 'destroy']);
+    Route::post('/forum/replies/{reply}/like', [ForumReplyController::class, 'toggleLike']);
 
     // Admin manage badges
     Route::post('/admin/badges/{userId}', [UserBadgeController::class, 'assignBadge'])->middleware('role:admin');
     Route::delete('/admin/badges/{badgeId}', [UserBadgeController::class, 'removeBadge'])->middleware('role:admin');
     Route::get('/admin/badges/{userId}', [UserBadgeController::class, 'listBadges'])->middleware('role:admin');
 
-    // User profile routes (authenticated versions)
+    // User profile routes
+    Route::get('/users/profile', [UserController::class, 'getProfile']);
     Route::put('/profile', [UserController::class, 'updateProfile']);
-    Route::post('/profile/avatar', [UserController::class, 'updateProfile']);
-    
-    // User activities route
-    Route::get('/users/{userId}/activities', [UserController::class, 'activityLog']);
-    
-    // User comments route - NEWLY ADDED FOR PROFILE ACTIVITY SECTION
-    Route::get('/users/{userId}/comments', [UserController::class, 'getUserComments']);
-    
-    // User statistics route
-    Route::get('/users/{userId}/statistics', [UserController::class, 'getStatistics']);
+    Route::delete('/profile', [UserController::class, 'deleteProfile']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::post('/users/{id}/password', [UserController::class, 'changePassword']);
+    Route::get('/users/{id}/activities', [UserController::class, 'activityLog']);
+    Route::get('/users/{id}/logins', [UserController::class, 'loginHistory']);
+    Route::get('/users/{id}/badges', [UserController::class, 'userBadges']);
+    Route::get('/users/{id}/statistics', [UserController::class, 'getStatistics']);
+    Route::get('/users/{id}/comments', [UserController::class, 'getUserComments']);
     
     // Private messaging
-    Route::post('/messages', [PrivateMessageController::class, 'send']);
+    Route::post('/messages', [PrivateMessageController::class, 'store']);
     Route::get('/messages', [PrivateMessageController::class, 'index']);
+    Route::get('/messages/conversations', [PrivateMessageController::class, 'getConversations']);
+    Route::get('/messages/conversation/{otherUserId}', [PrivateMessageController::class, 'getConversation']);
     Route::get('/messages/{message}', [PrivateMessageController::class, 'show']);
     Route::delete('/messages/{message}', [PrivateMessageController::class, 'destroy']);
+    
+    // Test route for debugging (without auth middleware)
+    Route::get('/test-conversations-public', [PrivateMessageController::class, 'getConversations']);
     
     // User interactions (follow, etc.)
     Route::post('/users/{userId}/follow', [UserInteractionController::class, 'follow']);
@@ -164,3 +185,4 @@ Route::prefix('admin')->middleware('auth:sanctum')->group(function () {
         Route::delete('/forum/topics/{topic}', [ForumModerationController::class, 'delete']);
     });
 });
+

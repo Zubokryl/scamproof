@@ -122,3 +122,17 @@
     order: 2;
   }
 }
+
+/* Messaging column - only shown on larger screens when viewing another user's profile */
+.messagingColumn {
+  order: 3;
+  grid-column: span 12 / span 12;
+  margin-top: 1rem;
+}
+
+@media (min-width: 1024px) {
+  .messagingColumn {
+    grid-column: span 12 / span 12;
+    margin-top: 0;
+  }
+}

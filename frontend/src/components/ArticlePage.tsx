@@ -7,13 +7,13 @@ import api from '@/api/api';
 import styles from './ArticlePage.module.css';
 import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
-import { ThumbsUp, MessageCircle, Send, User, ChevronDown } from 'lucide-react';
-import EmojiPicker from '@/components/EmojiPicker';
+import { ThumbsUp, MessageCircle, Send, User, ChevronDown, Trash2 } from 'lucide-react';
 import CommentItem from '@/components/CommentItem';
 import { useArticle } from '@/hooks/useArticle';
 import { useComments } from '@/hooks/useComments';
 import { useLike } from '@/hooks/useLike';
 import { prepareContent } from '@/utils/content';
+import { pluralizeViews, pluralizeLikes, pluralizeComments } from '@/lib/pluralize';
 
 // =============================================================================
 // PROTECTIVE COMMENT: ARTICLE STYLING PRESERVATION
@@ -212,53 +212,9 @@ const ArticlePage = () => {
     }
   };
 
-  const handleEmojiSelect = (emoji: string) => {
-    setNewComment(prev => prev + emoji);
-  };
 
-  // Function to handle comment reactions
-  const handleCommentReaction = async (commentId: number, reactionType: string) => {
-    try {
-      // Send reaction to backend
-      const response = await api.post(`/comments/${commentId}/react/${reactionType}`, {});
-      
-      // Update local state with new reaction data
-      setComments(prevComments => 
-        prevComments.map(comment => {
-          if (comment.id === commentId) {
-            // Create a copy of the reactions object
-            const updatedReactions = comment.reactions ? { ...comment.reactions } : {};
-            
-            // Update the specific reaction type
-            if (!updatedReactions[reactionType]) {
-              updatedReactions[reactionType] = { count: 0, user_has_reacted: false };
-            }
-            
-            // Toggle user reaction status
-            const userHasReacted = updatedReactions[reactionType].user_has_reacted;
-            updatedReactions[reactionType] = {
-              count: userHasReacted ? updatedReactions[reactionType].count - 1 : updatedReactions[reactionType].count + 1,
-              user_has_reacted: !userHasReacted
-            };
-            
-            // If count becomes 0, remove the reaction type
-            if (updatedReactions[reactionType].count === 0) {
-              delete updatedReactions[reactionType];
-            }
-            
-            return {
-              ...comment,
-              reactions: updatedReactions
-            };
-          }
-          return comment;
-        })
-      );
-    } catch (err) {
-      console.error('Error adding reaction:', err);
-      alert('Не удалось добавить реакцию');
-    }
-  };
+
+  // Comment reactions removed
 
   // Fetch category when article is loaded
   useEffect(() => {
@@ -445,7 +401,7 @@ const ArticlePage = () => {
           <div className={styles.stats}>
             {article.views_count !== undefined && (
               <span className={styles.statItem}>
-                👁️ {article.views_count} просмотров
+                👁️ {pluralizeViews(article.views_count)}
               </span>
             )}
             <span 
@@ -453,11 +409,11 @@ const ArticlePage = () => {
               onClick={() => handleLike()}
               style={{ cursor: 'pointer' }}
             >
-              👍 {likesCount} лайков
+              👍 {pluralizeLikes(likesCount)}
             </span>
             {article.comments_count !== undefined && (
               <span className={styles.statItem}>
-                💬 {article.comments_count} комментариев
+                💬 {pluralizeComments(article.comments_count)}
               </span>
             )}
           </div>
@@ -498,7 +454,7 @@ const ArticlePage = () => {
               </div>
               <div className={styles.commentActions}>
                 <div className={styles.commentActionsLeft}>
-                  <EmojiPicker onEmojiSelect={handleEmojiSelect} />
+                  {/* Emoji picker removed */}
                 </div>
                 <Button 
                   type="submit" 
@@ -530,7 +486,6 @@ const ArticlePage = () => {
                 <CommentItem 
                   key={comment.id} 
                   comment={comment} 
-                  onReact={handleCommentReaction}
                   onDelete={handleDeleteComment}
                   index={index}
                 />

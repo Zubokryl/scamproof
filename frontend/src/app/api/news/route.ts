@@ -43,6 +43,14 @@ async function fetchAllNews() {
   const newsdataKey = process.env.NEWSDATA_KEY;
   const mediastackKey = process.env.NEWS_MEDIASTACK_KEY;
   const serpapiKey = process.env.NEWS_SERPAPI_KEY;
+  
+  console.log('Available API keys:', {
+    gnews: !!gnewsKey,
+    newscatcher: !!newscatcherKey,
+    newsdata: !!newsdataKey,
+    mediastack: !!mediastackKey,
+    serpapi: !!serpapiKey
+  });
 
   const fetchPromises = [];
 
@@ -79,21 +87,27 @@ async function fetchAllNews() {
   }
 
   if (mediastackKey) {
+    console.log('Mediastack key found, fetching news...');
     fetchPromises.push(
       fetchFromMediastack(mediastackKey, 'мошенничество', 15).catch(e => {
         console.error('Mediastack fetch error:', e);
         return [];
       })
     );
+  } else {
+    console.log('No Mediastack key found, skipping Mediastack news fetch');
   }
 
   if (serpapiKey) {
+    console.log('SerpAPI key found, fetching news...');
     fetchPromises.push(
       fetchFromSerpAPI(serpapiKey, 'мошенничество').catch(e => {
         console.error('SerpAPI fetch error:', e);
         return [];
       })
     );
+  } else {
+    console.log('No SerpAPI key found, skipping SerpAPI news fetch');
   }
 
   // Always try to fetch from GDELT (doesn't require API key)

@@ -3,16 +3,11 @@ import { useState, useEffect } from 'react';
 import { NormalizedArticle } from '@/lib/news/types';
 import './LatestNews.css';
 
-// Extend the NormalizedArticle type to include category
-interface CategorizedArticle extends NormalizedArticle {
-  category: string | null;
-}
-
 // Update interval to check for new data (every 30 minutes)
 const CHECK_INTERVAL = 30 * 60 * 1000; // 30 minutes
 
 export default function LatestNews() {
-  const [articles, setArticles] = useState<CategorizedArticle[]>([]);
+  const [articles, setArticles] = useState<NormalizedArticle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [lastUpdated, setLastUpdated] = useState<string | null>(null);
@@ -20,8 +15,10 @@ export default function LatestNews() {
   const fetchLatestFraudNews = async () => {
     try {
       setLoading(true);
+      console.log('Fetching latest fraud news...');
       const response = await fetch('/api/news');
       const result = await response.json();
+      console.log('News API response:', result);
       
       if (result.success) {
         // Ensure we always have exactly 6 articles
@@ -29,6 +26,7 @@ export default function LatestNews() {
         setArticles(articlesToDisplay);
         setLastUpdated(result.lastUpdated || new Date().toISOString());
         setError(null);
+        console.log(`Displaying ${articlesToDisplay.length} articles`);
       } else {
         throw new Error(result.error || 'Failed to load news');
       }

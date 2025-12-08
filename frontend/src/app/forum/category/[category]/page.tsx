@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useAuth } from '@/context/AuthContext';
 import api from '@/api/api';
 import styles from './CategoryPage.module.css';
+import { pluralizeReplies, pluralizeLikes } from '@/lib/pluralize';
 
 interface ForumTopic {
   id: number;
@@ -36,28 +37,28 @@ interface Category {
 }
 
 export default function CategoryForumPage() {
-  const { slug } = useParams();
+  const { category } = useParams();
   const { user } = useAuth();
   const [topics, setTopics] = useState<ForumTopic[]>([]);
-  const [category, setCategory] = useState<Category | null>(null);
+  const [categoryData, setCategory] = useState<Category | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (slug) {
+    if (category) {
       fetchCategoryTopics();
     }
-  }, [slug]);
+  }, [category]);
 
   const fetchCategoryTopics = async () => {
     try {
       setLoading(true);
       
-      console.log('Fetching category topics for slug:', slug);
+      console.log('Fetching category topics for slug:', category);
       
       // Fetch category info
-      if (slug !== 'other') {
-        const categoryResponse = await api.get(`/categories/${slug}`);
+      if (category !== 'other') {
+        const categoryResponse = await api.get(`/categories/${category}`);
         console.log('Category response:', categoryResponse.data);
         setCategory(categoryResponse.data);
       } else {
@@ -71,9 +72,10 @@ export default function CategoryForumPage() {
       }
       
       // Fetch topics for this specific category (efficiently from backend)
-      const topicsResponse = await api.get(`/forum/topics/category/${slug}`);
+      const topicsResponse = await api.get(`/forum/topics/category/${category}`);
       console.log('Topics response:', topicsResponse.data);
-      setTopics(topicsResponse.data);
+      // Fix: Extract data from the response correctly (Laravel API resources wrap data in 'data' key)
+      setTopics(topicsResponse.data.data || topicsResponse.data);
     } catch (err) {
       console.error('Ошибка при загрузке тем категории:', err);
       setError('Не удалось загрузить темы категории');
@@ -109,14 +111,20 @@ export default function CategoryForumPage() {
 
   return (
     <div className={styles.container}>
+      <div className={styles.breadcrumb}>
+        <Link href="/forum" className={styles.breadcrumbLink}>
+          ← Назад к Форуму
+        </Link>
+      </div>
+      
       <div className={styles.header}>
         <div className={styles.categoryInfo}>
-          {category && (
+          {categoryData && (
             <>
-              <div className={styles.categoryIcon}>{category.icon}</div>
+              <div className={styles.categoryIcon}>{categoryData.icon}</div>
               <div>
-                <h1 className={styles.title}>{category.name}</h1>
-                <p className={styles.description}>{category.description}</p>
+                <h1 className={styles.title}>{categoryData.name}</h1>
+                <p className={styles.description}>{categoryData.description}</p>
               </div>
             </>
           )}
@@ -148,8 +156,8 @@ export default function CategoryForumPage() {
                 <div className={styles.topicMeta}>
                   <span className={styles.author}>Автор: {topic.author.name}</span>
                   <span className={styles.stats}>
-                    <span className={styles.replies}>{topic.replies_count} ответов</span>
-                    <span className={styles.likes}>{topic.likes_count} лайков</span>
+                    <span className={styles.replies}>{pluralizeReplies(topic.replies_count)}</span>
+                    <span className={styles.likes}>{pluralizeLikes(topic.likes_count)}</span>
                   </span>
                 </div>
                 <div className={styles.topicDate}>

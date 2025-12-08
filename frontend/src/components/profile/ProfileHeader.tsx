@@ -73,12 +73,19 @@ export function ProfileHeader({ user, isOwnProfile = false }: ProfileHeaderProps
   
   const handleMessage = async () => {
     if (!isOwnProfile) {
-      try {
-        // In a real implementation, this would send a message to the user
-        toast.success("Открываем чат с " + user.name);
-      } catch (error) {
-        toast.error('Ошибка при отправке сообщения');
-        console.error(error);
+      // Scroll to the messaging section
+      const messagingSection = document.getElementById('messaging-section');
+      if (messagingSection) {
+        messagingSection.scrollIntoView({ behavior: 'smooth' });
+        // Focus on the message input
+        const messageInput = messagingSection.querySelector('textarea');
+        if (messageInput) {
+          setTimeout(() => {
+            messageInput.focus();
+          }, 300);
+        }
+      } else {
+        toast.error('Раздел сообщений недоступен');
       }
     } else {
       // Navigate to messages page for own profile

@@ -1,0 +1,277 @@
+.comment {
+  position: relative;
+  border-radius: 22px;
+  background: rgba(30, 41, 59, 0.95);
+  border: 1px solid rgba(0, 198, 255, 0.3);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  margin: 0;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.comment:hover {
+  border-color: rgba(0, 198, 255, 0.55);
+  box-shadow: 0 14px 35px rgba(0, 198, 255, 0.2);
+}
+
+.commentContentWrapper {
+  position: relative;
+  background: rgba(30, 41, 59, 0.95);
+  border-radius: 18px;
+  padding: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.commentMeta {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid rgba(0, 198, 255, 0.15);
+}
+
+.commentAuthorGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.commentAvatar {
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 999px;
+  background: rgba(0, 198, 255, 0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(0, 198, 255, 0.45);
+  flex-shrink: 0;
+}
+
+.commentAuthor {
+  font-weight: 600;
+  color: #00c6ff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 198, 255, 0.35);
+  background: rgba(0, 198, 255, 0.16);
+  transition: all 0.2s ease;
+  max-width: 220px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.02em;
+}
+
+.commentAuthor:hover {
+  background: rgba(0, 198, 255, 0.3);
+  border-color: rgba(0, 198, 255, 0.55);
+  box-shadow: 0 0 12px rgba(0, 198, 255, 0.25);
+}
+
+.authorIcon {
+  width: 1rem;
+  height: 1rem;
+}
+
+.commentDate {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.06);
+  letter-spacing: 0.02em;
+}
+
+.commentMetaSpacer {
+  flex: 1;
+}
+
+.deleteButton {
+  background: rgba(239, 68, 68, 0.18);
+  border: 1px solid rgba(239, 68, 68, 0.45);
+  border-radius: 10px;
+  padding: 0.35rem 0.45rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.deleteButton:hover {
+  background: rgba(239, 68, 68, 0.35);
+  transform: translateY(-1px) scale(1.02);
+  border-color: rgba(239, 68, 68, 0.65);
+  box-shadow: 0 6px 14px rgba(239, 68, 68, 0.35);
+}
+
+.commentText {
+  color: #f0f0f0;
+  line-height: 1.6;
+  font-size: 1rem;
+  padding-left: 2.75rem;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  letter-spacing: 0.01em;
+  margin-bottom: 0.75rem;
+}
+
+.reactionsList {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-left: auto;
+}
+
+.reactionButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(0, 198, 255, 0.2);
+  border: 1px solid rgba(0, 198, 255, 0.3);
+  border-radius: 20px;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  color: #f0f0f0;
+  letter-spacing: 0.02em;
+}
+
+.reactionButton:hover {
+  background: rgba(0, 198, 255, 0.3);
+  transform: translateY(-1px);
+  border-color: rgba(0, 198, 255, 0.5);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.userReacted {
+  background: linear-gradient(135deg, rgba(0, 198, 255, 0.4) 0%, rgba(0, 114, 255, 0.3) 100%);
+  border-color: rgba(0, 198, 255, 0.7);
+  box-shadow: 0 0 12px rgba(0, 198, 255, 0.4);
+}
+
+.reactionEmoji {
+  font-size: 0.9rem;
+}
+
+.reactionCount {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.commentActions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.toggleReactionsButton,
+.replyButton {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(0, 198, 255, 0.1);
+  border: 1px solid rgba(0, 198, 255, 0.2);
+  border-radius: 20px;
+  padding: 0.3rem 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #f0f0f0;
+  letter-spacing: 0.02em;
+}
+
+.toggleReactionsButton:hover,
+.replyButton:hover {
+  background: rgba(0, 198, 255, 0.2);
+  transform: translateY(-1px);
+  border-color: rgba(0, 198, 255, 0.4);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.actionIcon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.chevron {
+  width: 0.9rem;
+  height: 0.9rem;
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+.replyPlaceholder {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0, 198, 255, 0.1);
+}
+
+.replyText {
+  font-size: 0.85rem;
+  color: #00c6ff;
+  padding: 0.5rem;
+  background: rgba(0, 198, 255, 0.1);
+  border-radius: 12px;
+  border: 1px dashed rgba(0, 198, 255, 0.2);
+}
+
+.nestedComment {
+  margin-left: 2rem;
+  border-left: 2px solid rgba(0, 198, 255, 0.3);
+  padding-left: 1rem;
+}
+
+@media (max-width: 768px) {
+  .comment {
+    margin-bottom: 0.75rem;
+  }
+  
+  .commentContentWrapper {
+    padding: 1rem;
+  }
+  
+  .commentMeta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .commentAuthorGroup {
+    width: 100%;
+  }
+  
+  .commentText {
+    padding-left: 0;
+    margin-top: 0.5rem;
+  }
+  
+  .reactionsList {
+    margin-left: 0;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .nestedComment {
+    margin-left: 1rem;
+    padding-left: 0.75rem;
+  }
+}

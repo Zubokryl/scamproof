@@ -18,11 +18,21 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
         ]);
         
+        // Configure authentication redirect for guests
+        $middleware->redirectGuestsTo(fn () => request()->expectsJson() ? null : '/login');
+        
         // Add CORS middleware globally
         $middleware->append(HandleCors::class);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e) {
+            if (request()->expectsJson() || request()->is('api/*')) {
+                return response()->json(['error' => 'Unauthenticated.'], 401);
+            }
+            
+            // For non-JSON requests, we still need a login route
+            return response('Login required', 401);
+        });
     })    
     ->withProviders([
         App\Providers\RouteServiceProvider::class,

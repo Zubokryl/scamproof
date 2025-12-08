@@ -14,9 +14,8 @@ class PrivateMessageStoreRequest extends FormRequest
     public function rules()
     {
         return [
-            'recipient_id' => 'required|integer|exists:users,id',
-            'subject' => 'nullable|string|max:255',
-            'body' => 'required|string|max:5000',
+            'receiver_id' => 'required|integer|exists:users,id',
+            'content' => 'required|string|max:5000',
         ];
     }
 }

@@ -4,6 +4,7 @@ import { Category } from '@/lib/types';
 import { Dispatch, SetStateAction, useState } from 'react';
 import api from '@/api/api';
 import './CategoriesTab.css';
+import { pluralizeArticles } from '@/lib/pluralize';
 
 // SVG Icons
 const PlusIcon = () => (
@@ -172,7 +173,7 @@ const CategoriesTab: React.FC<CategoriesTabProps> = ({ categories, setCategories
                   <div className="categories-stat-value">
                     {category.articles_count || 0}
                   </div>
-                  <div className="categories-stat-label">Статей</div>
+                  <div className="categories-stat-label">{pluralizeArticles(category.articles_count || 0)}</div>
                 </div>
               </div>
               <div className="categories-card-actions">

@@ -6,7 +6,7 @@ import api from "@/api/api";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import Navigation from "@/components/Navigation";
+// Removed duplicate Navigation import
 import "./../../../components/profile/Profile.css";
 
 export default function EditProfilePage() {
@@ -71,7 +71,7 @@ export default function EditProfilePage() {
   if (loading) {
     return (
       <div className="auth-layout">
-        <Navigation />
+        {/* Removed duplicate Navigation component */}
         <main className="auth-main-content">
           <div className="register-section">
             <div className="register-container">
@@ -87,7 +87,7 @@ export default function EditProfilePage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <Navigation />
+      {/* Removed duplicate Navigation component */}
       
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">

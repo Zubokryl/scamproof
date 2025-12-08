@@ -54,6 +54,8 @@
 .textarea {
   min-height: 200px;
   resize: vertical;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .actions {

@@ -5,6 +5,7 @@ import api from '@/api/api';
 import { Button } from '@/components/ui/button';
 import { ThumbsUp, ThumbsDown, MessageCircle, User, Calendar } from 'lucide-react';
 import './AdminPanel.css';
+import { pluralizeComments } from '@/lib/pluralize';
 
 interface Comment {
   id: number;
@@ -155,7 +156,7 @@ const CommentModerationTab = () => {
             <MessageCircle className="admin-stat-icon" />
             <h3 className="admin-stat-title">Ожидают модерации</h3>
           </div>
-          <p className="admin-stat-value">{stats.pending}</p>
+          <p className="admin-stat-value">{pluralizeComments(stats.pending)}</p>
         </div>
         
         <div className="admin-stat-card">
@@ -163,7 +164,7 @@ const CommentModerationTab = () => {
             <ThumbsUp className="admin-stat-icon text-green-500" />
             <h3 className="admin-stat-title">Одобрено сегодня</h3>
           </div>
-          <p className="admin-stat-value text-green-500">{stats.approved_today}</p>
+          <p className="admin-stat-value text-green-500">{pluralizeComments(stats.approved_today)}</p>
         </div>
         
         <div className="admin-stat-card">
@@ -171,13 +172,13 @@ const CommentModerationTab = () => {
             <ThumbsDown className="admin-stat-icon text-red-500" />
             <h3 className="admin-stat-title">Отклонено сегодня</h3>
           </div>
-          <p className="admin-stat-value text-red-500">{stats.rejected_today}</p>
+          <p className="admin-stat-value text-red-500">{pluralizeComments(stats.rejected_today)}</p>
         </div>
       </div>
 
       {/* Comments List */}
       <div className="admin-comments-container">
-        <h2 className="admin-section-title">Комментарии на модерации ({comments.length})</h2>
+        <h2 className="admin-section-title">Комментарии на модерации ({pluralizeComments(comments.length)})</h2>
         
         {comments.length === 0 ? (
           <div className="admin-empty-state">

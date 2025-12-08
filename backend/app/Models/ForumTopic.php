@@ -4,11 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Scout\Searchable;
+// use Laravel\Scout\Searchable;
 
 class ForumTopic extends Model
 {
-    use HasFactory, Searchable;
+    use HasFactory; // , Searchable;
     
     protected $fillable = [
         'category_id',
@@ -38,6 +38,7 @@ class ForumTopic extends Model
     ];
 
     // Define what fields should be indexed for search
+    /*
     public function toSearchableArray()
     {
         return [
@@ -47,12 +48,15 @@ class ForumTopic extends Model
             'category' => $this->category ? $this->category->name : '',
         ];
     }
+    */
 
     // Specify the search index name
+    /*
     public function searchableAs()
     {
         return 'topics';
     }
+    */
 
     // relationships
     public function author()

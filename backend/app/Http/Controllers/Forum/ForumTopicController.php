@@ -187,4 +187,29 @@ class ForumTopicController extends Controller
             'likes_count' => $topic->likes_count
         ]);
     }
+
+    /**
+     * Search forum topics by query
+     */
+    public function search(Request $request)
+    {
+        $query = trim($request->get('q', ''));
+        
+        if (empty($query)) {
+            return response()->json([]);
+        }
+        
+        // Simple database search for forum topics
+        $topics = ForumTopic::with('author:id,name', 'category:id,name,slug')
+            ->withCount('replies')
+            ->where(function ($q) use ($query) {
+                $q->where('title', 'LIKE', "%{$query}%")
+                  ->orWhere('content', 'LIKE', "%{$query}%");
+            })
+            ->orderByDesc('created_at')
+            ->limit(20)
+            ->get();
+            
+        return ForumTopicResource::collection($topics);
+    }
 }
