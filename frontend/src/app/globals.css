@@ -16,6 +16,54 @@ body {
   overflow-x: hidden;
 }
 
+/* iPhone-specific adjustments (375x667) */
+@media screen and (width: 375px) and (height: 667px) {
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Prevent horizontal scrolling on iPhone */
+  .container,
+  .messagingColumn,
+  .messagingSection,
+  .chatWindow {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+}
+
+/* Screen size 344x882 adjustments */
+@media screen and (width: 344px) and (height: 882px) {
+  html,
+  body {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* Prevent horizontal scrolling on 344x882 screens */
+  .container,
+  .messagingColumn,
+  .messagingSection,
+  .chatWindow {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    box-sizing: border-box;
+  }
+}
+
 body {
   color: var(--foreground);
   background: var(--background);

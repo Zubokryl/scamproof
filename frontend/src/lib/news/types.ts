@@ -13,12 +13,18 @@ export interface NormalizedArticle {
   author?: string | null;
   image?: string | null;
   language?: string;
-  category?: string;    // Category for the article
-  raw?: unknown;            // original data
+  category?: string;    // Category for the article (will be overwritten by addCategories)
+  raw?: unknown;        // original data
 }
 
-export interface FilterResult {
-  match: boolean;
-  reason?: string;
-  confidence?: number;
-}
+// Define topic categories for fraud news
+export type NewsCategory = 
+  'образование' | 
+  'социальные аферы' | 
+  'финансовые схемы' | 
+  'коммерческое мошенничество' | 
+  'медицина' | 
+  'отдых и туризм' | 
+  'социальные сети' | 
+  'недвижимость' | 
+  'развлечения';

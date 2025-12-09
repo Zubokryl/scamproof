@@ -44,13 +44,15 @@ async function fetchAllNews() {
   const mediastackKey = process.env.NEWS_MEDIASTACK_KEY;
   const serpapiKey = process.env.NEWS_SERPAPI_KEY;
   
-  console.log('Available API keys:', {
-    gnews: !!gnewsKey,
-    newscatcher: !!newscatcherKey,
-    newsdata: !!newsdataKey,
-    mediastack: !!mediastackKey,
-    serpapi: !!serpapiKey
-  });
+  if (process.env.NODE_ENV === "development") {
+    console.log('Available API keys:', {
+      gnews: !!gnewsKey,
+      newscatcher: !!newscatcherKey,
+      newsdata: !!newsdataKey,
+      mediastack: !!mediastackKey,
+      serpapi: !!serpapiKey
+    });
+  }
 
   const fetchPromises = [];
 
@@ -150,9 +152,10 @@ export async function GET() {
       if (!article.title || !article.url) return false;
       
       // Check if content is in Russian
+      const ruRegex = /[а-яё]/i;
       const hasRussianText = 
-        /[а-яё]/i.test(article.title) || 
-        (article.description && /[а-яё]/i.test(article.description));
+        ruRegex.test(article.title) || 
+        (article.description && ruRegex.test(article.description));
       
       // Check if from trusted source
       const isFromTrustedSource = TRUSTED_RUSSIAN_SOURCES.some(
@@ -173,16 +176,17 @@ export async function GET() {
 
     // Sort by date (newest first)
     categorizedArticles.sort((a, b) => 
-      new Date(b.published_at).getTime() - new Date(a.published_at).getTime()
+      +new Date(b.published_at || 0) - +new Date(a.published_at || 0)
     );
 
     // Keep only recent articles (last 2 weeks)
     const twoWeeksAgo = new Date();
     twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 14);
     
-    const recentArticles = categorizedArticles.filter(article => 
-      new Date(article.published_at) >= twoWeeksAgo
-    );
+    const recentArticles = categorizedArticles.filter(article => {
+      const date = new Date(article.published_at);
+      return date.toString() !== "Invalid Date" && date >= twoWeeksAgo;
+    });
 
     // Update cache
     cachedArticles = recentArticles;

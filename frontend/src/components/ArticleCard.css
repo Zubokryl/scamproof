@@ -1,0 +1,108 @@
+.article-card {
+  background: rgba(30, 41, 59, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  border: 1px solid rgba(0, 217, 255, 0.3);
+  box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+}
+
+.article-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 0 25px rgba(0, 217, 255, 0.8);
+  animation: pulse 2s infinite;
+}
+
+.article-card-content {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.article-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #fff;
+  transition: color 0.2s ease;
+}
+
+.article-card:hover .article-title {
+  color: #00c6ff;
+}
+
+.article-excerpt {
+  color: #aaa;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.article-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 1rem;
+  color: #777;
+  font-size: 0.9rem;
+  margin-top: auto;
+}
+
+.article-category {
+  background: rgba(0, 217, 255, 0.1);
+  color: #00d9ff;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.article-date {
+  color: #94a3b8;
+  font-size: 0.8rem;
+}
+
+.article-link {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(90deg, #00d9ff, #0080ff);
+  color: #0a0e27;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+}
+
+.article-link:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 128, 255, 0.4);
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 217, 255, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+  }
+}
+
+@media (max-width: 480px) {
+  .article-card {
+    padding: 1rem;
+  }
+}

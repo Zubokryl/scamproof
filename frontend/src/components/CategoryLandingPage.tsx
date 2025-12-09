@@ -108,6 +108,12 @@ export default function CategoryLandingPage({ slug }: { slug?: string }) {
     <div className={styles.container}>
       <div className={styles.header}>
         <div className={styles.headerContent}>
+          {/* Back to categories link */}
+          <div className={styles.backLinkContainer}>
+            <a href="/database" className={styles.backLink}>
+              ← Все категории
+            </a>
+          </div>
           {/* Removed emoji icon container */}
           <div>
             <h1 className={styles.title}>{category.name}</h1>

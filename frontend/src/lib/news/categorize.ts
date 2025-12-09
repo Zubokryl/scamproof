@@ -1,17 +1,5 @@
 // Topic categorization for fraud news articles
-import { NormalizedArticle } from '@/lib/news/types';
-
-// Define topic categories
-export type NewsCategory = 
-  'образование' | 
-  'социальные аферы' | 
-  'финансовые схемы' | 
-  'коммерческое мошенничество' | 
-  'медицина' | 
-  'отдых и туризм' | 
-  'социальные сети' | 
-  'недвижимость' | 
-  'развлечения';
+import { NormalizedArticle, NewsCategory } from '@/lib/news/types';
 
 // Keywords for each category
 const CATEGORY_KEYWORDS: Record<NewsCategory, string[]> = {
@@ -23,7 +11,7 @@ const CATEGORY_KEYWORDS: Record<NewsCategory, string[]> = {
   'отдых и туризм': ['тур', 'путешестви', 'отель', 'курорт', 'отпуск', 'виза', 'авиа', 'поездка'],
   'социальные сети': ['соцсети', 'facebook', 'instagram', 'vk', 'вконтакте', 'одноклассники', 'telegram', 'whatsapp'],
   'недвижимость': ['недвижимость', 'квартир', 'дом', 'земл', 'ипотек', 'риэлтор', 'продажа', 'покупка'],
-  'развлечения': ['развлечен', 'игр', 'лотере', 'казино', 'ставк', 'букмекер', 'реклама']
+  'развлечения': ['разведен', 'игр', 'лотере', 'казино', 'ставк', 'букмекер', 'реклама']
 };
 
 /**
@@ -46,9 +34,9 @@ export function categorizeArticle(article: NormalizedArticle): NewsCategory | nu
 /**
  * Add category information to articles
  */
-export function addCategories(articles: NormalizedArticle[]): (NormalizedArticle & { category: NewsCategory | null })[] {
+export function addCategories(articles: NormalizedArticle[]): NormalizedArticle[] {
   return articles.map(article => ({
     ...article,
-    category: categorizeArticle(article)
+    category: categorizeArticle(article) as any // Type assertion to avoid conflict
   }));
 }

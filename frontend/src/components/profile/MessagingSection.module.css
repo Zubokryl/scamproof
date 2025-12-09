@@ -50,6 +50,8 @@
   background: rgba(30, 41, 59, 0.8);
   border: 1px solid rgba(255, 255, 255, 0.1);
   backdrop-filter: blur(10px);
+  width: 100%; /* Ensure container takes full width but doesn't overflow */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .messagesList {
@@ -65,6 +67,9 @@
   background: rgba(15, 23, 42, 0.5);
   position: relative;
   overflow: hidden;
+  word-wrap: break-word; /* Ensure long words break to prevent overflow */
+  word-break: break-word; /* Break words if needed */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 .message::before {
@@ -87,12 +92,14 @@
   background: rgba(30, 41, 59, 0.8);
   border-left: 3px solid #00d9ff;
   margin-left: auto;
+  max-width: 85%; /* Limit width to prevent overflow */
 }
 
 .otherMessage {
   align-self: flex-start;
   background: rgba(15, 23, 42, 0.8);
   border-left: 3px solid #a855f7;
+  max-width: 85%; /* Limit width to prevent overflow */
 }
 
 .messageHeader {
@@ -151,29 +158,155 @@
 }
 
 .sendButton {
-  align-self: flex-end;
-  background: linear-gradient(135deg, #00d9ff, #3b82f6);
-  color: #0a0e27;
-  border: none;
-  border-radius: 4px;
-  padding: 0.5rem 1rem;
-  font-weight: 700;
-  font-size: 0.875rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 217, 255, 0.3);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.625rem;
 }
 
-.sendButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(0, 217, 255, 0.4);
+/* iPhone-specific adjustments (375x667) */
+@media (max-width: 375px) and (min-width: 375px) {
+  .messagingSection {
+    padding: 0.75rem;
+    border-radius: 12px;
+    margin-top: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .messageForm {
+    padding: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .message {
+    padding: 0.625rem;
+    max-width: 100%;
+    word-wrap: break-word;
+    word-break: break-word;
+    box-sizing: border-box;
+  }
+  
+  .messageInput {
+    min-height: 60px;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .messagesContainer {
+    max-height: 180px;
+    padding: 0.625rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .sendButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 
-.sendButton:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
+/* Screen size 344x882 adjustments */
+@media screen and (width: 344px) and (height: 882px) {
+  .messagingSection {
+    padding: 0.5rem;
+    border-radius: 12px;
+    margin-top: 0.75rem;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  .sectionTitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .messageForm {
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .message {
+    padding: 0.5rem;
+    max-width: 95%;
+    word-wrap: break-word;
+    word-break: break-word;
+    box-sizing: border-box;
+  }
+  
+  .messageInput {
+    min-height: 50px;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .messagesContainer {
+    max-height: 150px;
+    padding: 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .sendButton {
+    padding: 0.5rem;
+    font-size: 0.875rem;
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
 
+/* Minimum 270px width support */
+@media (max-width: 270px) {
+  .messagingSection {
+    padding: 0.375rem;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 0.75rem;
+    margin-bottom: 0.375rem;
+  }
+  
+  .messageForm {
+    padding: 0.375rem;
+  }
+  
+  .message {
+    padding: 0.375rem;
+  }
+  
+  .messageInput {
+    min-height: 40px;
+    padding: 0.25rem;
+    font-size: 0.625rem;
+  }
+  
+  .messagesContainer {
+    max-height: 120px;
+    padding: 0.375rem;
+  }
+  
+  .sendButton {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
+  }
+}
+
+/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
   .messagingSection {
     padding: 1rem;
@@ -189,5 +322,124 @@
   
   .sendButton {
     width: 100%;
+  }
+  
+  .messagesContainer {
+    max-height: 300px;
+  }
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 640px) {
+  .messagesContainer {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .messagingSection {
+    padding: 0.75rem;
+    border-radius: 12px;
+    margin-top: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .messageForm {
+    padding: 0.75rem;
+  }
+  
+  .message {
+    padding: 0.75rem;
+  }
+  
+  .messageInput {
+    min-height: 60px;
+    padding: 0.5rem;
+    font-size: 0.875rem;
+  }
+  
+  .messagesContainer {
+    max-height: 200px;
+    padding: 0.75rem;
+  }
+}
+
+/* Ultra-small screens (320px and below) */
+@media (max-width: 320px) {
+  .messagingSection {
+    padding: 0.5rem;
+    border-radius: 8px;
+    margin-top: 0.75rem;
+  }
+  
+  .sectionTitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .messageForm {
+    padding: 0.5rem;
+  }
+  
+  .message {
+    padding: 0.5rem;
+  }
+  
+  .messageInput {
+    min-height: 50px;
+    padding: 0.375rem;
+    font-size: 0.75rem;
+  }
+  
+  .messagesContainer {
+    max-height: 150px;
+    padding: 0.5rem;
+  }
+  
+  .sendButton {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+}
+
+/* Minimum 270px width support */
+@media (max-width: 270px) {
+  .messagingSection {
+    padding: 0.375rem;
+    border-radius: 6px;
+    margin-top: 0.5rem;
+  }
+  
+  .sectionTitle {
+    font-size: 0.75rem;
+    margin-bottom: 0.375rem;
+  }
+  
+  .messageForm {
+    padding: 0.375rem;
+  }
+  
+  .message {
+    padding: 0.375rem;
+  }
+  
+  .messageInput {
+    min-height: 40px;
+    padding: 0.25rem;
+    font-size: 0.625rem;
+  }
+  
+  .messagesContainer {
+    max-height: 120px;
+    padding: 0.375rem;
+  }
+  
+  .sendButton {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.625rem;
   }
 }

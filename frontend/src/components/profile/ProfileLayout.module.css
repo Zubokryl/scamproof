@@ -62,6 +62,8 @@
   padding-right: 0.75rem;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  width: 100%; /* Ensure container takes full width but doesn't overflow */
+  box-sizing: border-box; /* Include padding in width calculation */
 }
 
 @media (min-width: 640px) {
@@ -173,6 +175,56 @@
   }
 }
 
+/* iPhone-specific adjustments (375x667) */
+@media (max-width: 375px) and (min-width: 375px) {
+  .container {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  .grid {
+    gap: 0.75rem;
+  }
+  
+  .messagingColumn {
+    margin-top: 0.75rem;
+    max-height: 45vh;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+/* Screen size 344x882 adjustments */
+@media screen and (width: 344px) and (height: 882px) {
+  .container {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+  
+  .grid {
+    gap: 0.5rem;
+  }
+  
+  .messagingColumn {
+    margin-top: 0.5rem;
+    max-height: 40vh;
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
 /* Ultra-small screens (320px and below) */
 @media (max-width: 320px) {
   .container {
@@ -206,5 +258,73 @@
   
   .messagingColumn {
     margin-top: 0.25rem;
+  }
+}
+
+/* Ensure messaging section doesn't push other content on small screens */
+@media (max-width: 640px) {
+  .messagingColumn {
+    max-height: 50vh;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .messagingColumn {
+    max-height: 40vh;
+  }
+}
+
+@media (max-width: 320px) {
+  .messagingColumn {
+    max-height: 35vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .messagingColumn {
+    max-height: 40vh;
+  }
+}
+
+@media (max-width: 320px) {
+  .messagingColumn {
+    max-height: 35vh;
+  }
+}
+
+@media (max-width: 270px) {
+  .messagingColumn {
+    max-height: 30vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .messagingColumn {
+    max-height: 40vh;
+  }
+}
+
+@media (max-width: 320px) {
+  .messagingColumn {
+    max-height: 35vh;
+  }
+}
+
+@media (max-width: 480px) {
+  .messagingColumn {
+    max-height: 40vh;
+  }
+}
+
+@media (max-width: 320px) {
+  .messagingColumn {
+    max-height: 35vh;
+  }
+}
+
+@media (max-width: 270px) {
+  .messagingColumn {
+    max-height: 30vh;
   }
 }

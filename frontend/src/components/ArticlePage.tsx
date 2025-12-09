@@ -285,14 +285,43 @@ const ArticlePage = () => {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (window.location.hash) {
-      setTimeout(() => {
+      // Try immediately first
+      const element = document.querySelector(window.location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+        return;
+      }
+      
+      // If not found, try again after a delay (in case comments are still loading)
+      const scrollToElement = () => {
         const element = document.querySelector(window.location.hash);
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' });
+          return true;
         }
-      }, 100);
+        return false;
+      };
+      
+      // Try immediately
+      if (scrollToElement()) return;
+      
+      // Try after 100ms
+      const timeout1 = setTimeout(scrollToElement, 100);
+      
+      // Try after 500ms (in case of slower network)
+      const timeout2 = setTimeout(scrollToElement, 500);
+      
+      // Try after 1000ms (final attempt)
+      const timeout3 = setTimeout(scrollToElement, 1000);
+      
+      // Clean up timeouts
+      return () => {
+        clearTimeout(timeout1);
+        clearTimeout(timeout2);
+        clearTimeout(timeout3);
+      };
     }
-  }, []);
+  }, [comments]); // Depend only on comments to trigger when they load
 
   // Apply article page background to body
   useEffect(() => {

@@ -1,24 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'next/navigation';
-import api from '@/api/api';
+import { searchArticles } from '@/services/articles';
+import { Article } from '@/types/articles';
+import ArticleCard from '@/components/ArticleCard';
 import './SearchResults.css';
-
-interface Article {
-  id: number;
-  title: string;
-  excerpt: string;
-  slug: string;
-  category: {
-    id: number;
-    name: string;
-    slug: string;
-  };
-  published_at: string;
-  image_url: string;
-  views_count: number;
-}
 
 export default function SearchResults() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -27,33 +14,45 @@ export default function SearchResults() {
   const searchParams = useSearchParams();
   const query = searchParams.get('q') || '';
 
-  useEffect(() => {
-    const fetchSearchResults = async () => {
-      if (!query.trim()) {
-        setArticles([]);
-        setLoading(false);
-        return;
-      }
+  const fetchSearchResults = useCallback(async () => {
+    if (!query.trim()) {
+      setArticles([]);
+      setLoading(false);
+      return;
+    }
 
-      try {
-        setLoading(true);
-        setError(null);
-        
-        const res = await api.get(`/search?q=${encodeURIComponent(query)}`);
-        // The backend returns { articles: [...], categories: [...], topics: [...] }
-        // We only need the articles for this page
-        const articlesData = res.data.articles || [];
-        setArticles(articlesData);
-      } catch (err) {
-        console.error('Error fetching search results:', err);
-        setError('Не удалось выполнить поиск');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSearchResults();
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const articlesData = await searchArticles(query);
+      setArticles(articlesData);
+    } catch (err) {
+      console.error('Error fetching search results:', err);
+      setError('Не удалось выполнить поиск');
+    } finally {
+      setLoading(false);
+    }
   }, [query]);
+
+  useEffect(() => {
+    fetchSearchResults();
+  }, [fetchSearchResults]);
+
+  // Don't render anything if query is empty
+  if (!query.trim()) {
+    return (
+      <div className="search-results-page">
+        <div className="search-results-header">
+          <h1 className="search-results-title">Результаты поиска</h1>
+          <p className="search-results-query">Введите поисковый запрос</p>
+        </div>
+        <div className="search-results-empty">
+          <p>Пожалуйста, введите запрос для поиска статей</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="search-results-page">
@@ -80,27 +79,7 @@ export default function SearchResults() {
               <p className="search-results-count">{articles.length} найденных статей</p>
               <div className="search-results-grid">
                 {articles.map(article => (
-                  <div key={article.id} className="article-card">
-                    <div className="article-card-content">
-                      <h3 className="article-title">{article.title}</h3>
-                      {article.excerpt && (
-                        <p className="article-excerpt">{article.excerpt}</p>
-                      )}
-                      <div className="article-meta">
-                        {article.category && (
-                          <span className="article-category">{article.category.name}</span>
-                        )}
-                        {article.published_at && (
-                          <span className="article-date">
-                            {new Date(article.published_at).toLocaleDateString('ru-RU')}
-                          </span>
-                        )}
-                      </div>
-                      <a href={`/article/${article.id}`} className="article-link">
-                        Читать далее
-                      </a>
-                    </div>
-                  </div>
+                  <ArticleCard key={article.id} article={article} />
                 ))}
               </div>
             </>
