@@ -68,6 +68,7 @@
   overflow: hidden;
   cursor: pointer;
   transition: all 0.2s ease;
+  max-width: 100%;
 }
 
 .conversation:hover {
@@ -88,6 +89,7 @@
   position: relative;
   z-index: 1;
   margin-right: 1rem;
+  flex-shrink: 0;
 }
 
 .avatarImg {
@@ -130,12 +132,16 @@
   flex: 1;
   position: relative;
   z-index: 1;
+  min-width: 0;
 }
 
 .userName {
   font-weight: 600;
   color: #00d9ff;
   margin-bottom: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .lastMessage {
@@ -152,15 +158,21 @@
   font-size: 0.75rem;
   position: relative;
   z-index: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
 }
 
+/* Responsive adjustments for conversations list */
 @media (max-width: 768px) {
   .conversationsSection {
     padding: 1rem;
+    margin-top: 1.5rem;
   }
   
   .sectionTitle {
     font-size: 1.125rem;
+    margin-bottom: 0.75rem;
   }
   
   .conversation {
@@ -168,6 +180,184 @@
   }
   
   .lastMessage {
+    font-size: 0.75rem;
     max-width: 150px;
+  }
+  
+  .userName {
+    font-size: 0.875rem;
+  }
+  
+  .messageTime {
+    font-size: 0.625rem;
+  }
+  
+  .conversationsContainer {
+    max-height: 300px;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+  .conversationsSection {
+    padding: 0.75rem;
+    margin-top: 1rem;
+    border-radius: 12px;
+  }
+  
+  .sectionTitle {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .conversation {
+    padding: 0.5rem;
+  }
+  
+  .avatar {
+    margin-right: 0.5rem;
+  }
+  
+  .avatarImg,
+  .avatarPlaceholder {
+    width: 32px;
+    height: 32px;
+    font-size: 0.75rem;
+  }
+  
+  .unreadBadge {
+    width: 16px;
+    height: 16px;
+    font-size: 0.625rem;
+    top: -4px;
+    right: -4px;
+  }
+  
+  .lastMessage {
+    font-size: 0.625rem;
+    max-width: 120px;
+  }
+  
+  .userName {
+    font-size: 0.75rem;
+  }
+  
+  .messageTime {
+    font-size: 0.5rem;
+    margin-left: 0.25rem;
+  }
+  
+  .conversationsContainer {
+    max-height: 250px;
+  }
+}
+
+/* Ultra-small screens (320px and below) */
+@media (max-width: 320px) {
+  .conversationsSection {
+    padding: 0.5rem;
+    margin-top: 0.75rem;
+    border-radius: 8px;
+  }
+  
+  .sectionTitle {
+    font-size: 0.875rem;
+    margin-bottom: 0.375rem;
+  }
+  
+  .conversation {
+    padding: 0.375rem;
+  }
+  
+  .avatar {
+    margin-right: 0.375rem;
+  }
+  
+  .avatarImg,
+  .avatarPlaceholder {
+    width: 28px;
+    height: 28px;
+    font-size: 0.625rem;
+  }
+  
+  .unreadBadge {
+    width: 14px;
+    height: 14px;
+    font-size: 0.5rem;
+    top: -3px;
+    right: -3px;
+  }
+  
+  .lastMessage {
+    font-size: 0.5rem;
+    max-width: 100px;
+  }
+  
+  .userName {
+    font-size: 0.625rem;
+  }
+  
+  .messageTime {
+    font-size: 0.375rem;
+    margin-left: 0.125rem;
+  }
+  
+  .conversationsContainer {
+    max-height: 200px;
+  }
+}
+
+/* Minimum 270px width support */
+@media (max-width: 270px) {
+  .conversationsSection {
+    padding: 0.375rem;
+    margin-top: 0.5rem;
+    border-radius: 6px;
+  }
+  
+  .sectionTitle {
+    font-size: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  .conversation {
+    padding: 0.25rem;
+  }
+  
+  .avatar {
+    margin-right: 0.25rem;
+  }
+  
+  .avatarImg,
+  .avatarPlaceholder {
+    width: 24px;
+    height: 24px;
+    font-size: 0.5rem;
+  }
+  
+  .unreadBadge {
+    width: 12px;
+    height: 12px;
+    font-size: 0.375rem;
+    top: -2px;
+    right: -2px;
+  }
+  
+  .lastMessage {
+    font-size: 0.375rem;
+    max-width: 80px;
+  }
+  
+  .userName {
+    font-size: 0.5rem;
+  }
+  
+  .messageTime {
+    font-size: 0.25rem;
+    margin-left: 0.0625rem;
+  }
+  
+  .conversationsContainer {
+    max-height: 150px;
   }
 }

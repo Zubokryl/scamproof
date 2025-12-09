@@ -120,6 +120,9 @@
   font-weight: 600;
   display: block;
   margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .searchResultLink:hover {
@@ -131,6 +134,7 @@
   gap: 1rem;
   font-size: 0.9rem;
   color: #94a3b8;
+  flex-wrap: wrap;
 }
 
 .searchLoading, .noResults {
@@ -192,12 +196,22 @@
   font-weight: 600;
   color: #00c6ff;
   margin: 0 0 0.25rem 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .categoryDescription {
   color: #94a3b8;
   margin: 0;
   font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  white-space: normal;
+  word-wrap: break-word;
 }
 
 .categoryStats {
@@ -240,6 +254,9 @@
   font-weight: 500;
   display: block;
   margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .topicLink:hover {
@@ -256,6 +273,7 @@
   gap: 1rem;
   font-size: 0.8rem;
   color: #94a3b8;
+  flex-wrap: wrap;
 }
 
 .topicAuthor, .topicDate, .topicReplies {
@@ -291,6 +309,9 @@
   font-weight: 600;
   display: block;
   margin-bottom: 0.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .recentTopicLink:hover {
@@ -307,6 +328,8 @@
 
 .recentTopicCategory, .recentTopicAuthor, .recentTopicDate, .recentTopicReplies {
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .noRecentTopics {
@@ -347,7 +370,7 @@
   }
   
   .content {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 1.5rem;
   }
   
@@ -361,5 +384,168 @@
   
   .recentTopicMeta {
     font-size: 0.8rem;
+  }
+}
+
+/* Screen sizes between 323px and 478px - Move recent topics to bottom */
+@media (min-width: 323px) and (max-width: 478px) {
+  .content {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .leftColumn {
+    order: 1;
+  }
+  
+  .rightColumn {
+    order: 2;
+  }
+}
+
+/* Ultra-small screen optimizations (320px and below) */
+@media (max-width: 320px) {
+  .container {
+    padding: 0.75rem;
+  }
+  
+  .searchAndCreateSection {
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1rem;
+  }
+  
+  .searchInput {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .createButton {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    min-width: auto;
+  }
+  
+  .content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  .categoryHeader {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
+  
+  .categoryIcon {
+    font-size: 1.25rem;
+  }
+  
+  .categoryName {
+    font-size: 1.1rem;
+  }
+  
+  .categoryDescription {
+    font-size: 0.8rem;
+    -webkit-line-clamp: 3;
+  }
+  
+  .recentTopicItem {
+    padding: 0.75rem;
+  }
+  
+  .recentTopicLink {
+    font-size: 1rem;
+  }
+  
+  .recentTopicMeta {
+    font-size: 0.75rem;
+    gap: 0.125rem;
+  }
+}
+
+/* Minimum 270px width support */
+@media (max-width: 270px) {
+  .container {
+    padding: 0.5rem;
+  }
+  
+  .searchAndCreateSection {
+    margin-bottom: 0.75rem;
+  }
+  
+  .searchInput {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .createButton {
+    padding: 0.375rem 0.75rem;
+    font-size: 0.75rem;
+  }
+  
+  .content {
+    gap: 0.75rem;
+  }
+  
+  .sectionTitle {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .categoryHeader {
+    padding: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  .categoryIcon {
+    font-size: 1rem;
+  }
+  
+  .categoryName {
+    font-size: 1rem;
+  }
+  
+  .categoryDescription {
+    font-size: 0.7rem;
+    -webkit-line-clamp: 4;
+  }
+  
+  .recentTopicItem {
+    padding: 0.5rem;
+  }
+  
+  .recentTopicLink {
+    font-size: 0.875rem;
+  }
+  
+  .recentTopicMeta {
+    font-size: 0.625rem;
+    gap: 0.0625rem;
+  }
+  
+  .searchResults {
+    padding: 1rem;
+  }
+  
+  .searchResultsTitle {
+    font-size: 1.1rem;
+  }
+  
+  .searchResultItem {
+    padding: 0.75rem;
+  }
+  
+  .searchResultLink {
+    font-size: 0.875rem;
+  }
+  
+  .searchResultMeta {
+    font-size: 0.75rem;
+    gap: 0.5rem;
   }
 }

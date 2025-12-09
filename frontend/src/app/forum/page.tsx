@@ -45,6 +45,8 @@ export default function ForumPage() {
   const [loading, setLoading] = useState(true);
   const [searchLoading, setSearchLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+  
   // Remove expandedCategory and categoryTopics since we're using separate pages
 
   useEffect(() => {
@@ -54,6 +56,18 @@ export default function ForumPage() {
     ]).finally(() => {
       setLoading(false);
     });
+    
+    // Check screen size and set up listener for changes
+    const checkScreenSize = () => {
+      setIsSmallScreen(window.innerWidth >= 319 && window.innerWidth <= 488);
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => {
+      window.removeEventListener('resize', checkScreenSize);
+    };
   }, []);
 
   const fetchCategories = async () => {
@@ -157,7 +171,7 @@ export default function ForumPage() {
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Поиск по темам форума..."
+            placeholder={isSmallScreen ? "Поиск..." : "Поиск по темам форума..."}
             className={styles.searchInput}
             onKeyDown={handleSearchKeyDown}
           />
@@ -273,5 +287,4 @@ export default function ForumPage() {
       </div>
     </div>
   );
-
 }

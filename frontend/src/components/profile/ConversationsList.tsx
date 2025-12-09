@@ -70,8 +70,6 @@ export function ConversationsList({ onConversationSelect }: { onConversationSele
 
   return (
     <section className={styles.conversationsSection}>
-      <h2 className={styles.sectionTitle}>Сообщения</h2>
-      
       {error && (
         <div className={styles.errorMessage}>
           {error}

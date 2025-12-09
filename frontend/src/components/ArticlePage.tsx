@@ -88,6 +88,11 @@ interface User {
   name: string;
 }
 
+// Type guard to check if error has response property
+const isErrorWithResponse = (error: unknown): error is { response?: { status?: number } } => {
+  return typeof error === 'object' && error !== null && 'response' in error;
+};
+
 const ArticlePage = () => {
   const params = useParams();
   console.log("ArticlePage params:", params);
@@ -109,7 +114,7 @@ const ArticlePage = () => {
     hasMore,
     loadMoreComments
   } = useComments(id);
-  const { liked, setLiked, likesCount, setLikesCount, handleLike } = useLike(id, user);
+  const { liked, setLiked, likesCount, setLikesCount, handleLike, initializeLikeState } = useLike(id, user);
   
   const [category, setCategory] = useState<Category | null>(null);
   const [newComment, setNewComment] = useState('');
@@ -155,10 +160,12 @@ const ArticlePage = () => {
       }
       
       setNewComment('');
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error submitting comment:', err);
+      
+      
       // Handle CSRF errors specifically
-      if (err.response?.status === 419) {
+      if (isErrorWithResponse(err) && err.response?.status === 419) {
         console.log("CSRF error detected, attempting to refresh token...");
         // Try to reinitialize CSRF and retry once
         try {
@@ -187,7 +194,7 @@ const ArticlePage = () => {
           console.error('Retry failed:', retryErr);
           alert('Не удалось добавить комментарий. Пожалуйста, обновите страницу и попробуйте снова.');
         }
-      } else if (err.response?.status === 401) {
+      } else if (isErrorWithResponse(err) && err.response?.status === 401) {
         alert('Пожалуйста, войдите в систему, чтобы оставить комментарий.');
       } else {
         alert('Не удалось добавить комментарий');
@@ -206,9 +213,17 @@ const ArticlePage = () => {
           comments_count: Math.max(0, (article.comments_count || 0) - 1)
         });
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Error deleting comment:', err);
-      alert('Не удалось удалить комментарий');
+      
+      
+      if (isErrorWithResponse(err) && err.response?.status === 401) {
+        alert('Пожалуйста, войдите в систему, чтобы удалить комментарий.');
+      } else if (isErrorWithResponse(err) && err.response?.status === 403) {
+        alert('У вас нет прав для удаления этого комментария.');
+      } else {
+        alert('Не удалось удалить комментарий');
+      }
     }
   };
 
@@ -248,32 +263,23 @@ const ArticlePage = () => {
   // Set likes count and user liked state when article loads
   useEffect(() => {
     if (article) {
-      setLikesCount(article.likes_count || 0);
-      // For authenticated users, check if they've already liked this article
-      if (user && article.user_has_liked !== undefined) {
-        setLiked(article.user_has_liked);
-      }
-      // For guests, check if they've already liked this article
-      else if (!user && article.guest_has_liked !== undefined) {
-        setLiked(article.guest_has_liked);
-        // Also update localStorage to match backend state
+      // Initialize the like state using the helper function
+      initializeLikeState(
+        article.likes_count || 0,
+        user ? (article.user_has_liked || false) : false
+      );
+      
+      // For guests, also check localStorage
+      if (!user) {
         const storageKey = `article_like_${article.id}`;
-        if (article.guest_has_liked) {
-          localStorage.setItem(storageKey, '1');
-        } else {
-          localStorage.removeItem(storageKey);
-        }
-      }
-      // If we don't have guest_has_liked data but have localStorage data, 
-      // we'll rely on the localStorage for now but the next like action will verify with backend
-      else if (!user) {
-        const storageKey = `article_like_${article.id}`;
-        if (localStorage.getItem(storageKey)) {
+        const hasLikedLocally = localStorage.getItem(storageKey);
+        if (hasLikedLocally) {
+          // Set the liked state to true if found in localStorage
           setLiked(true);
         }
       }
     }
-  }, [article, setLikesCount, user]);
+  }, [article, user, setLiked, initializeLikeState]);
 
   // Scroll to article if hash is present in URL
   useEffect(() => {

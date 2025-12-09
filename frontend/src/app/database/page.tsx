@@ -102,7 +102,6 @@ export default function DatabasePage() {
       ) : (
         <>
           <section className={styles.categoriesSection}>
-            <h2 className={styles.sectionTitle}>Категории мошенничества</h2>
             {categories.length > 0 ? (
               <div className={styles.categoriesGrid}>
                 {categories.map(category => (

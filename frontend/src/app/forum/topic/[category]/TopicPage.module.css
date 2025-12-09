@@ -48,6 +48,9 @@
   font-size: 2rem;
   font-weight: bold;
   color: #f1f5f9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .deleteButton {
@@ -69,6 +72,7 @@
   gap: 20px;
   font-size: 0.9rem;
   color: #94a3b8;
+  flex-wrap: wrap;
 }
 
 .author {
@@ -91,6 +95,8 @@
 .topicContent {
   white-space: pre-wrap;
   line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .topicCombinedContainer {
@@ -105,6 +111,7 @@
   display: flex;
   gap: 10px;
   margin-bottom: 30px;
+  flex-wrap: wrap;
 }
 
 .replyForm {
@@ -146,6 +153,7 @@
   display: flex;
   gap: 10px;
   justify-content: flex-end;
+  flex-wrap: wrap;
 }
 
 .cancelReplyButton {
@@ -231,12 +239,15 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 15px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .replyAuthor {
   display: flex;
   gap: 15px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .authorName {
@@ -261,6 +272,7 @@
   display: flex;
   gap: 10px;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 .replyButton {
@@ -348,4 +360,423 @@
   background: #1e293b;
   border-radius: 8px;
   border: 1px solid #334155;
+}
+
+/* Medium screens */
+@media (max-width: 768px) {
+  .container {
+    padding: 15px;
+  }
+  
+  .topicHeader {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .topicTitle {
+    font-size: 1.75rem;
+  }
+  
+  .topicMeta {
+    gap: 15px;
+    font-size: 0.85rem;
+  }
+  
+  .topicCombinedContainer {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .replyForm {
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .repliesSection {
+    padding: 20px;
+  }
+  
+  .reply {
+    padding: 15px;
+  }
+  
+  .replyHeader {
+    margin-bottom: 10px;
+  }
+  
+  .replyAuthor {
+    gap: 10px;
+  }
+  
+  .inlineReplyForm {
+    padding: 12px;
+    margin-top: 10px;
+  }
+  
+  .nestedRepliesContainer {
+    margin-top: 15px;
+    padding-left: 15px;
+  }
+}
+
+/* Small screens */
+@media (max-width: 480px) {
+  .container {
+    padding: 10px;
+  }
+  
+  .topicHeader {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .topicHeaderTop {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  .topicTitle {
+    font-size: 1.5rem;
+  }
+  
+  .topicMeta {
+    gap: 10px;
+    font-size: 0.8rem;
+  }
+  
+  .topicCombinedContainer {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .topicActions {
+    gap: 5px;
+    margin-bottom: 15px;
+  }
+  
+  .replyForm {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .replyFormTitle {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+  }
+  
+  .replyTextarea {
+    padding: 10px;
+    min-height: 100px;
+  }
+  
+  .replyFormActions {
+    gap: 5px;
+  }
+  
+  .cancelReplyButton, .submitReplyButton {
+    padding: 8px 15px;
+    font-size: 0.9rem;
+  }
+  
+  .repliesSection {
+    padding: 15px;
+  }
+  
+  .repliesList {
+    gap: 15px;
+  }
+  
+  .reply {
+    padding: 12px;
+  }
+  
+  .replyHeader {
+    margin-bottom: 10px;
+  }
+  
+  .replyAuthor {
+    gap: 8px;
+  }
+  
+  .authorName {
+    font-size: 0.9rem;
+  }
+  
+  .replyDate {
+    font-size: 0.75rem;
+  }
+  
+  .replyContent {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  
+  .replyActions {
+    gap: 5px;
+  }
+  
+  .replyButton {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .inlineReplyForm {
+    padding: 10px;
+    margin-top: 10px;
+  }
+  
+  .inlineReplyForm textarea {
+    padding: 8px;
+    min-height: 60px;
+  }
+  
+  .nestedRepliesContainer {
+    margin-top: 10px;
+    padding-left: 10px;
+  }
+  
+  .parentCommentInline {
+    padding: 8px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Ultra-small screens (320px and below) */
+@media (max-width: 320px) {
+  .container {
+    padding: 8px;
+  }
+  
+  .topicHeader {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .topicTitle {
+    font-size: 1.3rem;
+  }
+  
+  .topicMeta {
+    gap: 8px;
+    font-size: 0.75rem;
+  }
+  
+  .topicCombinedContainer {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .topicActions {
+    gap: 4px;
+    margin-bottom: 12px;
+  }
+  
+  .replyForm {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .replyFormTitle {
+    font-size: 1rem;
+    margin-bottom: 12px;
+  }
+  
+  .replyTextarea {
+    padding: 8px;
+    min-height: 80px;
+    font-size: 0.9rem;
+  }
+  
+  .replyFormActions {
+    gap: 4px;
+  }
+  
+  .cancelReplyButton, .submitReplyButton {
+    padding: 6px 12px;
+    font-size: 0.85rem;
+  }
+  
+  .repliesSection {
+    padding: 12px;
+  }
+  
+  .repliesList {
+    gap: 12px;
+  }
+  
+  .reply {
+    padding: 10px;
+  }
+  
+  .replyHeader {
+    margin-bottom: 8px;
+    gap: 5px;
+  }
+  
+  .replyAuthor {
+    gap: 6px;
+  }
+  
+  .authorName {
+    font-size: 0.85rem;
+  }
+  
+  .replyDate {
+    font-size: 0.7rem;
+  }
+  
+  .replyContent {
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+  
+  .replyActions {
+    gap: 4px;
+  }
+  
+  .replyButton {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+  
+  .inlineReplyForm {
+    padding: 8px;
+    margin-top: 8px;
+  }
+  
+  .inlineReplyForm textarea {
+    padding: 6px;
+    min-height: 50px;
+    font-size: 0.85rem;
+  }
+  
+  .nestedRepliesContainer {
+    margin-top: 8px;
+    padding-left: 8px;
+  }
+  
+  .parentCommentInline {
+    padding: 6px;
+    font-size: 0.8rem;
+  }
+}
+
+/* Minimum 270px width support */
+@media (max-width: 270px) {
+  .container {
+    padding: 5px;
+  }
+  
+  .topicHeader {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .topicTitle {
+    font-size: 1.1rem;
+  }
+  
+  .topicMeta {
+    gap: 5px;
+    font-size: 0.7rem;
+  }
+  
+  .topicCombinedContainer {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .topicActions {
+    gap: 3px;
+    margin-bottom: 10px;
+  }
+  
+  .replyForm {
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .replyFormTitle {
+    font-size: 0.9rem;
+    margin-bottom: 10px;
+  }
+  
+  .replyTextarea {
+    padding: 6px;
+    min-height: 60px;
+    font-size: 0.8rem;
+  }
+  
+  .replyFormActions {
+    gap: 3px;
+  }
+  
+  .cancelReplyButton, .submitReplyButton {
+    padding: 5px 10px;
+    font-size: 0.8rem;
+  }
+  
+  .repliesSection {
+    padding: 10px;
+  }
+  
+  .repliesList {
+    gap: 10px;
+  }
+  
+  .reply {
+    padding: 8px;
+  }
+  
+  .replyHeader {
+    margin-bottom: 6px;
+    gap: 3px;
+  }
+  
+  .replyAuthor {
+    gap: 4px;
+  }
+  
+  .authorName {
+    font-size: 0.8rem;
+  }
+  
+  .replyDate {
+    font-size: 0.65rem;
+  }
+  
+  .replyContent {
+    font-size: 0.8rem;
+    margin-bottom: 6px;
+  }
+  
+  .replyActions {
+    gap: 3px;
+  }
+  
+  .replyButton {
+    padding: 3px 6px;
+    font-size: 0.7rem;
+  }
+  
+  .inlineReplyForm {
+    padding: 6px;
+    margin-top: 6px;
+  }
+  
+  .inlineReplyForm textarea {
+    padding: 5px;
+    min-height: 40px;
+    font-size: 0.75rem;
+  }
+  
+  .nestedRepliesContainer {
+    margin-top: 6px;
+    padding-left: 6px;
+  }
+  
+  .parentCommentInline {
+    padding: 5px;
+    font-size: 0.75rem;
+  }
 }
